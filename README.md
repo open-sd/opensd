@@ -1,92 +1,150 @@
 # OpenSD
+An open-source Linux userspace driver for Valve's Steam Deck.
 
+![](https://img.shields.io/badge/License-GPLv3-yellowgreen)
 
+<br>
 
-## Getting started
+## About
+OpenSD is a highly-configurable userspace driver for the Steam Deck written in modern C++.  It aims to be lighweight, very fast and provide a way to fully utilize the hardware without running any closed-source, proprietary software/spyware like Steam.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+If you're like me, you want to tinker with your hardware devices and build neat projects on them without needing to run any bloat, spyware, or closed-source drivers.  At the time of writing, there is no way to utilize the gamepad portion (buttons, thumbsticks, gyros, etc.) of the Steam Deck without also having to run Steam, since Steam implements an unpublished, undocumented, closed-source userspace driver to make it all work.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+As good as Valve has been about Linux support and contributing to open-source initiatives, they're not so good about keeping their hardware open, nor do they respect privacy as a human right.
 
-## Add your files
+This goal of this project is to reverse engineer, document the hardware, and provide a driver along with the tools to configure it.  Ultimately enabling the hardware to be used freely and unencumbered by proprietary requirements.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+<br>
 
+## Features
+Development is still early, so many of the features and support is incomplete.  What's listed is the current scope of the project.  See the Roadmap section for feature implmentation.
+
+- Fast and tiny driver daemon
+- Fully configurable and mappable
+- Default device profiles for common controllers
+- Customizable device profiles
+- Configurable by ini file
+- CLI tool to configure live driver
+- GUI tool to configure live driver
+- Support for gamepad input (buttons, axes, etc.)
+- Support for motion controls (accelerometers, gyros)
+- Support for Force-Feedback / haptic vibration.
+- Support for non-gamepad input (volume)
+- Manual backlight control
+- Automatic backlight control (ambient light sensor)
+- Volume control
+- Configurable mouse emulation
+
+<br>
+
+## Current state
+The OpenSD main branch is currently in a usable state for very basic driver functionality.  It should be enough to play many games and emulators if you know your way around a terminal.
+
+<br>
+
+## Requirements
+Hardware support for the Steam Deck is pretty recent, so using the most recent kernel is recommended.  Presently the target / development system is Arch Linux with kernel 5.19.  Older distros/kernels may not support the necessary features.
+
+The code has very few dependencies other than the kernel.  It does, however use C++17 and a couple C++20 features, so a fairly recent version of G++ is needed.  I'm currently building with G++ 12.2.
+
+- Kernel 5.18+  (older kernels will work, but other hardware support may be missing, i.e. audio and wifi)
+- G++ 8.0+ (for c++20 designated initializers)
+- cmake
+
+<br>
+
+## Building
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/seek-dev/opensd.git
-git branch -M main
-git push -uf origin main
+mkdir build
+cd build
+cmake ..
+make
 ```
 
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/seek-dev/opensd/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+<br>
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+TODO:  Better instructions + install script
+
+There's no install script yet, so it must be manually built and executed.
+
+The OpenSD daemon `opensdd` requires access to the underlying hardware via the `hidraw` kernel subsystem, it then wites the events to the `uinput` subsystem.  This means the user running the daemon must have access to those devices.  
+
+A `udev` rule is provided to make setting this up easier -- or you can configure it your own way, but it's NOT recommended to run `opensdd` as root.
+
+once the uder rule is loaded and the user has been made a member of the relevant group(s), it should be able to run.  You will need to logout for group changes to take effect on your current user.
+
+<br>
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+TODO
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Once you build the project binaries, you can run.  Again, make sure the user that runs this has access to the Steam Deck gamepad hidraw nodes AND the uinput device, or it it will fail.
+
+If your permissions are correct, run from a terminal:
+```
+opensdd
+```
+
+Once the daemon finished starting up and the program is running you should be able to read joystick/gamepad the event devices from other software.
+
+You can use tools `evtest` and `jstest-gtk` to test if it's working.
+
+<br>
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Feature progress:
+
+- [ ]   Driver daemon
+    - [ ]   Gamepad driver
+        - [x]   Hidraw interface
+        - [x]   Gamepad uinput interface
+        - [x]   Motion uinput interface
+        - [x]   Mouse uinput interface
+        - [x]   Completely mappable
+        - [x]   Universal binding system
+        - [ ]   Profile support
+        - [x]   Multithreaded
+        - [x]   Buttons
+        - [x]   Sticks
+        - [x]   Trackpads
+        - [ ]   Accelerometers
+        - [ ]   Gyros
+        - [x]   "Lizard Mode" control
+        - [ ]   Mouse emuation
+        - [ ]   Force-feedback
+    - [ ]   Backlight driver
+        - [ ]   Backend interface
+        - [ ]   Manual control
+        - [ ]   Automatic control
+    - [ ]   Volume control
+    - [ ]   IPC
+    - [ ]   Config file loading
+        - [ ]   Global config file
+        - [ ]   User config files
+        - [ ]   User profile files
+- [ ]   CLI config tool
+- [ ]   GUI config tool
+- [ ]   Install script
+- [ ]   Packaging
+
+<br>
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+There are a lot of open questions about how the HID reports work.  Most of the the work has come from reverse engineering input reports and function documenetation from the kernel Steam Controller driver.  Anyone who can fill in blanks in the code would be appreciated, just open an issue or submit a PR.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+As always, feel free to buy me a coffee if you appreciate this software ;)
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+<br>
 
 ## License
-For open source projects, say how it is licensed.
+OpenSD is licensed under THE GNU GPLv3+.  See LICENSE for details.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+<br>
+
+## Disclaimer
+I have no affiliation with Valve or any of their properties.
+
+Valve, Steam, Steam Deck, Steam Controller or other Valve trademarks, are the property of Valve LLC.  Any reference to these, or other tradmarks, are in fair use.
+
+All hardware documentation and implementation is derived from legal reverse-engineering and referencing other GPL-licensed open-source code published in the Linux kernel.  No code or documentation in this project has been obtained from any method that could be considered a trade secret.
