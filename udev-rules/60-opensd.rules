@@ -1,0 +1,8 @@
+# Allow access to Steam Deck Controller hidraw device
+KERNEL=="hidraw*", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1205", GROUP="opensd", MODE="660"
+
+# Allow access to Steam Deck Controller USB device
+SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", ATTRS{idProduct}=="1205", GROUP="opensd", MODE="660"
+
+# Allow group access to uinput
+KERNEL=="uinput", SUBSYSTEM=="misc", GROUP="opensd", MODE="660", OPTIONS+="static_node=uinput"

@@ -1,7 +1,8 @@
 # OpenSD
-An open-source Linux userspace driver for Valve's Steam Deck.
+An open-source Linux userspace driver for Valve's Steam Deck hardware.
 
-![](https://img.shields.io/badge/License-GPLv3-yellowgreen)
+![](https://img.shields.io/badge/License-GPLv3-blueviolet)
+
 
 <br>
 
@@ -68,9 +69,9 @@ TODO:  Better instructions + install script
 
 There's no install script yet, so it must be manually built and executed.
 
-The OpenSD daemon `opensdd` requires access to the underlying hardware via the `hidraw` kernel subsystem, it then wites the events to the `uinput` subsystem.  This means the user running the daemon must have access to those devices.  
+The OpenSD daemon `opensdd` requires access to the underlying hardware via the hidraw kernel subsystem, it then wites the events to the uinput subsystem.  This means the user running the daemon must have access to those devices.  
 
-A `udev` rule is provided to make setting this up easier -- or you can configure it your own way, but it's NOT recommended to run `opensdd` as root.
+A udev rule is provided to make setting this up easier -- or you can configure it your own way, but it's NOT recommended to run `opensdd` as root.
 
 once the uder rule is loaded and the user has been made a member of the relevant group(s), it should be able to run.  You will need to logout for group changes to take effect on your current user.
 
