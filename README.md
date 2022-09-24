@@ -1,7 +1,7 @@
 # OpenSD
 An open-source Linux userspace driver for Valve's Steam Deck hardware.
 
-![](https://img.shields.io/badge/License-GPLv3-blueviolet)
+![](https://img.shields.io/badge/License-GPLv3-blueviolet?style=flat-square) ![](https://img.shields.io/badge/Written%20in-C%2B%2B-green?style=flat-square) ![https://paypal.me/SeeKntr0py](https://img.shields.io/badge/PayPal-Donate-blue?style=flat-square&logo=paypal)
 
 
 <br>
@@ -49,17 +49,23 @@ Hardware support for the Steam Deck is pretty recent, so using the most recent k
 The code has very few dependencies other than the kernel.  It does, however use C++17 and a couple C++20 features, so a fairly recent version of G++ is needed.  I'm currently building with G++ 12.2.
 
 - Kernel 5.18+  (older kernels will work, but other hardware support may be missing, i.e. audio and wifi)
-- G++ 8.0+ (for c++20 designated initializers)
-- cmake
+- GCC 8.0+ (for c++20 designated initializers)
+- cmake 3.10+
 
 <br>
 
 ## Building
+OpenSD uses cmake so building is nice and simple.
 ```
 mkdir build
 cd build
 cmake ..
 make
+```
+
+To configure build/install options, run this from the build directory
+```
+ccmake ..
 ```
 
 <br>
@@ -80,7 +86,7 @@ once the uder rule is loaded and the user has been made a member of the relevant
 ## Usage
 TODO
 
-Once you build the project binaries, you can run.  Again, make sure the user that runs this has access to the Steam Deck gamepad hidraw nodes AND the uinput device, or it it will fail.
+Build the binaries, then run the daemon.  Again, make sure the user that runs this has access to the Steam Deck gamepad hidraw nodes AND the uinput device, or it it will fail.
 
 If your permissions are correct, run from a terminal:
 ```
@@ -124,6 +130,7 @@ Feature progress:
         - [ ]   Global config file
         - [ ]   User config files
         - [ ]   User profile files
+- [ ]   Battery reporting
 - [ ]   CLI config tool
 - [ ]   GUI config tool
 - [ ]   Install script
