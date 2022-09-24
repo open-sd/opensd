@@ -40,18 +40,20 @@ namespace Drivers::Gamepad
         const double    STICK_FORCE_MAX     = 112.0;                    // Weird number
         const double    PAD_X_MIN           = -32767.0;
         const double    PAD_X_MAX           = 32767.0;
-        const double    PAD_Y_MIN           = -32767.0;
-        const double    PAD_Y_MAX           = 32767.0;
+        const double    PAD_Y_MIN           = 32767.0;
+        const double    PAD_Y_MAX           = -32767.0;
         const double    PAD_FORCE_MAX       = 32767.0;
         const double    TRIGG_MIN           = 0;
         const double    TRIGG_MAX           = 32767.0;
-
+        
         // Precalculated axis multipliers
         const double    STICK_X_AXIS_MULT   = 1.0 / STICK_X_MAX;
         const double    STICK_Y_AXIS_MULT   = 1.0 / STICK_Y_MAX;
         const double    STICK_FORCE_MULT    = 1.0 / STICK_FORCE_MAX;
         const double    PAD_X_AXIS_MULT     = 1.0 / PAD_X_MAX;
         const double    PAD_Y_AXIS_MULT     = 1.0 / PAD_Y_MAX;
+        const double    PAD_X_SENS_MULT     = 1.0 / 128.0;
+        const double    PAD_Y_SENS_MULT     = 1.0 / 128.0;
         const double    PAD_FORCE_MULT      = 1.0 / PAD_FORCE_MAX;
         const double    TRIGG_AXIS_MULT     = 1.0 / TRIGG_MAX;
         

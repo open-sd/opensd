@@ -84,6 +84,10 @@ namespace Drivers::Gamepad
         {        
             double          x;
             double          y;
+            double          sx;
+            double          sy;
+            double          dx;
+            double          dy;
             bool            touch;
             bool            press;
             double          force;

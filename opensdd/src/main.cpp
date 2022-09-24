@@ -54,8 +54,9 @@ int main( int argc, char **argv )
     Daemon                      opensdd;
     ProgArgs                    args( arg_list );
     
+    
     // Set initial Logging level
-    gLog.SetFilterLevel( Log::VERB );
+    gLog.SetFilterLevel( Log::WARN );
 
     // Version
     if (args.HasOpt( "v", "version" ))

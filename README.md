@@ -110,7 +110,7 @@ Feature progress:
         - [x]   Mouse uinput interface
         - [x]   Completely mappable
         - [x]   Universal binding system
-        - [ ]   Profile support
+        - [x]   Profile support
         - [x]   Multithreaded
         - [x]   Buttons
         - [x]   Sticks
@@ -118,7 +118,7 @@ Feature progress:
         - [ ]   Accelerometers
         - [ ]   Gyros
         - [x]   "Lizard Mode" control
-        - [ ]   Mouse emuation
+        - [x]   Mouse emuation
         - [ ]   Force-feedback
     - [ ]   Backlight driver
         - [ ]   Backend interface

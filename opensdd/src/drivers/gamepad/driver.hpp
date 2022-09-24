@@ -36,7 +36,8 @@ namespace Drivers::Gamepad
         BUTTON,
         AXIS_PLUS,
         AXIS_MINUS,
-        PRESSURE
+        PRESSURE,
+        RELATIVE
     };
     
     // Enums for deadzone and calibration functions

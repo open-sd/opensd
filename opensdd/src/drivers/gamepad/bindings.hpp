@@ -112,6 +112,8 @@ namespace Drivers::Gamepad
             Binding             down;
             Binding             left;
             Binding             right;
+            Binding             rel_x;
+            Binding             rel_y;
             Binding             touch;
             Binding             press;
             Binding             force;

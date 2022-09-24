@@ -131,7 +131,8 @@ void Drivers::Gamepad::Driver::DestroyUinputDevs()
 
 void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
 {
-    using namespace v1;
+    using namespace     v1;
+    DeviceState         old = mState;
     
     // Buttons
     mState.dpad.up              = pIr->up;
@@ -171,15 +172,46 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
     // Pads
     mState.pad.l.x              = (double)pIr->l_pad_x * PAD_X_AXIS_MULT;
     mState.pad.l.y              = (double)pIr->l_pad_y * PAD_Y_AXIS_MULT;
+    mState.pad.l.sx             = ((double)pIr->l_pad_x + PAD_X_MAX) * PAD_X_SENS_MULT;
+    mState.pad.l.sy             = ((double)pIr->l_pad_y * -1.0 + PAD_Y_MIN) * PAD_Y_SENS_MULT;
     mState.pad.l.touch          = pIr->l_pad_touch;
     mState.pad.l.press          = pIr->l_pad_press;
     mState.pad.l.force          = (double)pIr->l_pad_force * PAD_FORCE_MULT;
     mState.pad.r.x              = (double)pIr->r_pad_x * PAD_X_AXIS_MULT;
     mState.pad.r.y              = (double)pIr->r_pad_y * PAD_Y_AXIS_MULT;
+    mState.pad.r.sx             = ((double)pIr->r_pad_x + PAD_X_MAX) * PAD_X_SENS_MULT;
+    mState.pad.r.sy             = ((double)pIr->r_pad_y * -1.0 + PAD_Y_MIN) * PAD_Y_SENS_MULT;
     mState.pad.r.touch          = pIr->r_pad_touch;
     mState.pad.r.press          = pIr->r_pad_press;
     mState.pad.r.force          = (double)pIr->r_pad_force * PAD_FORCE_MULT;
-        
+    // Left trackpad deltas
+    if ((mState.pad.l.touch) && (old.pad.l.touch))
+    {
+        mState.pad.l.dx = ((mState.pad.l.sx - old.pad.l.sx) + old.pad.l.dx) / 2.0;
+        mState.pad.l.dy = ((mState.pad.l.sy - old.pad.l.sy) + old.pad.l.dy) / 2.0;
+    }
+    else
+    {
+        // Delta decay / inertia
+        // Rate of decay here is fixed to hardware polling interval, which
+        // seems to be 250Hz.  If the polling rate changes, the decay will need
+        // to reflect that.  For now, 5% feels pretty good.
+        mState.pad.l.dx *= 0.95;
+        mState.pad.l.dy *= 0.95;
+    }
+    // Right trackpad deltas
+    if ((mState.pad.r.touch) && (old.pad.r.touch))
+    {
+        mState.pad.r.dx = ((mState.pad.r.sx - old.pad.r.sx) + old.pad.r.dx) / 2.0;
+        mState.pad.r.dy = ((mState.pad.r.sy - old.pad.r.sy) + old.pad.r.dy) / 2.0;
+    }
+    else
+    {
+        // Delta decay / inertia
+        mState.pad.r.dx *= .95;
+        mState.pad.r.dy *= .95;
+    }
+    
     // Accelerometers
     // TODO
     
@@ -291,7 +323,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                     // If triggered, emit the state as a positive or negative relative axis 
                     // value depending on the direction specified in the binding.
                     if (state < 0)
-                        device->UpdateRel( bind.code, (bind.dir) ? fabs(state) : state );  // TODO Some kind of axis scaling / multiplier
+                        device->UpdateRel( bind.code, (bind.dir) ? fabs(state) : state);  // TODO Some kind of axis scaling / multiplier
                 break;
                 
                 default:
@@ -327,6 +359,23 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                     // value depending on the direction specified in the binding.
                     if (state > 0)
                         device->UpdateRel( bind.code, (bind.dir) ? state : state * -1.0 );  // TODO Some kind of axis scaling / multiplier
+                break;
+                
+                default:
+                    // Unsupported input event type
+                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unsupported input event type occurred." );
+                    return;
+                break;
+            }
+        break;
+        
+        case BindMode::RELATIVE:
+            switch (bind.type)
+            {
+                // TODO: handle other bind types?  Is it practical?
+                
+                case EV_REL:
+                    device->UpdateRel( bind.code, state );
                 break;
                 
                 default:
@@ -393,6 +442,8 @@ void Drivers::Gamepad::Driver::Translate()
     TransEvent( mMap.pad.l.down,        mState.pad.l.y,             BindMode::AXIS_PLUS );
     TransEvent( mMap.pad.l.left,        mState.pad.l.x,             BindMode::AXIS_MINUS );
     TransEvent( mMap.pad.l.right,       mState.pad.l.x,             BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.l.rel_x,       mState.pad.l.dx,            BindMode::RELATIVE );
+    TransEvent( mMap.pad.l.rel_y,       mState.pad.l.dy,            BindMode::RELATIVE );
     TransEvent( mMap.pad.l.touch,       mState.pad.l.touch,         BindMode::BUTTON );
     TransEvent( mMap.pad.l.press,       mState.pad.l.press,         BindMode::BUTTON );
     TransEvent( mMap.pad.l.force,       mState.pad.l.force,         BindMode::PRESSURE );
@@ -400,6 +451,8 @@ void Drivers::Gamepad::Driver::Translate()
     TransEvent( mMap.pad.r.down,        mState.pad.r.y,             BindMode::AXIS_PLUS );
     TransEvent( mMap.pad.r.left,        mState.pad.r.x,             BindMode::AXIS_MINUS );
     TransEvent( mMap.pad.r.right,       mState.pad.r.x,             BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.r.rel_x,       mState.pad.r.dx,            BindMode::RELATIVE );
+    TransEvent( mMap.pad.r.rel_y,       mState.pad.r.dy,            BindMode::RELATIVE );
     TransEvent( mMap.pad.r.touch,       mState.pad.r.touch,         BindMode::BUTTON );
     TransEvent( mMap.pad.r.press,       mState.pad.r.press,         BindMode::BUTTON );
     TransEvent( mMap.pad.r.force,       mState.pad.r.force,         BindMode::PRESSURE );
@@ -530,9 +583,6 @@ int Drivers::Gamepad::Driver::Poll()
     static std::vector<uint8_t>     buff;
     int                             result;
     
-    //static uint32_t                 call_count = 0;
-    //static time_t                   start_time = time(NULL);
-    //double                          diff_time = 0;
 
     using namespace v1;
     
@@ -585,19 +635,6 @@ int Drivers::Gamepad::Driver::Poll()
     else
         gLog.Write( Log::VERB, "Received zero-length report from gamepad device." );
     
-    /*
-    // TODO:  Remove this
-    ++call_count;
-        
-    diff_time = difftime( time(NULL), start_time );
-    if (diff_time >= 1.0)
-    {
-        gLog.Write( Log::DEBUG, std::to_string(call_count) + " calls in " + std::to_string(diff_time) + " seconds. " );
-        call_count = 0;
-        start_time = time(NULL);
-    }
-    */
-
     return Err::OK;
 }
 
@@ -608,14 +645,13 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
     std::vector<uint8_t>    buff;
     int                     result;
 
-    // Strangely, the only known methof to disable keyboard emulation only does
+    // Strangely, the only known method to disable keyboard emulation only does
     // so for a few seconds, whereas disabling the mouse is permanent until
     // re-enabled.  This means we have to run a separate thread which wakes up
     // every couple seconds and disabled the keyboard again using the 
     // CLEAR_MAPPINGS report.  If there's a better way to do this, I'd love to
     // know about it.  Looking at you, Valve.
-    
-    
+        
     using namespace v1;
     
     // Initialize report
@@ -626,7 +662,7 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
     while (mRunning)
     {
         // Sleep for a bit
-        usleep( LIZARD_SLEEP_SEC * 1000000 );
+        usleep( LIZARD_SLEEP_SEC * 1000000 );   // in microseconds
         
         // If lizard mode is still false, send another CLEAR_MAPPINGS report
         if (!mLizardMode)

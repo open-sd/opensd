@@ -327,8 +327,6 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
 
     mDeviceName = deviceName;
 
-    // Give system time to find device before we do anything else
-    usleep( 1000000 );
     gLog.Write( Log::DEBUG, "Successfully created uinput device '" + mDeviceName + "'." );
 
     return Err::OK;
@@ -450,7 +448,11 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
     
     if (rCfg.features.enable_rel)
     {
-        // TODO: configure relative axes
+        for (auto&& i : rCfg.rel_list)
+        {
+            if (EnableRel( i ) != Err::OK)
+                ++error_count;
+        }
     }
     
     result = Create( rCfg.deviceinfo.name, rCfg.deviceinfo.vid, rCfg.deviceinfo.pid, rCfg.deviceinfo.ver );

@@ -196,10 +196,12 @@ namespace Drivers::Gamepad
             {
                 .l
                 {
-                    .up             = { .dev = MOUSE,   .type = REL,    .code = REL_Y,      .dir = 0 },
-                    .down           = { .dev = MOUSE,   .type = REL,    .code = REL_Y,      .dir = 1 },
-                    .left           = { .dev = MOUSE,   .type = REL,    .code = REL_X,      .dir = 0 },
-                    .right          = { .dev = MOUSE,   .type = REL,    .code = REL_X,      .dir = 1 },
+                    .up             = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .rel_x          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .rel_y          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                     .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                     .press          = { .dev = MOUSE,   .type = BTN,    .code = BTN_LEFT,   .dir = 0 },
                     .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
@@ -210,8 +212,10 @@ namespace Drivers::Gamepad
                     .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                     .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                     .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .rel_x          = { .dev = MOUSE,   .type = REL,    .code = REL_X,      .dir = 0 },
+                    .rel_y          = { .dev = MOUSE,   .type = REL,    .code = REL_Y,      .dir = 0 },
                     .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .press          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                    .press          = { .dev = MOUSE,   .type = BTN,    .code = BTN_RIGHT,  .dir = 0 },
                     .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
                 },
             },

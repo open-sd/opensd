@@ -225,7 +225,7 @@ int Hidraw::Write( const std::vector<uint8_t>& rData )
         return Err::WRITE_FAILED;
     }
 
-    gLog.Write( Log::VERB, "Hidraw::Write(): Successfully wrote " + std::to_string(result) + " bytes to '" + mPath.string() );
+    //gLog.Write( Log::VERB, "Hidraw::Write(): Successfully wrote " + std::to_string(result) + " bytes to '" + mPath.string() );
     
     return Err::OK;
 }
