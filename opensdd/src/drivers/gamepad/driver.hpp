@@ -61,6 +61,7 @@ namespace Drivers::Gamepad
         Uinput::Device*         mpMotion;
         Uinput::Device*         mpMouse;
         BindMap                 mMap;
+        std::mutex              mLock;
         std::atomic<bool>       mLizardMode;
         std::thread             mLizHandlerThread;
         

@@ -489,7 +489,12 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     Uinput::DeviceConfig        cfg;
 
 
-    gLog.Write( Log::INFO, "Setting gamepad profile." );
+    gLog.Write( Log::INFO, "Setting gamepad profile..." );
+
+    // Lock driver so we can make changes
+    std::lock_guard<std::mutex>     lock( mLock );
+    // Wait 50ms for threads to hit the mutex just to be safe
+    usleep( 50000 );
     
     // Destroy any uinput objects since we need to create new ones
     DestroyUinputDevs();
@@ -664,6 +669,7 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
         // Sleep for a bit
         usleep( LIZARD_SLEEP_SEC * 1000000 );   // in microseconds
         
+        mLock.lock();
         // If lizard mode is still false, send another CLEAR_MAPPINGS report
         if (!mLizardMode)
         {
@@ -676,6 +682,7 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
                     gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::ThreadedLizardHander(): Failed to write gamepad device." );
             }
         }
+        mLock.unlock();
     }
 }
 
@@ -693,7 +700,13 @@ void Drivers::Gamepad::Driver::Run()
     // Loop while driver is running
     while (mRunning)
     {
+        // Lock public functions
+        mLock.lock();
+        
         Poll();
+        
+        // Unlock driver
+        mLock.unlock();
     }
     
     // Rejoin threads after driver exits
@@ -715,6 +728,11 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Device is not open." );
         return Err::NOT_OPEN;
     }
+    
+    // Lock driver so we can make changes
+    std::lock_guard<std::mutex>     lock( mLock );
+    // Wait 50ms for drivers to hit the mutex just to be safe
+    usleep( 50000 );
     
     // Initialize report
     buff.resize( 64, 0 );
