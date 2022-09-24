@@ -103,7 +103,7 @@ You can use tools `evtest` and `jstest-gtk` to test if it's working.
 Feature progress:
 
 - [ ]   Driver daemon
-    - [ ]   Gamepad driver
+    - [x]   Gamepad driver
         - [x]   Hidraw interface
         - [x]   Gamepad uinput interface
         - [x]   Motion uinput interface
