@@ -1,7 +1,7 @@
 # OpenSD
 An open-source Linux userspace driver for Valve's Steam Deck hardware.
 
-[![](https://img.shields.io/badge/License-GPLv3-blueviolet?style=for-the-badge)]() [![](https://img.shields.io/badge/Written%20in-C%2B%2B-63be3d?style=for-the-badge)]() [![](https://img.shields.io/badge/PayPal-Donate-blue?style=for-the-badge&logo=paypal)](https://paypal.me/SeeKntr0py)
+[![](https://img.shields.io/badge/License-GPLv3-blueviolet?style=for-the-badge)]() [![](https://img.shields.io/badge/Written%20in-C%2B%2B-f34b7d?style=for-the-badge)]() [![](https://img.shields.io/badge/PayPal-Donate-blue?style=for-the-badge&logo=paypal)](https://paypal.me/SeeKntr0py)
 
 
 <br>
