@@ -71,7 +71,8 @@ int Daemon::Run()
     }
     
     // Load default profile
-    mGpDrv->SetProfile( Drivers::Gamepad::DEFAULT_PROFILE );
+    mGpDrv->SetProfile( Drivers::Gamepad::Presets::DEFAULT );
+    //mGpDrv->SetProfile( *Drivers::Gamepad::Presets::PRESET_LIST[0] );
     
     // Start threaded gamepad driver
     mGpDrv->Start();
