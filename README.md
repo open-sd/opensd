@@ -102,7 +102,7 @@ You can use tools `evtest` and `jstest-gtk` to test if it's working.
 ## Roadmap
 Feature progress:
 
-- [ ]   Driver daemon
+- [x]   Driver daemon
     - [x]   Gamepad driver
         - [x]   Hidraw interface
         - [x]   Gamepad uinput interface
@@ -120,6 +120,7 @@ Feature progress:
         - [x]   "Lizard Mode" control
         - [x]   Mouse emuation
         - [ ]   Force-feedback
+        - [ ]   Deadzones
     - [ ]   Backlight driver
         - [ ]   Backend interface
         - [ ]   Manual control

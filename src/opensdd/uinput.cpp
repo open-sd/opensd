@@ -18,7 +18,7 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "uinput.hpp"
-#include "log.hpp"
+#include "../common/log.hpp"
 #include <sys/stat.h>
 #include <sys/uio.h>
 #include <fcntl.h>

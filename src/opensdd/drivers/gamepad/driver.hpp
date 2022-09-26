@@ -91,7 +91,7 @@ namespace Drivers::Gamepad
         ~Driver();
     };
 
-} // namespace Driver::Gamepad
+} // namespace Drivers::Gamepad
 
 
 #endif // __GAMEPAD__DRIVER_HPP__

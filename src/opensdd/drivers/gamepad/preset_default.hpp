@@ -26,6 +26,10 @@
 
 namespace Drivers::Gamepad::Presets
 {
+    // The OpenSD default profile for testing and general use.
+    // Follows a PS5 button/axis layout from the hid_playstation driver.
+    // Uses the right pad for a trackpad mouse.  Left trackpad press is
+    // left click, right trackpad press is right click.
     const Drivers::Gamepad::Profile DEFAULT =
     {
         .profile_name               = "Default OpenSD Profile",

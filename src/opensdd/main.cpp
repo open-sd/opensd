@@ -17,9 +17,9 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "log.hpp"
+#include "../common/log.hpp"
+#include "../common/prog_args.hpp"
 #include "daemon.hpp"
-#include "prog_args.hpp"
 #include "appinfo.hpp"
 #include <vector>
 #include <string>
@@ -58,6 +58,12 @@ int main( int argc, char **argv )
     // Set initial Logging level
     gLog.SetFilterLevel( Log::WARN );
 
+
+
+
+
+    // Handle command line arguments
+    
     // Version
     if (args.HasOpt( "v", "version" ))
     {
@@ -120,8 +126,7 @@ int main( int argc, char **argv )
             break;
         }
     }
-    
-    
+   
     // Exit if there were argument parsing errors
     if (args.GetErrorCount())
     {

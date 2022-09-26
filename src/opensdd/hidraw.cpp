@@ -18,7 +18,7 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "hidraw.hpp"
-#include "log.hpp"
+#include "../common/log.hpp"
 #include "string_conv.hpp"
 // Linux
 #include <fcntl.h>

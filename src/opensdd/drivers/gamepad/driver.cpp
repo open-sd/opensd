@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "driver.hpp"
 #include "compat.hpp"
-#include "../../log.hpp"
+#include "../../../common/log.hpp"
 // Linux
 #include <unistd.h>
 // C++

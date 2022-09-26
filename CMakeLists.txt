@@ -39,13 +39,26 @@ set( OPENSD_CLI_BIN "opensd-cli" )
 set( OPENSD_GUI_BIN "opensd-gui" )
 
 # OpenSD daemon source files
-file( GLOB OPENSD_DAEMON_SRC "opensdd/src/*.cpp" "opensdd/src/drivers/*.cpp" "opensdd/src/drivers/gamepad/*.cpp" "opensdd/src/drivers/backlight/*.cpp" )
+file( GLOB OPENSD_DAEMON_SRC 
+        "src/common/errors.cpp"
+        "src/common/log.cpp"
+        "src/common/ini.cpp"
+        "src/common/prog_args.cpp"
+        "src/opensdd/*.cpp" 
+        "src/opensdd/drivers/*.cpp" 
+        "src/opensdd/drivers/gamepad/*.cpp" 
+        "src/opensdd/drivers/backlight/*.cpp"
+    )
 
 # OpenSD CLI tool source files
-file( GLOB OPENSD_CLI_SRC "opensd-cli/src/*.cpp" )
+file( GLOB OPENSD_CLI_SRC 
+        "src/opensd-cli/*.cpp" 
+    )
 
 # OpenSD GUI tool source files
-file( GLOB OPENSD_GUI_SRC "opensd-gui/src/*.cpp" )
+file( GLOB OPENSD_GUI_SRC 
+        "src/opensd-gui/*.cpp" 
+    )
 
 # Build options
 option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" ON )
