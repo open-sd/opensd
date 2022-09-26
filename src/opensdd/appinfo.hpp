@@ -32,7 +32,7 @@ namespace AppInfo
     const std::string   AUTHOR          = "seek";
     const std::string   COPYRIGHT_YEAR  = "2022";
     const std::string   MAJOR_VER       = "0";
-    const std::string   MINOR_VER       = "28";
+    const std::string   MINOR_VER       = "29";
     const std::string   SPDX_LICENSE    = "GPL-3.0-or-later";
     const std::string   INFO_BLOCK      =
     {

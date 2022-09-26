@@ -21,7 +21,6 @@
 #define __ERRORS_HPP__
 
 #include <string>
-#include <string.h>
 #include <errno.h>
 
 
@@ -29,23 +28,34 @@ namespace Err
 {
     enum
     {
+        // Success
         OK = 0,
+
+        // Generic
         UNKNOWN,
+        EMPTY,
         INVALID_PARAMETER,
+        INVALID_FORMAT,
         OUT_OF_RANGE,
+        OUT_OF_MEMORY,
+
+        // Files
+        FILE_NOT_FOUND,
+
+        // TODO: Clean up
+        READ_FAILED,
+        WRITE_FAILED,
+        CANNOT_OPEN,
+        NO_PERMISSION,      
+        ALREADY_OPEN,
+        NOT_OPEN,
         INIT_FAILED,
         NOT_INITIALIZED,
         NOT_FOUND,
-        NOT_OPEN,
         NO_DEVICE,
-        ALREADY_OPEN,
-        CANNOT_OPEN,
         CANNOT_CREATE,
         CANNOT_SET_PROP,
-        READ_FAILED,
-        WRITE_FAILED,
         WRONG_SIZE,
-        NO_PERMISSION,      
     };
 
     std::string GetErrnoString( int e );

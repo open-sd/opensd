@@ -21,7 +21,7 @@
 #define __UINPUT_HPP__
 
 #include "uinput_device_config.hpp"
-#include "errors.hpp"
+#include "../common/errors.hpp"
 #include <linux/input.h>
 #include <linux/uinput.h>
 #include <cstdint>

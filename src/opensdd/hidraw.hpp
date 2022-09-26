@@ -21,7 +21,7 @@
 #define __HIDRAW_CPP__
 
 // Needed for return codes
-#include "errors.hpp"
+#include "../common/errors.hpp"
 // Linux
 #include <linux/hidraw.h>
 // C++

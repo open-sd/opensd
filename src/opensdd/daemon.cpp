@@ -18,8 +18,8 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "daemon.hpp"
-#include "log.hpp"
-#include "errors.hpp"
+#include "../common/log.hpp"
+#include "../common/errors.hpp"
 #include "drivers/gamepad/presets.hpp"
 // Linux
 #include <signal.h>
@@ -79,7 +79,7 @@ int Daemon::Run()
 
     // TODO: proper loop with IPC
     
-    // Loop until kepress just for testing
+    // Loop until interrupt signal
     while (gDaemonRunning)
     {
         // ZzZzZzzz...

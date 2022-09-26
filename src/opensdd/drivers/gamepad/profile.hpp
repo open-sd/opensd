@@ -22,7 +22,8 @@
 
 #include "bindings.hpp"
 #include "../../uinput_device_config.hpp"
-
+// C++
+#include <filesystem>
 
 namespace Drivers::Gamepad
 {
@@ -78,6 +79,9 @@ namespace Drivers::Gamepad
         // Map of each physical input to their respective uinput device events
         BindMap                                 map;
     };
+    
+    // Free function to load (and test) external gamepad profiles
+    int LoadGpProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf );
     
 }   // namespace Driver::Gamepad
 

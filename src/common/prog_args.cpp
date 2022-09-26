@@ -18,7 +18,7 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "prog_args.hpp"
-#include "log.hpp"
+#include "../common/log.hpp"
 
 
 int ProgArgs::HasOpt( std::string shortOpt, std::string longOpt )

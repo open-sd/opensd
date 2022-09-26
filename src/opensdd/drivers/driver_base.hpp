@@ -21,7 +21,7 @@
 #define __DRIVER_BASE_HPP__
 
 // Needed for error codes
-#include "../errors.hpp"
+#include "../../common/errors.hpp"
 // C++
 #include <atomic>
 #include <thread>
