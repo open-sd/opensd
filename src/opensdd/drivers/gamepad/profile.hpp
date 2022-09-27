@@ -22,6 +22,7 @@
 
 #include "bindings.hpp"
 #include "../../uinput_device_config.hpp"
+
 // C++
 #include <filesystem>
 

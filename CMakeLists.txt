@@ -44,6 +44,7 @@ file( GLOB OPENSD_DAEMON_SRC
         "src/common/log.cpp"
         "src/common/ini.cpp"
         "src/common/prog_args.cpp"
+        "src/common/input_event_names.cpp"
         "src/opensdd/*.cpp" 
         "src/opensdd/drivers/*.cpp" 
         "src/opensdd/drivers/gamepad/*.cpp" 

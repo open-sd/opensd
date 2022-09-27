@@ -21,6 +21,7 @@
 #include "../../../common/errors.hpp"
 #include "../../../common/log.hpp"
 #include "../../../common/ini.hpp"
+#include "../../../common/input_event_names.hpp"
 // C++
 #include <fstream>
 
