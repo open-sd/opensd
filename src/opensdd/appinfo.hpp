@@ -3,7 +3,7 @@
 //  An open-source userspace driver for Valve's Steam Deck hardware
 //
 //  Copyright 2022 seek
-//  https://gitlab.com/seek-dev/opensd
+//  https://gitlab.com/open-sd/opensd
 //  Licensed under the GNU GPLv3+
 //
 //    This program is free software: you can redistribute it and/or modify it under the terms of 
@@ -26,7 +26,7 @@
 namespace AppInfo
 {
     const std::string   PROJECT         = "OpenSD";
-    const std::string   PROJECT_PAGE    = "https://gitlab.com/seek-dev/opensd";
+    const std::string   PROJECT_PAGE    = "https://gitlab.com/open-sd/opensd";
     const std::string   APP_NAME        = "OpenSD daemon";
     const std::string   APP_SHORT_NAME  = "opensdd";
     const std::string   AUTHOR          = "seek";
@@ -46,7 +46,7 @@ namespace AppInfo
     {
         "    This program comes with ABSOLUTELY NO WARRANTY.\n"
         "    This is free software, and you are welcome to redistribute it under certain\n"
-        "    conditions.  See https://gitlab.com/seek-dev/opensd for license.\n"
+        "    conditions.  See https://gitlab.com/open-sd/opensd for license.\n"
     };
     const std::string   HELP_BLOCK      =
     {
@@ -70,7 +70,7 @@ Licensed under the GNU GPLv3+
     
     This program comes with ABSOLUTELY NO WARRANTY. 
     This is free software, and you are welcome to redistribute it under certain
-    conditions.  See https://gitlab.com/seek-dev/opensd for license.
+    conditions.  See https://gitlab.com/open-sd/opensd for license.
 
   Usage:
     

@@ -3,7 +3,7 @@
 ##  An open-source userspace driver for Valve's Steam Deck hardware
 ##
 ##  Copyright 2022 seek
-##  https://gitlab.com/seek-dev/opensd
+##  https://gitlab.com/open-sd/opensd
 ##  Licensed under the GNU GPLv3+
 ##
 ##  This program is free software: you can redistribute it and/or modify it under the terms of the 
