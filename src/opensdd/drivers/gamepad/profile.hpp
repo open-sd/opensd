@@ -82,7 +82,7 @@ namespace Drivers::Gamepad
     };
     
     // Free function to load (and test) external gamepad profiles
-    int LoadGpProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf );
+    int LoadGamepadProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf );
     
 }   // namespace Driver::Gamepad
 

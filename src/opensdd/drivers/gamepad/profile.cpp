@@ -26,7 +26,7 @@
 #include <fstream>
 
 
-int Drivers::Gamepad::LoadGpProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf )
+int Drivers::Gamepad::LoadGamepadProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf )
 {
     Profile             temp_prof = {};
     std::ifstream       file;
