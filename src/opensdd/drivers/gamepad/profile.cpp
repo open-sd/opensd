@@ -38,7 +38,7 @@ int Drivers::Gamepad::LoadGamepadProfileFromFile( std::filesystem::path filePath
     
     if (!fs::exists(filePath))
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGpProfileFromFile(): File '" + filePath.string() + "' not found." );
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGamepadProfileFromFile(): File '" + filePath.string() + "' not found." );
         return Err::CANNOT_OPEN;
     }
     
@@ -46,7 +46,7 @@ int Drivers::Gamepad::LoadGamepadProfileFromFile( std::filesystem::path filePath
     file.open( filePath );
     if (!file.is_open())
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGpProfileFromFile(): Failed to open file '" + filePath.string() + "'" );
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGamepadProfileFromFile(): Failed to open file '" + filePath.string() + "'" );
         return Err::CANNOT_OPEN;
     }
     file.close();
@@ -54,7 +54,7 @@ int Drivers::Gamepad::LoadGamepadProfileFromFile( std::filesystem::path filePath
     result = ini.LoadFile( filePath );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGpProfileFromFile(): Failed to parse file '" + filePath.string() + "'" );
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::LoadGamepadProfileFromFile(): Failed to parse file '" + filePath.string() + "'" );
         return result;
     }
     
