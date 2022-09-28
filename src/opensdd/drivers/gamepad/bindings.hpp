@@ -26,17 +26,13 @@
 
 namespace Drivers::Gamepad
 {
-    enum Dev
-    {
-        NONE,
-        GAME,
-        MOTION,
-        MOUSE,
-    };
-    
     // Shorthand enums
     enum
     {
+        NONE    = 0,
+        GAME    = 100,
+        MOTION  = 200,
+        MOUSE   = 300,
         KEY     = EV_KEY,
         BTN     = EV_KEY,
         ABS     = EV_ABS,
@@ -46,7 +42,8 @@ namespace Drivers::Gamepad
     // Event map element
     struct Binding
     {
-        Dev                     dev;            // Determines which uinput device the event is sent to
+        uint16_t                dev;            // Determines which uinput device the event is sent to
+                                                // Must be: NONE, GAME, MOTION or MOUSE
         uint16_t                type;           // Input event type
         uint16_t                code;           // Input event code
         bool                    dir;            // Axis direction.  true = Axis+, false = Axis-

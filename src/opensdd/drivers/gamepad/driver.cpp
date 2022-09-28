@@ -229,12 +229,12 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
     // Select which uinput device we need to write to
     switch (bind.dev)
     {
-        case Dev::NONE:
+        case NONE:
             // No binding, do nothing
             return;
         break;
         
-        case Dev::GAME:
+        case GAME:
             // Abort if there is no gamepad uinput device to write to
             if (mpGamepad == nullptr)
                 return;
@@ -242,14 +242,14 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 device = mpGamepad;
         break;
         
-        case Dev::MOTION:
+        case MOTION:
             if (mpMotion == nullptr)
                 return;
             else
                 device = mpMotion;
         break;
         
-        case Dev::MOUSE:
+        case MOUSE:
             if (mpMouse == nullptr)
                 return;
             else

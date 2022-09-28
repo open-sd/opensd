@@ -33,7 +33,8 @@ namespace Drivers::Gamepad::Presets
     // to leave to the user to configure.
     const Drivers::Gamepad::Profile TEMPLATE =
     {
-        .profile_name               = "Default OpenSD Profile",
+        .profile_name               = "Basic profile template",
+        .profile_desc               = "The default profile template description.",
         .features
         {
             .ff                     = false,
@@ -53,6 +54,11 @@ namespace Drivers::Gamepad::Presets
                 .l                  = 0.00,
                 .r                  = 0.00
             },
+            .trigg
+            {
+                .l                  = 0.00,
+                .r                  = 0.00
+            }
         },
         .dev
         {
@@ -135,7 +141,7 @@ namespace Drivers::Gamepad::Presets
                 .left               = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                 .right              = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
             },
-            .NONE
+            .btn
             {
                 .a                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
                 .b                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },

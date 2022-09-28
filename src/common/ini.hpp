@@ -58,6 +58,8 @@ namespace Ini
         std::vector<std::string>        GetVal( std::string section, std::string key );
         int                             SetVal( std::string section, std::string key, std::vector<std::string> vals );
         
+        void                            Clear();
+        
         IniFile();
         ~IniFile();
     };
@@ -88,6 +90,13 @@ namespace Ini
         // Converts the selected string to a floating point number and returns it.
         // Defaults to first string if no parameter is supplied.
         double                      Double( unsigned int index = 0 );
+        
+        // Returns all values as a single string separated by spaces.
+        // Used for text lines
+        std::string                 FullString();
+        
+        ValVec(){};
+        ~ValVec(){};
     };
 
 }

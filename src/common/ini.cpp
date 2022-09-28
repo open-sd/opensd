@@ -340,7 +340,7 @@ std::vector<std::string> Ini::IniFile::GetSectionList()
 std::vector<std::string> Ini::IniFile::GetKeyList( std::string section )
 {
     std::vector<std::string>    sv;
-    section = Str::Uppercase();
+    section = Str::Uppercase(section);
     
     for (auto& s : mData)
         if (Str::Uppercase(s.name) == section)
@@ -477,6 +477,13 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
 
 
 
+void Ini::IniFile::Clear()
+{
+    mData.clear();
+}
+
+
+
 Ini::IniFile::IniFile()
 {
     // Nothing to do
@@ -542,4 +549,21 @@ double Ini::ValVec::Double( unsigned int index )
     }
     
     return d;
+}
+
+
+
+std::string Ini::ValVec::FullString()
+{
+    std::string     s;
+    
+    // Concatenate all values, separated by a space.
+    for (auto& v : mData)
+        s = s + v + " ";
+        
+    // Trim trailing space.
+    if (s.ends_with(' '))
+        s = s.substr( 0, s.size() - 1 );
+        
+    return s;
 }
