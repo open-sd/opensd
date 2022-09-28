@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "ini.hpp"
 #include "log.hpp"
+#include "string_funcs.hpp"
 // C++
 #include <sstream>
 #include <fstream>
@@ -339,9 +340,10 @@ std::vector<std::string> Ini::IniFile::GetSectionList()
 std::vector<std::string> Ini::IniFile::GetKeyList( std::string section )
 {
     std::vector<std::string>    sv;
+    section = Str::Uppercase();
     
     for (auto& s : mData)
-        if (s.name == section)
+        if (Str::Uppercase(s.name) == section)
             for (auto& k : s.keys)
                 if (!k.comment)
                     sv.push_back( k.name );
@@ -353,9 +355,15 @@ std::vector<std::string> Ini::IniFile::GetKeyList( std::string section )
 
 std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string key )
 {
+    if (section.empty() || key.empty())
+    {
+        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to get value: Section or key name is blank." );
+        return {};
+    }
+    
     if (section == "NONE")
     {
-        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to set value: Use of reserved section name." );
+        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to get value: Use of reserved section name." );
         return {};
     }
     
@@ -377,11 +385,16 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
         }
     }
 
+    // For case insensitive compare
+    section = Str::Uppercase(section);
+    key = Str::Uppercase(key);
+    
+    // Loop through date looking section+key and return value
     for (auto& s : mData)
-        if (s.name == section)
+        if (Str::Uppercase(s.name) == section)
             for (auto& k : s.keys)
                 if (!k.comment)
-                    if (k.name == key)
+                    if (Str::Uppercase(k.name) == key)
                         return k.values;
     
     // Return empty vector if not found
@@ -420,12 +433,12 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
     // find section or creat it if it doesn't exist
     for (auto& s : mData)
     {
-        if (s.name == section)
+        if (Str::CIComp( s.name, section)) // Ignore case
         {
             for (auto& k : s.keys)
             {
                 if (!k.comment)
-                    if (k.name == key)
+                    if (Str::CIComp( k.name, key )) // Ignore case
                     {
                         // Key found, so update values
                         k.values.clear();
@@ -438,7 +451,7 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
             Key         new_key;
             new_key.name    = key;
             new_key.comment = false;
-            new_key.values = vals;
+            new_key.values  = vals;
             
             // Add new key to end of section
             s.keys.push_back( new_key );
