@@ -21,6 +21,7 @@
 #include "../common/log.hpp"
 #include "../common/errors.hpp"
 #include "drivers/gamepad/presets.hpp"
+#include "drivers/gamepad/profile_ini.hpp"
 // Linux
 #include <signal.h>
 
@@ -47,6 +48,9 @@ void sig_handler( int sig )
 
 int Daemon::Run()
 {
+    int         result;
+    
+    
     gLog.Write( Log::INFO, "Starting up..." );
 
 
@@ -71,8 +75,19 @@ int Daemon::Run()
     }
     
     // Load default profile
-    mGpDrv->SetProfile( Drivers::Gamepad::Presets::DEFAULT );
-    //mGpDrv->SetProfile( *Drivers::Gamepad::Presets::PRESET_LIST[0] );
+    Drivers::Gamepad::Profile       profile;
+    Drivers::Gamepad::ProfileIni    ini;
+    
+    result = ini.Load( "../test.ini", profile );
+    if (result != Err::OK)
+    {
+        gLog.Write( Log::ERROR, "Failed to load gamepad profile." );
+        return Err::NOT_INITIALIZED;
+    }
+    
+    //mGpDrv->SetProfile( Drivers::Gamepad::Presets::DEFAULT );
+    mGpDrv->SetProfile( profile );
+    
     
     // Start threaded gamepad driver
     mGpDrv->Start();

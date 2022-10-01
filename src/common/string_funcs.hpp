@@ -17,17 +17,28 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "string_conv.hpp"
-#include <sstream>
-#include <ios>
-#include <iomanip>
+#ifndef __STRING_FUNCS_HPP__
+#define __STRING_FUNCS_HPP__
+
+#include <string>
+#include <cstdint>
 
 
-std::string Uint16ToHex( uint16_t value )
+//  Some string helper functions
+namespace Str
 {
-    std::stringstream ss;
+    // Convert 16-bit interger value into a hex string
+    std::string     Uint16ToHex( uint16_t value );
     
-    ss << std::uppercase << std::setfill ('0') << std::setw( sizeof(value) * 2 ) << std::hex << value;
+    // Return uppercase copy of string
+    std::string     Uppercase( std::string s );
     
-    return ss.str();
+    // return lowercase copy of string
+    std::string     Lowercase( std::string s );
+    
+    // Case insensive string comparison
+    bool            CIComp( std::string s1, std::string s2 );
 }
+
+
+#endif // __STRING_FUNCS_HPP__

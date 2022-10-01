@@ -25,12 +25,14 @@
 // C++
 #include <filesystem>
 
+
 namespace Drivers::Gamepad
 {
     
     struct Profile
     {
         std::string                             profile_name;
+        std::string                             profile_desc;
         
         // List of features gamepad driver will enable
         struct _features
@@ -46,17 +48,15 @@ namespace Drivers::Gamepad
         // floating point numbers (0 - 1.0)
         struct _deadzone
         {
-            struct _stick
+            struct _dzlr
             {
                 double                          l;
                 double                          r;
-            } stick;
+            };
             
-            struct _touchpad
-            {
-                double                          l;
-                double                          r;
-            } pad;
+            _dzlr                               stick;
+            _dzlr                               pad;
+            _dzlr                               trigg;
         } dz;
 
         struct _devinfo
@@ -79,9 +79,6 @@ namespace Drivers::Gamepad
         // Map of each physical input to their respective uinput device events
         BindMap                                 map;
     };
-    
-    // Free function to load (and test) external gamepad profiles
-    int LoadGpProfileFromFile( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf );
     
 }   // namespace Driver::Gamepad
 

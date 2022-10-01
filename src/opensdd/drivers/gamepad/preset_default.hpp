@@ -33,6 +33,7 @@ namespace Drivers::Gamepad::Presets
     const Drivers::Gamepad::Profile DEFAULT =
     {
         .profile_name               = "Default OpenSD Profile",
+        .profile_desc               = "A basic configuration that should work for most games and provide a few extras.",
         .features
         {
             .ff                     = true,
@@ -52,6 +53,11 @@ namespace Drivers::Gamepad::Presets
                 .l                  = 0.0,
                 .r                  = 0.0
             },
+            .trigg
+            {
+                .l                  = 0.0,
+                .r                  = 0.0
+            }
         },
         .dev
         {

@@ -17,16 +17,50 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __STRING_CONV_HPP__
-#define __STRING_CONV_HPP__
+#include "string_funcs.hpp"
+#include <sstream>
+#include <ios>
+#include <iomanip>
 
 
-#include <string>
-#include <cstdint>
+std::string Str::Uint16ToHex( uint16_t value )
+{
+    std::stringstream ss;
+    
+    ss << std::uppercase << std::setfill ('0') << std::setw( sizeof(value) * 2 ) << std::hex << value;
+    
+    return ss.str();
+}
 
 
-// Some simple string <---> integer type conversions
-std::string Uint16ToHex( uint16_t value );
+
+std::string Str::Uppercase( std::string s )
+{
+    for (auto& c : s)
+        c = std::toupper(c);
+
+    return s;
+}
 
 
-#endif // __STRING_CONV_HPP__
+
+std::string Str::Lowercase( std::string s )
+{
+    for (auto& c : s)
+        c = std::tolower(c);
+        
+    return s;
+}
+
+
+
+bool Str::CIComp( std::string s1, std::string s2 )
+{
+    for (auto& c : s1)
+        c = std::tolower(c);
+
+    for (auto& c : s2)
+        c = std::tolower(c);
+
+    return (s1 == s2);
+}

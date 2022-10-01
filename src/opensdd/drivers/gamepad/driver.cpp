@@ -229,12 +229,12 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
     // Select which uinput device we need to write to
     switch (bind.dev)
     {
-        case Dev::NONE:
+        case NONE:
             // No binding, do nothing
             return;
         break;
         
-        case Dev::GAME:
+        case GAME:
             // Abort if there is no gamepad uinput device to write to
             if (mpGamepad == nullptr)
                 return;
@@ -242,14 +242,14 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 device = mpGamepad;
         break;
         
-        case Dev::MOTION:
+        case MOTION:
             if (mpMotion == nullptr)
                 return;
             else
                 device = mpMotion;
         break;
         
-        case Dev::MOUSE:
+        case MOUSE:
             if (mpMouse == nullptr)
                 return;
             else
@@ -492,7 +492,6 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     gLog.Write( Log::INFO, "Setting gamepad profile..." );
 
     // Lock driver so we can make changes
-    std::lock_guard<std::mutex>     lock( mLock );
     // Wait 50ms for threads to hit the mutex just to be safe
     usleep( 50000 );
     
@@ -669,7 +668,6 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
         // Sleep for a bit
         usleep( LIZARD_SLEEP_SEC * 1000000 );   // in microseconds
         
-        mLock.lock();
         // If lizard mode is still false, send another CLEAR_MAPPINGS report
         if (!mLizardMode)
         {
@@ -682,7 +680,6 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
                     gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::ThreadedLizardHander(): Failed to write gamepad device." );
             }
         }
-        mLock.unlock();
     }
 }
 
@@ -700,13 +697,7 @@ void Drivers::Gamepad::Driver::Run()
     // Loop while driver is running
     while (mRunning)
     {
-        // Lock public functions
-        mLock.lock();
-        
         Poll();
-        
-        // Unlock driver
-        mLock.unlock();
     }
     
     // Rejoin threads after driver exits
@@ -729,8 +720,6 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         return Err::NOT_OPEN;
     }
     
-    // Lock driver so we can make changes
-    std::lock_guard<std::mutex>     lock( mLock );
     // Wait 50ms for drivers to hit the mutex just to be safe
     usleep( 50000 );
     
@@ -754,6 +743,7 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
             gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to disable trackpad margins." );
 
         mLizardMode = false;
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): 'Lizard Mode' disabled." );
     }
     else
     {
@@ -772,6 +762,7 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
             gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to enable trackpad margins." );
 
         mLizardMode = true;
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): 'Lizard Mode' enabled." );
     }
     
     return Err::OK;

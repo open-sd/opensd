@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "hidraw.hpp"
 #include "../common/log.hpp"
-#include "string_conv.hpp"
+#include "../common/string_funcs.hpp"
 // Linux
 #include <fcntl.h>
 #include <unistd.h>
@@ -36,7 +36,8 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
     fs::path            hidraw_node;
     std::string         search_string;
     
-    search_string = Uint16ToHex( vid ) + ":" + Uint16ToHex( pid ) + "." + Uint16ToHex( iFaceNum + 1 ) + "/hidraw";
+    search_string = Str::Uint16ToHex( vid ) + ":" + Str::Uint16ToHex( pid ) + 
+                    "." + Str::Uint16ToHex( iFaceNum + 1 ) + "/hidraw";
     
     gLog.Write( Log::VERB, "Hidraw::FindHidrawNode(): Searching for device string '" + search_string + "'..." );
 
