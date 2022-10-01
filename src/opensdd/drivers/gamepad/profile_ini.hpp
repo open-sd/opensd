@@ -52,9 +52,13 @@ namespace Drivers::Gamepad
         _axisranges                 mAxisRange;
         Ini::IniFile                mIni;
         
+        void                        AddKeyEvent( uint16_t device, uint16_t code );
+        void                        AddAbsEvent( uint16_t device, uint16_t code, int32_t min, int32_t max );
+        void                        AddRelEvent( uint16_t device, uint16_t code );
+        
         void                        GetFeatEnable( std::string key, bool& rValue );
         void                        GetDeadzone( std::string key, double& rValue );
-        void                        GetAxisRange( std::string key, int32_t& rMin, int32_t& rMax );
+        void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax );
         void                        GetBinding( std::string key, Drivers::Gamepad::Binding& rBind );
         
     public:

@@ -27,6 +27,134 @@
 #include <fstream>
 
 
+void Drivers::Gamepad::ProfileIni::AddKeyEvent( uint16_t device, uint16_t code )
+{
+    bool    found = false;
+    
+    switch (device)
+    {
+        case GAME:
+            for (auto& i : mProf.dev.gamepad.key_list)
+                if (i == code)
+                    found = true;
+            if (!found)
+                mProf.dev.gamepad.key_list.push_back( code );
+        break;
+        
+        case MOTION:
+            gLog.Write( Log::DEBUG, "Driver::Gamepad::ProfileIni::AddKeyEvent(): Key events are not supported on Motion device." );
+            return;
+        break;
+        
+        case MOUSE:
+            for (auto& i : mProf.dev.mouse.key_list)
+                if (i == code)
+                    found = true;
+            if (!found)
+                mProf.dev.mouse.key_list.push_back( code );
+        break;
+        
+        case NONE:
+        default:
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::AddKeyEvent(): Invalid device parameter." );
+            return;
+        break;
+    }
+}
+
+
+
+void Drivers::Gamepad::ProfileIni::AddAbsEvent( uint16_t device, uint16_t code, int32_t min, int32_t max )
+{
+    bool    found = false;
+    
+    switch (device)
+    {
+        case GAME:
+            for (auto& i : mProf.dev.gamepad.abs_list)
+                if (i.code == code)
+                    found = true;
+                    
+            if (!found)
+            {
+                Uinput::AbsAxisInfo     axis;
+                axis.code = code;
+                axis.min = min;
+                axis.max = max;
+                mProf.dev.gamepad.abs_list.push_back( axis );
+            }
+        break;
+        
+        case MOTION:
+            for (auto& i : mProf.dev.motion.abs_list)
+                if (i.code == code)
+                    found = true;
+                    
+            if (!found)
+            {
+                Uinput::AbsAxisInfo     axis;
+                axis.code = code;
+                axis.min = min;
+                axis.max = max;
+                mProf.dev.motion.abs_list.push_back( axis );
+            }
+        break;
+        
+        case MOUSE:
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::AddKeyEvent(): Absolute axis events are not supported on Mouse device." );
+            return;
+        break;
+        
+        case NONE:
+        default:
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::AddKeyEvent(): Invalid device parameter." );
+            return;
+        break;
+    }
+}
+
+
+
+void Drivers::Gamepad::ProfileIni::AddRelEvent( uint16_t device, uint16_t code )
+{
+    bool    found = false;
+    
+    switch (device)
+    {
+        case GAME:
+            for (auto& i : mProf.dev.gamepad.rel_list)
+                if (i == code)
+                    found = true;
+            if (!found)
+                mProf.dev.gamepad.rel_list.push_back( code );
+        break;
+        
+        case MOTION:
+            for (auto& i : mProf.dev.motion.rel_list)
+                if (i == code)
+                    found = true;
+            if (!found)
+                mProf.dev.motion.rel_list.push_back( code );
+        break;
+        
+        case MOUSE:
+            for (auto& i : mProf.dev.mouse.rel_list)
+                if (i == code)
+                    found = true;
+            if (!found)
+                mProf.dev.mouse.rel_list.push_back( code );
+        break;
+        
+        case NONE:
+        default:
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::AddRelEvent(): Invalid device parameter." );
+            return;
+        break;
+    }
+}
+
+
+
 void Drivers::Gamepad::ProfileIni::GetFeatEnable( std::string key, bool& rValue )
 {
     Ini::ValVec         val;
@@ -68,13 +196,13 @@ void Drivers::Gamepad::ProfileIni::GetDeadzone( std::string key, double& rValue 
 
 
 
-void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string key, int32_t& rMin, int32_t& rMax )
+void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax )
 {
     Ini::ValVec         val;
     
     // rMin and rMax are unaltered if key is not found or invalid
     
-    val = mIni.GetVal( "AxisRanges", "HatAxisRange" );
+    val = mIni.GetVal( section, key );
     if (val.Count() < 2)
         gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetAxisRange(): Format error: " + key + 
                     " expects 2 integer values.  Ignoring." );
@@ -108,7 +236,9 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
     int                         ev_type = 0;
     int                         result;
     
+    // Find the key in the Bindings section
     val = mIni.GetVal( "Bindings", key );
+    gLog.Write( Log::DEBUG, ">>> "+key+" = "+val.String(0)+" "+val.String(1)+" "+val.String(2) );
     if (!val.Count())
     {
         gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key + 
@@ -116,10 +246,12 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
         return;
     }
 
+    // Get the the input device to bind to
     temp_str = Str::Uppercase(val.String(0));
     if (temp_str == "NONE")
         return;
     else
+    {
         if (temp_str == "GAMEPAD")
             temp_bind.dev = GAME;
         else
@@ -127,14 +259,16 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
                 temp_bind.dev = MOTION;
             else
                 if (temp_str == "MOUSE")
-                    temp_bind.dev   = MOUSE;
+                    temp_bind.dev = MOUSE;
                 else
                 {                        
                     gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key + 
                                 ": Unknown device type '" + temp_str + "'" );
                     return;
                 }
+    }
     
+    // Need 2 params to continue
     if (val.Count() < 2)
     {
         gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key + 
@@ -142,35 +276,23 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
         return;
     }
     
-    // Get uppercase copy of 2nd param and chop it to 4 chars
-    temp_str = Str::Uppercase(val.String(1));
-    sub_str = sub_str.substr(0,4);
-    // Find out what kind of event type it is
-    if ((sub_str == "BTN_") || (sub_str == "KEY_"))
-        ev_type = EV_KEY;
-    else
+    // Get 2nd param, which should be the event code, from which we extract the event type
+    temp_str = val.String(1);
+    result = EvName::GetEvType( temp_str );
+    if (result < 0)
     {
-        if (sub_str == "ABS_")
-            ev_type = EV_ABS;
-        else
-        {
-            if (sub_str == "REL")
-                ev_type = EV_REL;
-            else
-            {
-                gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key + 
-                            ": Unknown event type '" + sub_str + "'" );
-                return;
-            }
-        }
+        gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Failed to get event type. " );
+        return;
     }
-
+    ev_type = result;
+    
+    // Handle the rest based on the event type
     switch (ev_type)
     {
         case EV_KEY: // Button / key
             temp_bind.type  = EV_KEY;
 
-            result = EvName::GetCode( temp_bind.type, temp_str );
+            result = EvName::GetEvCode( temp_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key +
@@ -179,10 +301,15 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
             }
             temp_bind.code  = (uint16_t)result;
             temp_bind.dir   = false;
+            // Return the binding as a reference parameter
             rBind           = temp_bind;
+            
+            // Enable key event to the specified device
+            AddKeyEvent( temp_bind.dev, temp_bind.code );
         break;
         
-        case EV_ABS:
+        case EV_ABS: // Absolute axis event
+            // Need 3 params to continue
             if (val.Count() < 3)
             {
                 gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key +
@@ -190,8 +317,9 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
                 return;
             }
             temp_bind.type  = EV_ABS;
-
-            result = EvName::GetCode( temp_bind.type, temp_str );
+            
+            // Get the event code + any offset
+            result = EvName::GetEvCode( temp_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key +
@@ -200,6 +328,7 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
             }
             temp_bind.code  = (uint16_t)result;
 
+            // Get the direction of the axis even to bind
             if (val.String(2) == "+")
                 temp_bind.dir = true;
             else
@@ -211,13 +340,16 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
                                 ": Unhandled device type.  Ignoring." );
                     return;
                 }
+            // Return the binding as a reference parameter
             rBind = temp_bind;
+            
+            // !! The axis is not enabled enabled here, but from the GamepadAxes / MotionAxes section
         break;
         
         case EV_REL:
             temp_bind.type  = EV_REL;
 
-            result = EvName::GetCode( temp_bind.type, temp_str );
+            result = EvName::GetEvCode( temp_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key +
@@ -226,7 +358,11 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
             }
             temp_bind.code  = (uint16_t)result;
             temp_bind.dir   = false;
+            // Return the binding as a reference parameter
             rBind           = temp_bind;
+            
+            // Enable relative axis event
+            AddRelEvent( temp_bind.dev, temp_bind.code );
         break;
         
         default:
@@ -286,13 +422,49 @@ int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers:
     GetDeadzone( "LTrigg",  mProf.dz.trigg.l );
     GetDeadzone( "RTrigg",  mProf.dz.trigg.r );
 
-    // ----------------------------- [AxisRanges] section -----------------------------
-    // Default ranges are already defined, any read from the ini overwrite those values.
-    GetAxisRange( "HatAxisRange",   mAxisRange.hat.min, mAxisRange.hat.max );
-    GetAxisRange( "TriggAxisRange", mAxisRange.trigg.min, mAxisRange.trigg.max );
-    GetAxisRange( "PadAxisRange",   mAxisRange.pad.min, mAxisRange.pad.max );
-    GetAxisRange( "AccelAxisRange", mAxisRange.accel.min, mAxisRange.accel.max );
-    GetAxisRange( "GyroAxisRange",  mAxisRange.gyro.min, mAxisRange.gyro.max );
+    // ----------------------------- [GamepadAxes] section -----------------------------
+    // Iterate through list of keys and define / enable axes
+    val = mIni.GetKeyList( "GamepadAxes" );
+    for (auto& key : val.mData)
+    {
+        int32_t         min;
+        int32_t         max;
+        uint16_t        code;
+        int             result;
+        
+        result = EvName::GetEvCode( key );
+        if (result < 0)
+        {
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::Load(): Failed to enable gamepad axis '" + key +
+                        ": Event name not found." );;
+        }
+        code = (uint16_t)result;
+        
+        GetAxisRange( "GamepadAxes", key, min, max );
+        AddAbsEvent( GAME, code, min, max );
+    }
+
+    // ----------------------------- [MotionAxes] section -----------------------------
+    // Iterate through list of keys and define / enable axes
+    val = mIni.GetKeyList( "MotionAxes" );
+    for (auto& key : val.mData)
+    {
+        int32_t         min;
+        int32_t         max;
+        uint16_t        code;
+        int             result;
+        
+        result = EvName::GetEvCode( key );
+        if (result < 0)
+        {
+            gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::Load(): Failed to enable gamepad axis '" + key +
+                        ": Event name not found." );;
+        }
+        code = (uint16_t)result;
+        
+        GetAxisRange( "MotionAxes", key, min, max );
+        AddAbsEvent( MOTION, code, min, max );
+    }
     
     // ----------------------------- [Bindings] section -----------------------------
     // Dpad
@@ -399,3 +571,9 @@ Drivers::Gamepad::ProfileIni::ProfileIni()
     mAxisRange.gyro.max     = 32767;
 }
 
+
+
+Drivers::Gamepad::ProfileIni::~ProfileIni()
+{
+    mIni.Clear();
+}

@@ -69,7 +69,8 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
         std::string                 t_str;
         bool                        ignore = false;
         
-       
+        ++line_count;
+   
         // parse line by whitespace into a vector
         while (ss >> t_str)
             t_vec.push_back(t_str);
@@ -116,7 +117,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                         
                         for (auto& c : test_str)
                         {
-                            if (!std::isalnum(c))
+                            if (!((std::isalnum(c)) || (c == '_')))
                             {
                                 gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line " + std::to_string(line_count) + 
                                             ": Section name contains invalid characters.  Aborting." );
@@ -169,7 +170,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                                 {
                                     for (auto& c : t_vec.front())
                                     {
-                                        if (!std::isalnum( c ))
+                                        if (!((std::isalnum(c)) || (c == '_')))
                                         {
                                             gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line "  + std::to_string(line_count) + 
                                                         ": Key name contains invalid characters.  Ignoring line." );
@@ -199,7 +200,6 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                 }
             }
         }
-        ++line_count;
     }
     
     gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Parsed " + std::to_string(line_count) + " lines, " +
@@ -367,18 +367,18 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
         return {};
     }
     
-    for (auto& s : section)
+    for (auto& c : section)
     {
-        if (!isalnum(s))
+        if (!((std::isalnum(c)) || (c == '_')))
         {
             gLog.Write( Log::DEBUG, "Ini::IniFile::GetVal(): Failed to get value: Invalid section name." );
             return {};
         }
     }
 
-    for (auto& s : key)
+    for (auto& c : key)
     {
-        if (!isalnum(s))
+        if (!((std::isalnum(c)) || (c == '_')))
         {
             gLog.Write( Log::DEBUG, "Ini::IniFile::GetVal(): Failed to get value: Invalid key name." );
             return {};
@@ -412,18 +412,18 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
         return Err::INVALID_PARAMETER;
     }
     
-    for (auto& s : section)
+    for (auto& c : section)
     {
-        if (!isalnum(s))
+        if (!((std::isalnum(c)) || (c == '_')))
         {
             gLog.Write( Log::DEBUG, "Ini::IniFile::SetVal(): Failed to set value: Invalid section name." );
             return Err::INVALID_PARAMETER;
         }
     }
 
-    for (auto& s : key)
+    for (auto& c : key)
     {
-        if (!isalnum(s))
+        if (!((std::isalnum(c)) || (c == '_')))
         {
             gLog.Write( Log::DEBUG, "Ini::IniFile::SetVal(): Failed to set value: Invalid key name." );
             return Err::INVALID_PARAMETER;

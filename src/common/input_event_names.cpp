@@ -19,11 +19,78 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "input_event_names.hpp"
 #include "log.hpp"
+#include "string_funcs.hpp"
 
 
-int EvName::GetCode( uint16_t evType, std::string codeName )
+int EvName::GetEvType( std::string codeName )
 {
-    switch (evType)
+    if (codeName.empty())
+    {
+        gLog.Write( Log::DEBUG, "EvName::GetEvType(): Empty string paramater. " );
+        return -1;
+    }
+    
+    // Derive the event type from the prefix
+    codeName = Str::Uppercase( codeName.substr( 0, 4 ) );
+    if ((codeName == "KEY_") || (codeName == "BTN_"))
+        return EV_KEY;
+    else
+        if (codeName == "ABS_")
+            return EV_ABS;
+        else
+            if (codeName == "REL_")
+                return EV_REL;
+
+    gLog.Write( Log::DEBUG, "EvName::GetEvType(): Unknown or unsupported event type. " );
+    return -1;
+}
+
+
+
+int EvName::GetEvCode( std::string codeName )
+{
+    int             result;
+    bool            has_offset = false;
+    int             code_val;
+    int             offset = 0;
+    std::string     pfx;
+    std::string     sfx;
+    
+       
+    result = EvName::GetEvType( codeName );
+    if (result < 0)
+    {
+        gLog.Write( Log::DEBUG, "EvName::GetEvCode(): Failed to get event type. " );
+        return -1;
+    }
+    
+    // Check for offset value (i.e. ABS_X+13)
+    for (auto& c : codeName)
+    {
+        if (c == '+')
+            has_offset = true;
+        else
+            if (has_offset)
+                sfx += c;
+            else
+                pfx += c;
+    }
+
+    if ((has_offset) && (sfx.size()))
+    {
+        try 
+        { 
+            offset = std::stoi( sfx ); 
+        } 
+        catch (...)
+        {
+            gLog.Write( Log::DEBUG, "EvName::GetCode(): Invalid event code offset value." );
+            return -1;
+        }
+    }
+
+    // Switch on detected event type
+    switch (result)
     {
         case EV_KEY:
             // Make sure key name exists in map
@@ -33,8 +100,14 @@ int EvName::GetCode( uint16_t evType, std::string codeName )
                 return -1;
             }
             
-            // Return with mapped event code
-            return KEY_MAP.at( codeName );
+            // Add offset and check max event code
+            code_val = KEY_MAP.at( codeName ) + offset;
+            if (code_val >= KEY_MAX)
+            {
+                gLog.Write( Log::DEBUG, "EvName::GetCode(): KEY event code out of range." );
+                return -1;
+            }
+            return code_val;
         break;
         
         case EV_ABS:
@@ -45,8 +118,14 @@ int EvName::GetCode( uint16_t evType, std::string codeName )
                 return -1;
             }
             
-            // Return with mapped event code
-            return ABS_MAP.at( codeName );
+            // Add offset and check max event code
+            code_val = ABS_MAP.at( codeName ) + offset;
+            if (code_val >= ABS_MAX)
+            {
+                gLog.Write( Log::DEBUG, "EvName::GetCode(): ABS event code out of range." );
+                return -1;
+            }
+            return code_val;
         break;
         
         case EV_REL:
@@ -54,8 +133,14 @@ int EvName::GetCode( uint16_t evType, std::string codeName )
             if (!REL_MAP.count( codeName ))
                 return -1;
             
-            // Return with mapped event code
-            return REL_MAP.at( codeName );
+            // Add offset and check max event code
+            code_val = REL_MAP.at( codeName ) + offset;
+            if (code_val >= REL_MAX)
+            {
+                gLog.Write( Log::DEBUG, "EvName::GetCode(): REL event code out of range." );
+                return -1;
+            }
+            return code_val;
         break;
         
         default:

@@ -766,8 +766,8 @@ namespace EvName
     };
     
     
-    
-    int GetCode( uint16_t evType, std::string codeName );
+    int GetEvType( std::string codeName);
+    int GetEvCode( std::string codeName );
     
 } // namespace EvName
 
