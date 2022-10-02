@@ -413,6 +413,7 @@ int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers:
     GetFeatEnable( "MotionDevice",  mProf.features.motion );
     GetFeatEnable( "MouseDevice",   mProf.features.mouse );
     GetFeatEnable( "LizardMode",    mProf.features.lizard );
+    GetFeatEnable( "RawSticks" ,    mProf.features.raw_sticks );
 
     // ----------------------------- [Deadzone] section -----------------------------
     GetDeadzone( "LStick",  mProf.dz.stick.l );

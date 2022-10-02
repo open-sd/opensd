@@ -40,7 +40,8 @@ namespace Drivers::Gamepad::Presets
             .ff                     = false,
             .motion                 = false,
             .mouse                  = false,
-            .lizard                 = false
+            .lizard                 = false,
+            .raw_sticks             = false
         },
         .dz
         {
