@@ -30,7 +30,7 @@
 #include <ctime>
 
 
-void FilterStick( double& rX, double& rY, double deadzone, double scale )
+void FilterStickCoords( double& rX, double& rY, double deadzone, double scale )
 {
     double mag = sqrt( rX * rX + rY * rY );
     double ang = atan2( rY, rX );
@@ -48,6 +48,30 @@ void FilterStick( double& rX, double& rY, double deadzone, double scale )
         mag = (mag - deadzone) * scale;
         // Clip magnitude to unit vector
         mag = (mag > 1.0) ? 1.0 : mag;
+        // Translate polar coordinates back to cartesian
+        rX = mag * cos(ang);
+        rY = mag * sin(ang);
+    }
+}
+
+
+
+void FilterPadCoords( double& rX, double& rY, double deadzone, double scale )
+{
+    double mag = sqrt( rX * rX + rY * rY );
+    double ang = atan2( rY, rX );
+
+    // Check if vector magnitude is inside deadzone
+    if (mag < deadzone)
+    {
+        // Clip low input inside deadzone
+        rX = 0;
+        rY = 0;
+    }
+    else
+    {
+        // Rescale stick outside deadzone
+        mag = (mag - deadzone) * scale;
         // Translate polar coordinates back to cartesian
         rX = mag * cos(ang);
         rY = mag * sin(ang);
@@ -189,18 +213,18 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
     // Sticks
     mState.stick.l.x            = (double)pIr->l_stick_x * STICK_X_AXIS_MULT;
     mState.stick.l.y            = (double)pIr->l_stick_y * STICK_Y_AXIS_MULT;
-    // Stick vectorization & deadzones
-    if (!mState.stick.raw)
-    {
-        FilterStick( mState.stick.l.x, mState.stick.l.y, mState.stick.l.deadzone, mState.stick.l.scale );
-        FilterStick( mState.stick.r.x, mState.stick.r.y, mState.stick.r.deadzone, mState.stick.r.scale );
-    }
     mState.stick.l.touch        = pIr->l_stick_touch;
     mState.stick.l.force        = (((double)pIr->l_stick_force > STICK_FORCE_MAX) ? STICK_FORCE_MAX : (double)pIr->l_stick_force) * STICK_FORCE_MULT;
     mState.stick.r.x            = (double)pIr->r_stick_x * STICK_X_AXIS_MULT;
     mState.stick.r.y            = (double)pIr->r_stick_y * STICK_Y_AXIS_MULT;
     mState.stick.r.touch        = pIr->r_stick_touch;
     mState.stick.r.force        = (((double)pIr->r_stick_force > STICK_FORCE_MAX) ? STICK_FORCE_MAX : (double)pIr->r_stick_force) * STICK_FORCE_MULT;
+    // Stick vectorization & deadzones
+    if (mState.stick.filtered)
+    {
+        FilterStickCoords( mState.stick.l.x, mState.stick.l.y, mState.stick.l.deadzone, mState.stick.l.scale );
+        FilterStickCoords( mState.stick.r.x, mState.stick.r.y, mState.stick.r.deadzone, mState.stick.r.scale );
+    }
     // Pads
     mState.pad.l.x              = (double)pIr->l_pad_x * PAD_X_AXIS_MULT;
     mState.pad.l.y              = (double)pIr->l_pad_y * PAD_Y_AXIS_MULT;
@@ -242,6 +266,12 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
         // Delta decay / inertia
         mState.pad.r.dx *= .95;
         mState.pad.r.dy *= .95;
+    }
+    // Trackpad deadzones
+    if (mState.pad.filtered)
+    {
+        FilterPadCoords( mState.pad.l.x, mState.pad.l.y, mState.pad.l.deadzone, mState.pad.l.scale );
+        FilterPadCoords( mState.pad.r.x, mState.pad.r.y, mState.pad.r.deadzone, mState.pad.r.scale );
     }
     
     // Accelerometers
@@ -606,7 +636,8 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     mMap = rProf.map;
     
     // Set Deadzones
-    SetRawSticks( rProf.features.raw_sticks );
+    SetStickFiltering( rProf.features.filter_sticks );
+    SetPadFiltering( rProf.features.filter_pads );
     SetDeadzone( AxisEnum::L_STICK, rProf.dz.stick.l );
     SetDeadzone( AxisEnum::R_STICK, rProf.dz.stick.r );
     SetDeadzone( AxisEnum::L_PAD,   rProf.dz.pad.l );
@@ -852,9 +883,16 @@ void Drivers::Gamepad::Driver::SetDeadzone( AxisEnum ax, double dz )
 
 
 
-void Drivers::Gamepad::Driver::SetRawSticks( bool enabled )
+void Drivers::Gamepad::Driver::SetStickFiltering( bool enabled )
 {
-    mState.stick.raw = enabled;
+    mState.stick.filtered = enabled;
+}
+
+
+
+void Drivers::Gamepad::Driver::SetPadFiltering( bool enabled )
+{
+    mState.pad.filtered = enabled;
 }
 
 

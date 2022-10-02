@@ -90,7 +90,7 @@ namespace Drivers::Gamepad
         {
             _stick          l;
             _stick          r;
-            bool            raw;
+            bool            filtered;
         } stick;
 
         struct _touchpad
@@ -114,6 +114,7 @@ namespace Drivers::Gamepad
         {
             _touchpad       l;
             _touchpad       r;
+            bool            filtered;
         } pad;
 
         struct _accel

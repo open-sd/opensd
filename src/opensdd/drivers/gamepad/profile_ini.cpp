@@ -179,7 +179,7 @@ void Drivers::Gamepad::ProfileIni::GetDeadzone( std::string key, double& rValue 
     
     // rValue is unaltered (i.e. uses default) if key is not found
 
-    val = mIni.GetVal( "Deadzone", key );
+    val = mIni.GetVal( "Deadzones", key );
     if (val.Count())
     {
         double v = val.Double();
@@ -238,7 +238,6 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
     
     // Find the key in the Bindings section
     val = mIni.GetVal( "Bindings", key );
-    gLog.Write( Log::DEBUG, ">>> "+key+" = "+val.String(0)+" "+val.String(1)+" "+val.String(2) );
     if (!val.Count())
     {
         gLog.Write( Log::DEBUG, "Drivers::Gamepad::ProfileIni::GetBinding(): Error in binding " + key + 
@@ -409,11 +408,12 @@ int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers:
         mProf.profile_desc = val.FullString();
     
     // ----------------------------- [Features] section -----------------------------
-    GetFeatEnable( "ForceFeedback", mProf.features.ff );
-    GetFeatEnable( "MotionDevice",  mProf.features.motion );
-    GetFeatEnable( "MouseDevice",   mProf.features.mouse );
-    GetFeatEnable( "LizardMode",    mProf.features.lizard );
-    GetFeatEnable( "RawSticks" ,    mProf.features.raw_sticks );
+    GetFeatEnable( "ForceFeedback",     mProf.features.ff );
+    GetFeatEnable( "MotionDevice",      mProf.features.motion );
+    GetFeatEnable( "MouseDevice",       mProf.features.mouse );
+    GetFeatEnable( "LizardMode",        mProf.features.lizard );
+    GetFeatEnable( "StickFiltering",    mProf.features.filter_sticks );
+    GetFeatEnable( "TrackpadFiltering", mProf.features.filter_pads );
 
     // ----------------------------- [Deadzone] section -----------------------------
     GetDeadzone( "LStick",  mProf.dz.stick.l );
