@@ -30,6 +30,56 @@
 #include <ctime>
 
 
+void FilterStickCoords( double& rX, double& rY, double deadzone, double scale )
+{
+    double mag = sqrt( rX * rX + rY * rY );
+    double ang = atan2( rY, rX );
+
+    // Check if vector magnitude is inside deadzone
+    if (mag < deadzone)
+    {
+        // Clip low input inside deadzone
+        rX = 0;
+        rY = 0;
+    }
+    else
+    {
+        // Rescale stick outside deadzone
+        mag = (mag - deadzone) * scale;
+        // Clip magnitude to unit vector
+        mag = (mag > 1.0) ? 1.0 : mag;
+        // Translate polar coordinates back to cartesian
+        rX = mag * cos(ang);
+        rY = mag * sin(ang);
+    }
+}
+
+
+
+void FilterPadCoords( double& rX, double& rY, double deadzone, double scale )
+{
+    double mag = sqrt( rX * rX + rY * rY );
+    double ang = atan2( rY, rX );
+
+    // Check if vector magnitude is inside deadzone
+    if (mag < deadzone)
+    {
+        // Clip low input inside deadzone
+        rX = 0;
+        rY = 0;
+    }
+    else
+    {
+        // Rescale stick outside deadzone
+        mag = (mag - deadzone) * scale;
+        // Translate polar coordinates back to cartesian
+        rX = mag * cos(ang);
+        rY = mag * sin(ang);
+    }
+}
+
+
+
 int Drivers::Gamepad::Driver::OpenHid()
 {
     int                 result;
@@ -158,8 +208,13 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
     mState.btn.steam            = pIr->steam;
     mState.btn.quick_access     = pIr->quick_access;
     // Triggers
-    mState.trigg.l              = (double)pIr->l_trigg * TRIGG_AXIS_MULT;
-    mState.trigg.r              = (double)pIr->r_trigg * TRIGG_AXIS_MULT;
+    mState.trigg.l.z            = (double)pIr->l_trigg * TRIGG_AXIS_MULT;
+    mState.trigg.r.z            = (double)pIr->r_trigg * TRIGG_AXIS_MULT;
+    // Trigger deadzones
+    if (mState.trigg.l.deadzone > 0)
+        mState.trigg.l.z = (mState.trigg.l.z < mState.trigg.l.deadzone) ? 0 : (mState.trigg.l.z - mState.trigg.l.deadzone) * mState.trigg.l.scale;
+    if (mState.trigg.r.deadzone > 0)
+        mState.trigg.r.z = (mState.trigg.r.z < mState.trigg.r.deadzone) ? 0 : (mState.trigg.r.z - mState.trigg.r.deadzone) * mState.trigg.r.scale;
     // Sticks
     mState.stick.l.x            = (double)pIr->l_stick_x * STICK_X_AXIS_MULT;
     mState.stick.l.y            = (double)pIr->l_stick_y * STICK_Y_AXIS_MULT;
@@ -169,6 +224,12 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
     mState.stick.r.y            = (double)pIr->r_stick_y * STICK_Y_AXIS_MULT;
     mState.stick.r.touch        = pIr->r_stick_touch;
     mState.stick.r.force        = (((double)pIr->r_stick_force > STICK_FORCE_MAX) ? STICK_FORCE_MAX : (double)pIr->r_stick_force) * STICK_FORCE_MULT;
+    // Stick vectorization & deadzones
+    if (mState.stick.filtered)
+    {
+        FilterStickCoords( mState.stick.l.x, mState.stick.l.y, mState.stick.l.deadzone, mState.stick.l.scale );
+        FilterStickCoords( mState.stick.r.x, mState.stick.r.y, mState.stick.r.deadzone, mState.stick.r.scale );
+    }
     // Pads
     mState.pad.l.x              = (double)pIr->l_pad_x * PAD_X_AXIS_MULT;
     mState.pad.l.y              = (double)pIr->l_pad_y * PAD_Y_AXIS_MULT;
@@ -210,6 +271,12 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
         // Delta decay / inertia
         mState.pad.r.dx *= .95;
         mState.pad.r.dy *= .95;
+    }
+    // Trackpad deadzones
+    if (mState.pad.filtered)
+    {
+        FilterPadCoords( mState.pad.l.x, mState.pad.l.y, mState.pad.l.deadzone, mState.pad.l.scale );
+        FilterPadCoords( mState.pad.r.x, mState.pad.r.y, mState.pad.r.deadzone, mState.pad.r.scale );
     }
     
     // Accelerometers
@@ -424,8 +491,8 @@ void Drivers::Gamepad::Driver::Translate()
     TransEvent( mMap.btn.options,       mState.btn.options,         BindMode::BUTTON );
     TransEvent( mMap.btn.steam,         mState.btn.steam,           BindMode::BUTTON );
     TransEvent( mMap.btn.quick_access,  mState.btn.quick_access,    BindMode::BUTTON );
-    TransEvent( mMap.trigg.l,           mState.trigg.l,             BindMode::PRESSURE );
-    TransEvent( mMap.trigg.r,           mState.trigg.r,             BindMode::PRESSURE );
+    TransEvent( mMap.trigg.l,           mState.trigg.l.z,           BindMode::PRESSURE );
+    TransEvent( mMap.trigg.r,           mState.trigg.r.z,           BindMode::PRESSURE );
     TransEvent( mMap.stick.l.up,        mState.stick.l.y,           BindMode::AXIS_MINUS );
     TransEvent( mMap.stick.l.down,      mState.stick.l.y,           BindMode::AXIS_PLUS );
     TransEvent( mMap.stick.l.left,      mState.stick.l.x,           BindMode::AXIS_MINUS );
@@ -508,7 +575,7 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     cfg.deviceinfo.ver          = 0x0001;
     cfg.features.enable_keys    = true;
     cfg.features.enable_abs     = true;
-    cfg.features.enable_rel     = false;
+    cfg.features.enable_rel     = true;
     cfg.features.enable_ff      = rProf.features.ff;
     cfg.key_list                = rProf.dev.gamepad.key_list;
     cfg.abs_list                = rProf.dev.gamepad.abs_list;
@@ -533,7 +600,7 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
         cfg.features.enable_keys    = false;
         cfg.features.enable_abs     = true;
         cfg.features.enable_rel     = false;
-        cfg.features.enable_ff      = rProf.features.ff;
+        cfg.features.enable_ff      = false;
         cfg.key_list.clear();
         cfg.abs_list                = rProf.dev.motion.abs_list;
         cfg.rel_list.clear();
@@ -572,6 +639,16 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
       
     // Set bindings
     mMap = rProf.map;
+    
+    // Set Deadzones
+    SetStickFiltering( rProf.features.filter_sticks );
+    SetPadFiltering( rProf.features.filter_pads );
+    SetDeadzone( AxisEnum::L_STICK, rProf.dz.stick.l );
+    SetDeadzone( AxisEnum::R_STICK, rProf.dz.stick.r );
+    SetDeadzone( AxisEnum::L_PAD,   rProf.dz.pad.l );
+    SetDeadzone( AxisEnum::R_PAD,   rProf.dz.pad.r );
+    SetDeadzone( AxisEnum::L_TRIGG, rProf.dz.trigg.l );
+    SetDeadzone( AxisEnum::R_TRIGG, rProf.dz.trigg.r );
     
     // Done
     return Err::OK;
@@ -766,6 +843,61 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
     }
     
     return Err::OK;
+}
+
+
+
+void Drivers::Gamepad::Driver::SetDeadzone( AxisEnum ax, double dz )
+{
+    dz = (dz < 0) ? 0 : dz;
+    dz = (dz > 0.9) ? 0.9 : dz;
+    
+    switch (ax)
+    {
+        case AxisEnum::L_STICK:
+            mState.stick.l.deadzone = dz;
+            mState.stick.l.scale = (1.0 / (1.0 - dz));
+        break;
+        
+        case AxisEnum::R_STICK:
+            mState.stick.r.deadzone = dz;
+            mState.stick.r.scale = (1.0 / (1.0 - dz));
+        break;
+
+        case AxisEnum::L_PAD:
+            mState.pad.l.deadzone = dz;
+            mState.pad.l.scale = (1.0 / (1.0 - dz));
+        break;
+        
+        case AxisEnum::R_PAD:
+            mState.pad.r.deadzone = dz;
+            mState.pad.r.scale = (1.0 / (1.0 - dz));
+        break;
+
+        case AxisEnum::L_TRIGG:
+            mState.trigg.l.deadzone = dz;
+            mState.trigg.l.scale = (1.0 / (1.0 - dz));
+        break;
+        
+        case AxisEnum::R_TRIGG:
+            mState.trigg.r.deadzone = dz;
+            mState.trigg.r.scale = (1.0 / (1.0 - dz));
+        break;
+    }
+}
+
+
+
+void Drivers::Gamepad::Driver::SetStickFiltering( bool enabled )
+{
+    mState.stick.filtered = enabled;
+}
+
+
+
+void Drivers::Gamepad::Driver::SetPadFiltering( bool enabled )
+{
+    mState.pad.filtered = enabled;
 }
 
 

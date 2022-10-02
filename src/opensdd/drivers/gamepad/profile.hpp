@@ -41,6 +41,8 @@ namespace Drivers::Gamepad
             bool                                motion;
             bool                                mouse;
             bool                                lizard;
+            bool                                filter_sticks;
+            bool                                filter_pads;
         } features;
 
         // Stick deazone profiles

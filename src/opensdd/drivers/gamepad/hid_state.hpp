@@ -60,28 +60,42 @@ namespace Drivers::Gamepad
 
         struct _trigg
         {
-            double          l;
-            double          r;
+            // Sensor
+            double          z;
+            // Configuration
+            double          deadzone;
+            double          scale;
+        };
+        
+        struct _triggs
+        {
+            _trigg          l;
+            _trigg          r;
         } trigg;
 
         // Reusable scoped struct
         struct _stick
         {
+            // Sensors
             double          x;
             double          y;
             bool            touch;
             double          force;
+            // Configuration
             double          deadzone;
+            double          scale;
         };
 
         struct _sticks
         {
             _stick          l;
             _stick          r;
+            bool            filtered;
         } stick;
 
         struct _touchpad
-        {        
+        {
+            // Sensors
             double          x;
             double          y;
             double          sx;
@@ -91,13 +105,16 @@ namespace Drivers::Gamepad
             bool            touch;
             bool            press;
             double          force;
+            // Configuration
             double          deadzone;
+            double          scale;
         };
 
         struct _touchpads
         {
             _touchpad       l;
             _touchpad       r;
+            bool            filtered;
         } pad;
 
         struct _accel

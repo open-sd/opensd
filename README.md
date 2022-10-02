@@ -111,6 +111,8 @@ Feature progress:
         - [x]   Completely mappable
         - [x]   Universal binding system
         - [x]   Profile support
+        - [x]   Profile ini loading
+        - [ ]   Configuration directories
         - [x]   Multithreaded
         - [x]   Buttons
         - [x]   Sticks
@@ -120,7 +122,7 @@ Feature progress:
         - [x]   "Lizard Mode" control
         - [x]   Mouse emuation
         - [ ]   Force-feedback
-        - [ ]   Deadzones
+        - [x]   Deadzones
     - [ ]   Backlight driver
         - [ ]   Backend interface
         - [ ]   Manual control

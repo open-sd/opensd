@@ -84,6 +84,9 @@ namespace Drivers::Gamepad
     public:
         int                     SetProfile( const Drivers::Gamepad::Profile& rProf );
         int                     SetLizardMode( bool enabled );
+        void                    SetDeadzone( AxisEnum axis, double dz );
+        void                    SetStickFiltering( bool enabled );
+        void                    SetPadFiltering( bool enabled );
         void                    Run();
 
         Driver();
