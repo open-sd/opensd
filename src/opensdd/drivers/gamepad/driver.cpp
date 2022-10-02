@@ -210,6 +210,11 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
     // Triggers
     mState.trigg.l.z            = (double)pIr->l_trigg * TRIGG_AXIS_MULT;
     mState.trigg.r.z            = (double)pIr->r_trigg * TRIGG_AXIS_MULT;
+    // Trigger deadzones
+    if (mState.trigg.l.deadzone > 0)
+        mState.trigg.l.z = (mState.trigg.l.z < mState.trigg.l.deadzone) ? 0 : (mState.trigg.l.z - mState.trigg.l.deadzone) * mState.trigg.l.scale;
+    if (mState.trigg.r.deadzone > 0)
+        mState.trigg.r.z = (mState.trigg.r.z < mState.trigg.r.deadzone) ? 0 : (mState.trigg.r.z - mState.trigg.r.deadzone) * mState.trigg.r.scale;
     // Sticks
     mState.stick.l.x            = (double)pIr->l_stick_x * STICK_X_AXIS_MULT;
     mState.stick.l.y            = (double)pIr->l_stick_y * STICK_Y_AXIS_MULT;
