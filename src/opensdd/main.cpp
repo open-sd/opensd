@@ -20,30 +20,60 @@
 #include "../common/log.hpp"
 #include "../common/prog_args.hpp"
 #include "daemon.hpp"
-#include "appinfo.hpp"
+#include "config.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
 
 
+
+const std::string   INFO_BLOCK      =
+{
+    "OpenSD daemon\n"
+    "Copyright 2022 seek\n"
+    "Version " + Config::VERSION_STR + "\n"
+    "https://gitlab.com/open-sd/opensd\n"
+    "Licensed under the GNU GPLv3+\n"
+};
+
+const std::string   LICENSE_BLOCK =
+{
+    "    This program comes with ABSOLUTELY NO WARRANTY.\n"
+    "    This is free software, and you are welcome to redistribute it under certain\n"
+    "    conditions.  See https://gitlab.com/open-sd/opensd for license.\n"
+};
+
+const std::string   HELP_BLOCK =
+{
+    "  Usage:\n"
+    "\n"
+    "    -h    --help             Show this help message.\n"
+    "    -v    --version          Output version number and exit.\n"
+    "    -l    --log-level        Set minumum logging level.  Default: 'warn'\n"
+    "                             Valid options are:\n"
+    "                                 verbose, debug, info, warn, error\n"
+};
+
+
+
 void ShowInfoLine()
 {
-    std::cout << AppInfo::INFO_BLOCK << std::endl;
-    std::cout << AppInfo::LICENSE_BLOCK << std::endl;
+    std::cout << INFO_BLOCK << std::endl;
+    std::cout << LICENSE_BLOCK << std::endl;
 }
 
 
 
 void ShowHelp()
 {
-    std::cout << AppInfo::HELP_BLOCK << std::endl;
+    std::cout << HELP_BLOCK << std::endl;
 }
 
 
 
 void ShowVersion()
 {
-    std::cout << AppInfo::MAJOR_VER << "." << AppInfo::MINOR_VER << std::endl;
+    std::cout << Config::VERSION_STR << std::endl;
 }
 
 

@@ -19,7 +19,7 @@
 ####################################################################################################
 cmake_minimum_required( VERSION 3.10 )
 
-project( OpenSD )
+project( OpenSD VERSION 0.34 )
 
 # Compiler settings
 set( CMAKE_CXX_STANDARD 20 )
@@ -30,7 +30,7 @@ set( CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall" )
 set( CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall -O2" )
 set( CMAKE_BUILD_TYPE Release )
 
-# Path for extra cmake mocules
+# Path for extra cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/" )
 
 # Executable names
@@ -62,6 +62,21 @@ file( GLOB OPENSD_GUI_SRC
         "src/opensd-gui/*.cpp" 
     )
 
+# OpenSD data files
+set( OPENSD_CONFIG_FILE "${PROJECT_SOURCE_DIR}/data/config/config.ini" )
+file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.ini" )
+
+# Global project configuration
+set( INSTALL_DATA_DIR "share/opensd/" )
+set( INSTALL_DATA_CONFIG_DIR "${INSTALL_DATA_DIR}/config/" )
+set( INSTALL_DATA_PROFILE_DIR "${INSTALL_DATA_DIR}/profiles/" )
+set( BUILD_DATA_CONFIG_DIR "${PROJECT_BINARY_DIR}/data/" )
+set( BUILD_DATA_PROFILE_DIR "${PROJECT_BINARY_DIR}/data/profiles/" )
+set( DEFAULT_CONFIG_FILENAME "config.ini" )
+set( DEFAULT_PROFILE_FILENAME "default.ini" )
+configure_file( "${PROJECT_SOURCE_DIR}/src/common/config.hpp.in" "${PROJECT_BINARY_DIR}/gen/config.hpp" )
+include_directories( "${PROJECT_BINARY_DIR}/gen/" )
+
 # Build options
 option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" ON )
 option( BUILD_CLI "Build OpenSD CLI tool (opensd-cli)" OFF )
@@ -72,6 +87,7 @@ if( BUILD_DAEMON )
     add_executable( "${OPENSD_DAEMON_BIN}" "${OPENSD_DAEMON_SRC}" )
     target_compile_options( "${OPENSD_DAEMON_BIN}" PUBLIC -Wall -Wextra )
     target_link_libraries( "${OPENSD_DAEMON_BIN}" )
+    install( TARGETS "${OPENSD_DAEMON_BIN}" CONFIGURATIONS Release DESTINATION bin )
 endif( BUILD_DAEMON )
 
 # Build CLI tool binary
@@ -84,4 +100,15 @@ if( BUILD_GUI )
     # TODO
 endif( BUILD_GUI )
 
-install( TARGETS "${OPENSD_DAEMON_BIN}" CONFIGURATIONS Release DESTINATION bin )
+# Copy data files to build directory for development and testing on systems 
+# where OpenSD is not already installed
+add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
+                    COMMAND ${CMAKE_COMMAND} -E make_directory "${BUILD_DATA_PROFILE_DIR}" )
+add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
+                    COMMAND ${CMAKE_COMMAND} -E copy "${OPENSD_CONFIG_FILE}" "${BUILD_DATA_CONFIG_DIR}" )
+add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
+                    COMMAND ${CMAKE_COMMAND} -E copy ${OPENSD_PROFILE_FILES} "${BUILD_DATA_PROFILE_DIR}" )
+
+# Data files to be installed
+install( FILES ${OPENSD_CONFIG_FILE} DESTINATION "${INSTALL_DATA_CONFIG_DIR}" )
+install( FILES ${OPENSD_PROFILE_FILES} DESTINATION "${INSTALL_DATA_PROFILE_DIR}" )

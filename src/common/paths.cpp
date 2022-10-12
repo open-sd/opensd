@@ -17,15 +17,40 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
+#include "paths.hpp"
+#include "xdg.hpp"
+#include "log.hpp"
 
 
-// Namespace for uinput virtual device profiles
-namespace Config
+bool FilePaths::IsInstalled()
 {
+    namespace fs = std::filesystem;
     
-} // namespace Config
+    fs::path            dir;
+    fs::path            file;
+    
 
+    dir = Xdg::SysDataDir();
+    if (dir.empty())
+    {
+        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): XDG system data dir is not defined." );
+        return false;
+    }
+    
+    dir += "/opensd/";
+    if (!fs::exists(dir))
+    {
+        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): Path '" + dir.string() + "' does not exist." );
+        return false;
+    }
 
-#endif // __CONFIG_HPP__
+    if (!fs::is_directory(dir))
+    {
+        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): Path '" + dir.string() + "' is not a directory." );
+        return false;
+    }
+    
+    file = dir + "
+    
+    return true;
+}

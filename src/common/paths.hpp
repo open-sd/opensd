@@ -17,25 +17,22 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __DAEMON_HPP__
-#define __DAEMON_HPP__
-
-#include "drivers/gamepad/driver.hpp"
+#ifndef __FILE_PATHS_HPP__
+#define __FILE_PATHS_HPP__
 
 
-class Daemon
+class FilePaths
 {
 private:
-    Drivers::Gamepad::Driver*       mpGpDrv;
-   
+
 public:
-    int                             Run();
-    void                            Stop();
+    bool                IsInstalled();
+    bool                HasSysConfig();
+    bool                HasDevPaths();
+    bool                HasUserConfig();
     
-    Daemon();
-    ~Daemon();
+    int                 CreateUserConfig();
 };
 
 
-
-#endif // __DAEMON_HPP__
+#endif // __FILE_PATHS_HPP__

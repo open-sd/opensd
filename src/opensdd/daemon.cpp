@@ -57,7 +57,7 @@ int Daemon::Run()
     // Set up signal handlers
     signal( SIGINT, sig_handler );
     
-    if (mGpDrv != nullptr)
+    if (mpGpDrv != nullptr)
     {
         gLog.Write( Log::ERROR, "Gamepad driver object already exists." );
         return Err::INIT_FAILED;
@@ -66,7 +66,7 @@ int Daemon::Run()
     // Create gamepad driver object
     try 
     {
-        mGpDrv = new Drivers::Gamepad::Driver;
+        mpGpDrv = new Drivers::Gamepad::Driver;
     }
     catch (...)
     {
@@ -86,11 +86,11 @@ int Daemon::Run()
     }
     
     //mGpDrv->SetProfile( Drivers::Gamepad::Presets::DEFAULT );
-    mGpDrv->SetProfile( profile );
+    mpGpDrv->SetProfile( profile );
     
     
     // Start threaded gamepad driver
-    mGpDrv->Start();
+    mpGpDrv->Start();
 
     // TODO: proper loop with IPC
     
@@ -105,7 +105,7 @@ int Daemon::Run()
     gLog.Write( Log::INFO, "Shutting down..." );
 
     // Stop gamepad driver thread
-    mGpDrv->Stop();
+    mpGpDrv->Stop();
     
     
     // Done
@@ -120,9 +120,10 @@ void Daemon::Stop()
 }
 
 
+
 Daemon::Daemon()
 {
-    mGpDrv          = nullptr;
+    mpGpDrv         = nullptr;
     gDaemonRunning  = true;
 }
 
@@ -130,9 +131,9 @@ Daemon::Daemon()
 
 Daemon::~Daemon()
 {
-    if (mGpDrv != nullptr)
-        delete mGpDrv;
+    if (mpGpDrv != nullptr)
+        delete mpGpDrv;
         
-    mGpDrv          = nullptr;
+    mpGpDrv         = nullptr;
     gDaemonRunning  = false;
 }

@@ -17,25 +17,20 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __DAEMON_HPP__
-#define __DAEMON_HPP__
-
-#include "drivers/gamepad/driver.hpp"
 
 
-class Daemon
+#include <string>
+#include <filesystem>
+#include <stdlib.h>
+
+
+namespace Xdg
 {
-private:
-    Drivers::Gamepad::Driver*       mpGpDrv;
-   
-public:
-    int                             Run();
-    void                            Stop();
-    
-    Daemon();
-    ~Daemon();
-};
-
-
-
-#endif // __DAEMON_HPP__
+    std::filesystem::path       UserHome();
+    std::filesystem::path       ConfigHome();
+    std::filesystem::path       CacheHome();
+    std::filesystem::path       DataHome();
+    std::filesystem::path       StateHome();
+    std::filesystem::path       SysConfigDir();
+    std::filesystem::path       SysDataDir();
+}
