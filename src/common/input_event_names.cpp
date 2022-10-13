@@ -26,7 +26,7 @@ int EvName::GetEvType( std::string codeName )
 {
     if (codeName.empty())
     {
-        gLog.Write( Log::DEBUG, "EvName::GetEvType(): Empty string paramater. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Empty string paramater. " );
         return -1;
     }
     
@@ -41,7 +41,7 @@ int EvName::GetEvType( std::string codeName )
             if (codeName == "REL_")
                 return EV_REL;
 
-    gLog.Write( Log::DEBUG, "EvName::GetEvType(): Unknown or unsupported event type. " );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Unknown or unsupported event type. " );
     return -1;
 }
 
@@ -60,7 +60,7 @@ int EvName::GetEvCode( std::string codeName )
     result = EvName::GetEvType( codeName );
     if (result < 0)
     {
-        gLog.Write( Log::DEBUG, "EvName::GetEvCode(): Failed to get event type. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get event type. " );
         return -1;
     }
     
@@ -84,7 +84,7 @@ int EvName::GetEvCode( std::string codeName )
         } 
         catch (...)
         {
-            gLog.Write( Log::DEBUG, "EvName::GetCode(): Invalid event code offset value." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid event code offset value." );
             return -1;
         }
     }
@@ -96,7 +96,7 @@ int EvName::GetEvCode( std::string codeName )
             // Make sure key name exists in map
             if (!KEY_MAP.count( codeName ))
             {
-                gLog.Write( Log::DEBUG, "EvName::GetCode(): Invalid or unknown KEY name specified." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid or unknown KEY name specified." );
                 return -1;
             }
             
@@ -104,7 +104,7 @@ int EvName::GetEvCode( std::string codeName )
             code_val = KEY_MAP.at( codeName ) + offset;
             if (code_val >= KEY_MAX)
             {
-                gLog.Write( Log::DEBUG, "EvName::GetCode(): KEY event code out of range." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "KEY event code out of range." );
                 return -1;
             }
             return code_val;
@@ -114,7 +114,7 @@ int EvName::GetEvCode( std::string codeName )
             // Make sure absolute axis name exists in map
             if (!ABS_MAP.count( codeName ))
             {
-                gLog.Write( Log::DEBUG, "EvName::GetCode(): Invalid or unknown ABS name specified." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid or unknown ABS name specified." );
                 return -1;
             }
             
@@ -122,7 +122,7 @@ int EvName::GetEvCode( std::string codeName )
             code_val = ABS_MAP.at( codeName ) + offset;
             if (code_val >= ABS_MAX)
             {
-                gLog.Write( Log::DEBUG, "EvName::GetCode(): ABS event code out of range." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "ABS event code out of range." );
                 return -1;
             }
             return code_val;
@@ -137,14 +137,14 @@ int EvName::GetEvCode( std::string codeName )
             code_val = REL_MAP.at( codeName ) + offset;
             if (code_val >= REL_MAX)
             {
-                gLog.Write( Log::DEBUG, "EvName::GetCode(): REL event code out of range." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "REL event code out of range." );
                 return -1;
             }
             return code_val;
         break;
         
         default:
-            gLog.Write( Log::DEBUG, "EvName::GetCode(): Invalid type specified." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid type specified." );
             return -1;
         break;
     }

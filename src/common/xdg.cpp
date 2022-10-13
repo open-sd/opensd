@@ -49,7 +49,7 @@ std::filesystem::path Xdg::ConfigHome()
     dir = UserHome();
     if (dir.empty())
     {
-        gLog.Write( Log::DEBUG, "Xdg::ConfigHome(): $HOME is not set." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "$HOME is not set." );
         return "";
     }
     
@@ -68,7 +68,7 @@ std::filesystem::path Xdg::CacheHome()
     dir = UserHome();
     if (dir.empty())
     {
-        gLog.Write( Log::DEBUG, "Xdg::CacheHome(): $HOME is not set." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "$HOME is not set." );
         return "";
     }
     
@@ -87,7 +87,7 @@ std::filesystem::path Xdg::DataHome()
     dir = UserHome();
     if (dir.empty())
     {
-        gLog.Write( Log::DEBUG, "Xdg::DataHome(): $HOME is not set." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "$HOME is not set." );
         return "";
     }
     
@@ -106,7 +106,7 @@ std::filesystem::path Xdg::StateHome()
     dir = UserHome();
     if (dir.empty())
     {
-        gLog.Write( Log::DEBUG, "Xdg::StateHome(): $HOME is not set." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "$HOME is not set." );
         return "";
     }
     

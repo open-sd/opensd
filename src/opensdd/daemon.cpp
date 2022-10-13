@@ -18,6 +18,7 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "daemon.hpp"
+#include "files.hpp"
 #include "../common/log.hpp"
 #include "../common/errors.hpp"
 #include "drivers/gamepad/presets.hpp"
@@ -53,9 +54,13 @@ int Daemon::Run()
     
     gLog.Write( Log::INFO, "Starting up..." );
 
-
     // Set up signal handlers
     signal( SIGINT, sig_handler );
+
+    if (!Files::IsInstalled())
+    {
+        gLog.Write( Log::WARN, "OpenSD does not appear to be installed.  Using local build files instead." );
+    }
     
     if (mpGpDrv != nullptr)
     {

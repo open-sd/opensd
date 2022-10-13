@@ -92,11 +92,11 @@ int Drivers::Gamepad::Driver::OpenHid()
         path = mHid.FindDevNode( i.vid, i.pid, i.ifacenum );
         if (!path.empty())
         {
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::OpenHid(): Found hidraw device on '" + path + "'." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Found hidraw device on '" + path + "'." );
             result = mHid.Open( path );
             if (result != Err::OK)
             {
-                gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::OpenHid(): Error opening hidraw device on '" + path + "'." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Error opening hidraw device on '" + path + "'." );
                 gLog.Write( Log::ERROR, "Failed to open gamepad hidraw device." );
                 return Err::CANNOT_OPEN;
             }
@@ -121,7 +121,7 @@ int Drivers::Gamepad::Driver::SetHidRegister( uint8_t reg, uint16_t value )
     
     if (!mHid.IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetHidRegister(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
 
@@ -144,7 +144,7 @@ int Drivers::Gamepad::Driver::SetHidRegister( uint8_t reg, uint16_t value )
     result = mHid.Write( buff );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetHidRegister(): Failed to write register to gamepad device. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write register to gamepad device. " );
         return Err::WRITE_FAILED;
     }
     
@@ -157,21 +157,21 @@ void Drivers::Gamepad::Driver::DestroyUinputDevs()
 {
     if (mpGamepad != nullptr)
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::DestroyUinputDevs(): Destroying gamepad uinput object." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Destroying gamepad uinput object." );
         delete mpGamepad;
         mpGamepad = nullptr;
     }
     
     if (mpMotion != nullptr)
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::DestroyUinputDevs(): Destroying motion uinput object." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Destroying motion uinput object." );
         delete mpMotion;
         mpMotion = nullptr;
     }
     
     if (mpMouse != nullptr)
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::DestroyUinputDevs(): Destroying mouse uinput object." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Destroying mouse uinput object." );
         delete mpMouse;
         mpMouse = nullptr;
     }
@@ -325,7 +325,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
         
         default:
             // Unhandled device type
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unhandled device type occurred." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled device type occurred." );
             return;
         break;
     }
@@ -360,7 +360,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 
                 default:
                     // Unsupported input event type
-                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unsupported input event type occurred." );
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An unsupported input event type occurred." );
                     return;
                 break;
             }
@@ -395,7 +395,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 
                 default:
                     // Unsupported input event type
-                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unsupported input event type occurred." );
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An unsupported input event type occurred." );
                     return;
                 break;
             }
@@ -430,7 +430,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 
                 default:
                     // Unsupported input event type
-                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unsupported input event type occurred." );
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An unsupported input event type occurred." );
                     return;
                 break;
             }
@@ -447,7 +447,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 
                 default:
                     // Unsupported input event type
-                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unsupported input event type occurred." );
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An unsupported input event type occurred." );
                     return;
                 break;
             }
@@ -455,7 +455,7 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
         
         default:
             // Unhandled state trigger mode
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::TransEvent(): An unhandled state trigger occurred." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled state trigger occurred." );
             return;
         break;
     }
@@ -695,7 +695,7 @@ int Drivers::Gamepad::Driver::Poll()
         {
             if (buff.size() != 64)
             {
-                gLog.Write( Log::WARN, "Invalid input report size was recieved from gamepad device." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report size was recieved from gamepad device." );
                 return Err::WRONG_SIZE;
             }
 
@@ -711,10 +711,10 @@ int Drivers::Gamepad::Driver::Poll()
             Flush();
         }
         else
-            gLog.Write( Log::VERB, "An unhandled report type was received from gamepad device." );
+            gLog.Write( Log::VERB, FUNC_NAME, "An unhandled report type was received from gamepad device." );
     }
     else
-        gLog.Write( Log::VERB, "Received zero-length report from gamepad device." );
+        gLog.Write( Log::VERB, FUNC_NAME, "Received zero-length report from gamepad device." );
     
     return Err::OK;
 }
@@ -749,12 +749,12 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
         if (!mLizardMode)
         {
             if (!mHid.IsOpen())
-                gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::ThreadedLizardHandler(): Device is not open." );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
             else
             {
                 result = mHid.Write( buff );
                 if (result != Err::OK)
-                    gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::ThreadedLizardHander(): Failed to write gamepad device." );
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write gamepad device." );
             }
         }
     }
@@ -793,7 +793,7 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         
     if (!mHid.IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
@@ -809,37 +809,37 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
 
         result = mHid.Write( buff );
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to disable keyboard emulation." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable keyboard emulation." );
 
         result = SetHidRegister( Register::RPAD_MODE, 0x07 );       // Disable mouse emulation on right pad
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to disable mouse emulation." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable mouse emulation." );
 
         result = SetHidRegister( Register::RPAD_MARGIN, 0x00 );     // Disable margins on the right pad
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to disable trackpad margins." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable trackpad margins." );
 
         mLizardMode = false;
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): 'Lizard Mode' disabled." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "'Lizard Mode' disabled." );
     }
     else
     {
         buff.at(0) = ReportId::DEFAULT_MAPPINGS;                    // Enable keyboard emulation
         result = mHid.Write( buff );
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to enable keyboard emulation." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable keyboard emulation." );
         
         buff.at(0) = ReportId::DEFAULT_MOUSE;                       // Enable mouse emulation
         result = mHid.Write( buff );
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to enable mouse emulation." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable mouse emulation." );
 
         result = SetHidRegister( Register::RPAD_MARGIN, 0x01 );     // Enable margins on the right pad
         if (result != Err::OK)
-            gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): Failed to enable trackpad margins." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable trackpad margins." );
 
         mLizardMode = true;
-        gLog.Write( Log::DEBUG, "Drivers::Gamepad::Driver::SetLizardMode(): 'Lizard Mode' enabled." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "'Lizard Mode' enabled." );
     }
     
     return Err::OK;

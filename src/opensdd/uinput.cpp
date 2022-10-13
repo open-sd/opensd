@@ -34,16 +34,16 @@ int Uinput::Device::Open( std::string deviceName )
     struct stat             stat_data;
     std::string             uinput_path;
    
-    gLog.Write( Log::DEBUG, "Opening uinput device:  " + deviceName );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Opening uinput device:  " + deviceName );
     
     // Find uinput path
-    gLog.Write( Log::DEBUG, "Searching for uinput path..." );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Searching for uinput path..." );
     for (auto p : UINPUT_PATH_LIST)
     {
         result = stat( p.c_str(), &stat_data );
         if (result >= 0)
         {
-            gLog.Write( Log::DEBUG, "Found uinput path at " + p );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Found uinput path at " + p );
             uinput_path = p;
             break;
         }
@@ -51,7 +51,7 @@ int Uinput::Device::Open( std::string deviceName )
 
     if (uinput_path.length() < 5)
     {
-        gLog.Write( Log::ERROR, "Failed to find a uinput device node." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to find a uinput device node." );
         return Err::NOT_FOUND;
     }
 
@@ -60,7 +60,7 @@ int Uinput::Device::Open( std::string deviceName )
     if (mFd < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Uinput::Device::Open(): errno: " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "errno: " + Err::GetErrnoString(e) );
         gLog.Write( Log::ERROR, "Failed to open uinput.  Make sure this user has R/W permissions for " + uinput_path );
         mFd = 0;
         return Err::NO_PERMISSION;
@@ -79,7 +79,7 @@ void Uinput::Device::Close()
     {
         ioctl( mFd, UI_DEV_DESTROY);
         close( mFd );
-        gLog.Write( Log::DEBUG, "Closing uinput device." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Closing uinput device." );
     }
 
     mFd = 0;
@@ -105,7 +105,7 @@ int Uinput::Device::EnableKey( uint16_t code )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableKey(): uinput device is not open for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "uinput device is not open for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable key (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::NOT_OPEN;
     }
@@ -113,7 +113,7 @@ int Uinput::Device::EnableKey( uint16_t code )
     // Make sure key code is within range
     if (code >= KEY_MAX)
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableKey(): Key code out of range for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Key code out of range for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable key (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::OUT_OF_RANGE;
     }
@@ -121,12 +121,12 @@ int Uinput::Device::EnableKey( uint16_t code )
     // Enable key events for this device if not already enabled
     if (mEvBuff.key.empty())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableKey(): Enabling key events for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Enabling key events for '" + mDeviceName + "'." );
         result = ioctl( mFd, UI_SET_EVBIT, EV_KEY );
         if (result < 0)
         {
             int e = errno;
-            gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
             gLog.Write( Log::ERROR, "Failed to enable key events for '" + mDeviceName + "'." );
             return Err::WRITE_FAILED;
         }
@@ -137,7 +137,7 @@ int Uinput::Device::EnableKey( uint16_t code )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableKey(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable key (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::WRITE_FAILED;
     }
@@ -164,7 +164,7 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): uinput device is not open for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "uinput device is not open for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable absolute axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::NOT_OPEN;
     }
@@ -172,7 +172,7 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
     // Make sure abs code is within range
     if (code >= ABS_MAX)
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): Abs code out of range for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Abs code out of range for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable absolute axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::OUT_OF_RANGE;
     }
@@ -180,12 +180,12 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
     // Enable abs events for this device if not already enabled
     if (mEvBuff.abs.empty())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): Enabling abs events for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Enabling abs events for '" + mDeviceName + "'." );
         result = ioctl( mFd, UI_SET_EVBIT, EV_ABS );
         if (result < 0)
         {
             int e = errno;
-            gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
             gLog.Write( Log::ERROR, "Failed to enable absolute axis events for '" + mDeviceName + "'." );
             return Err::WRITE_FAILED;
         }
@@ -203,7 +203,7 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableAbs(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable absolute axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::WRITE_FAILED;
     }
@@ -229,7 +229,7 @@ int Uinput::Device::EnableRel( uint16_t code )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableRel(): uinput device is not open for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "uinput device is not open for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable relative axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::NOT_OPEN;
     }
@@ -237,7 +237,7 @@ int Uinput::Device::EnableRel( uint16_t code )
     // Make sure rel code is within range
     if ((code >= ABS_MAX) || (code == REL_RESERVED))
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableRel(): Rel code out of range for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Rel code out of range for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable relative axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::OUT_OF_RANGE;
     }
@@ -245,12 +245,12 @@ int Uinput::Device::EnableRel( uint16_t code )
     // Enable rel events for this device if not already enabled
     if (mEvBuff.rel.empty())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableRel(): Enabling rel events for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Enabling rel events for '" + mDeviceName + "'." );
         result = ioctl( mFd, UI_SET_EVBIT, EV_REL );
         if (result < 0)
         {
             int e = errno;
-            gLog.Write( Log::DEBUG, "Uinput::Device::EnableRel(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
             gLog.Write( Log::ERROR, "Failed to enable relative axis events for '" + mDeviceName + "'." );
             return Err::WRITE_FAILED;
         }
@@ -261,7 +261,7 @@ int Uinput::Device::EnableRel( uint16_t code )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Uinput::Device::EnableRel(): ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to enable relative axis (" + std::to_string(code) + ") for '" + mDeviceName + "'." );
         return Err::WRITE_FAILED;
     }
@@ -298,7 +298,7 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Create(): uinput device is not open for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "uinput device is not open for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to set uinput device information for '" + mDeviceName + "'." );
         return Err::NOT_OPEN;
     }
@@ -308,7 +308,7 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "UInputDevice::Create(): UI_DEV_SETUP ioctl error (" + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "UI_DEV_SETUP ioctl error (" + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         gLog.Write( Log::ERROR, "Failed to set uinput device information." );
         Close();
         return Err::WRITE_FAILED;
@@ -319,7 +319,7 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "UInputDevice::Create(): UI_DEV_CREATE ioctl error (" + std::to_string(e) + "): " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "UI_DEV_CREATE ioctl error (" + std::to_string(e) + "): " + Err::GetErrnoString(e) );
         gLog.Write( Log::ERROR, "Failed to create uinput device." );
         Close();
         return Err::WRITE_FAILED;
@@ -327,7 +327,7 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
 
     mDeviceName = deviceName;
 
-    gLog.Write( Log::DEBUG, "Successfully created uinput device '" + mDeviceName + "'." );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Successfully created uinput device '" + mDeviceName + "'." );
 
     return Err::OK;
 }
@@ -338,7 +338,7 @@ int Uinput::Device::UpdateKey( uint16_t code, bool value )
 {
     if (!mEvBuff.key.count(code))
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::UpdateKey(): Key code (" + std::to_string(code) + ") is not mapped to buffer. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Key code (" + std::to_string(code) + ") is not mapped to buffer. " );
         gLog.Write( Log::WARN, "Attemped to update unmapped key for '" + mDeviceName + "'." );
         return Err::NOT_FOUND;
     }
@@ -359,7 +359,7 @@ int Uinput::Device::UpdateAbs( uint16_t code, double value )
 {
     if (!mEvBuff.abs.count(code))
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::UpdateAbs(): Abs code (" + std::to_string(code) + ") is not mapped to buffer. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Abs code (" + std::to_string(code) + ") is not mapped to buffer. " );
         gLog.Write( Log::WARN, "Attemped to update unmapped absolute axis for '" + mDeviceName + "'." );
         return Err::NOT_FOUND;
     }
@@ -391,7 +391,7 @@ int Uinput::Device::UpdateRel( uint16_t code, int32_t value )
 {
     if (!mEvBuff.rel.count(code))
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::UpdateRel(): Rel code (" + std::to_string(code) + ") is not mapped to buffer. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Rel code (" + std::to_string(code) + ") is not mapped to buffer. " );
         gLog.Write( Log::WARN, "Attemped to update unmapped relative axis for '" + mDeviceName + "'." );
         return Err::NOT_FOUND;
     }
@@ -423,7 +423,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Configure():  uinput device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "uinput device is not open." );
         gLog.Write( Log::ERROR, "Failed to configure uinput device for '" + mDeviceName + "': Device is not open." );
         return Err::NOT_OPEN;
     }
@@ -458,7 +458,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
     result = Create( rCfg.deviceinfo.name, rCfg.deviceinfo.vid, rCfg.deviceinfo.pid, rCfg.deviceinfo.ver );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Configure(): Failed to create device" );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to create device" );
         gLog.Write( Log::ERROR, "Failed to configure uinput device for '" + mDeviceName + "': Failed to create device." );
         return Err::CANNOT_CREATE;
     }
@@ -502,7 +502,7 @@ int Uinput::Device::Flush()
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Flush(): Device is not open for '" + mDeviceName + "'." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open for '" + mDeviceName + "'." );
         gLog.Write( Log::ERROR, "Failed to write uinput: Device not open." );
         return Err::NOT_OPEN;
     }
@@ -538,7 +538,7 @@ int Uinput::Device::Flush()
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Uinput::Device::Flush(): write error: " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "write error: " + Err::GetErrnoString(e) );
         gLog.Write( Log::ERROR, "Failed to write uinput: I/O error for '" +mDeviceName + "'." );
         return Err::WRITE_FAILED;
     }
@@ -572,7 +572,7 @@ Uinput::Device::Device( const Uinput::DeviceConfig& rCfg )
     result = Open( mDeviceName );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Device():  Failed to open uinput for r/w." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open uinput for r/w." );
         gLog.Write( Log::ERROR, "Failed to create uinput object for '" + mDeviceName + "'." );
         throw result;
     }
@@ -580,7 +580,7 @@ Uinput::Device::Device( const Uinput::DeviceConfig& rCfg )
     result = Configure( rCfg );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, "Uinput::Device::Device():  Failed to configure uinput device." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to configure uinput device." );
         gLog.Write( Log::ERROR, "Failed to create uinput object for '" + mDeviceName + "'." );
         throw result;
     }

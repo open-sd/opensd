@@ -42,7 +42,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
     
     if (!fs::exists(filePath))
     {
-        gLog.Write( Log::ERROR, "Ini::IniFile::LoadFile(): File '" + filePath.string() + "' not found." );
+        gLog.Write( Log::ERROR, FUNC_NAME, "File '" + filePath.string() + "' not found." );
         return Err::FILE_NOT_FOUND;
     }
     
@@ -50,7 +50,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
     if (!file.is_open())
     {
         int e = errno;
-        gLog.Write( Log::ERROR, "Ini::IniFile::LoadFile(): Failed to open '" + filePath.string() + "': " + Err::GetErrnoString(e) );
+        gLog.Write( Log::ERROR, FUNC_NAME, "Failed to open '" + filePath.string() + "': " + Err::GetErrnoString(e) );
         return Err::CANNOT_OPEN;
     }
     
@@ -98,7 +98,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                         // Error in section name
                         // Things could get pretty messed up if we ignore this, so we
                         // need to abort.
-                        gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line " + std::to_string(line_count) + 
+                        gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line " + std::to_string(line_count) + 
                                     ": Unclosed section name.  Aborting." );
                         return Err::INVALID_FORMAT;
                     }
@@ -110,7 +110,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                         
                         if (test_str == "NONE")
                         {
-                            gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line " + std::to_string(line_count) +
+                            gLog.Write( Log::DEBUG, FUNC_NAME, " Error on line " + std::to_string(line_count) +
                                         ": Section name 'NONE' is reserved. " );
                             return Err::INVALID_FORMAT;
                         }
@@ -119,7 +119,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                         {
                             if (!((std::isalnum(c)) || (c == '_')))
                             {
-                                gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line " + std::to_string(line_count) + 
+                                gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line " + std::to_string(line_count) + 
                                             ": Section name contains invalid characters.  Aborting." );
                                 return Err::INVALID_FORMAT;
                             }
@@ -156,14 +156,14 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                             // Verify second word is '='
                             if (t_vec.at(1) != "=")
                             {
-                                gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line " + std::to_string(line_count) + 
+                                gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line " + std::to_string(line_count) + 
                                             ": Expected key assignment, but missing '='.  Ignoring line." );
                             }
                             else
                             {
                                 if (t_vec.front().empty())
                                 {
-                                    gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line "  + std::to_string(line_count) + 
+                                    gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line "  + std::to_string(line_count) + 
                                                 ": Missing or invalid key name.  Ignoring line." );
                                 }
                                 else
@@ -172,7 +172,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                                     {
                                         if (!((std::isalnum(c)) || (c == '_')))
                                         {
-                                            gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Error on line "  + std::to_string(line_count) + 
+                                            gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line "  + std::to_string(line_count) + 
                                                         ": Key name contains invalid characters.  Ignoring line." );
                                             ignore = true;
                                         }
@@ -202,7 +202,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
         }
     }
     
-    gLog.Write( Log::DEBUG, "Ini::IniFile::LoadFile(): Parsed " + std::to_string(line_count) + " lines, " +
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Parsed " + std::to_string(line_count) + " lines, " +
                 std::to_string(section_count) + " sections, " + std::to_string(key_count) + " keys and " +
                 std::to_string(value_count) + " values (total). " );
     
@@ -220,7 +220,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
     
     if (mData.empty())
     {
-        gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Nothing to save." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Nothing to save." );
         return Err::EMPTY;
     }
     
@@ -228,24 +228,24 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
     if (!filePath.parent_path().empty())
         if (!fs::exists( filePath.parent_path() ))
         {
-            gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Creating directory '" + filePath.parent_path().string() + "'..." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Creating directory '" + filePath.parent_path().string() + "'..." );
             // Try to create it if it doesn't
             if (!fs::create_directory( filePath.parent_path() ))
             {
                 int e = errno;
-                gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to create directory '" + filePath.parent_path().string() + "': " + Err::GetErrnoString(e) );
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to create directory '" + filePath.parent_path().string() + "': " + Err::GetErrnoString(e) );
                 return Err::CANNOT_CREATE;
             }
         }
     
     if (fs::exists(filePath))
-        gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): File '" + filePath.string() + "' exists.  File will be overwritten." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "File '" + filePath.string() + "' exists.  File will be overwritten." );
         
     file.open( filePath, std::ios::out | std::ios::trunc );
     if (!file.is_open())
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to open '" + filePath.string() + "' for writing: " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open '" + filePath.string() + "' for writing: " + Err::GetErrnoString(e) );
         return Err::CANNOT_OPEN;
     }
     
@@ -259,7 +259,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
             if (file.fail())
             {
                 int e = errno;
-                gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to write to '" + filePath.string() + 
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write to '" + filePath.string() + 
                             "': " + Err::GetErrnoString(e) );
                 return Err::WRITE_FAILED;
             }
@@ -281,7 +281,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
                 if (file.fail())
                 {
                     int e = errno;
-                    gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to write to '" + filePath.string() + 
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write to '" + filePath.string() + 
                                 "': " + Err::GetErrnoString(e) );
                     return Err::WRITE_FAILED;
                 }
@@ -300,7 +300,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
                     if (file.fail())
                     {
                         int e = errno;
-                        gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to write to '" + filePath.string() + 
+                        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write to '" + filePath.string() + 
                                     "': " + Err::GetErrnoString(e) );
                         return Err::WRITE_FAILED;
                     }
@@ -313,7 +313,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
         if (file.fail())
         {
             int e = errno;
-            gLog.Write( Log::DEBUG, "Ini::IniFile::SaveFile(): Failed to write to '" + filePath.string() + 
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write to '" + filePath.string() + 
                         "': " + Err::GetErrnoString(e) );
             return Err::WRITE_FAILED;
         }
@@ -357,13 +357,13 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
 {
     if (section.empty() || key.empty())
     {
-        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to get value: Section or key name is blank." );
+        gLog.Write( Log::ERROR, FUNC_NAME, "Failed to get value: Section or key name is blank." );
         return {};
     }
     
     if (section == "NONE")
     {
-        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to get value: Use of reserved section name." );
+        gLog.Write( Log::ERROR, FUNC_NAME, "Failed to get value: Use of reserved section name." );
         return {};
     }
     
@@ -371,7 +371,7 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
     {
         if (!((std::isalnum(c)) || (c == '_')))
         {
-            gLog.Write( Log::DEBUG, "Ini::IniFile::GetVal(): Failed to get value: Invalid section name." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get value: Invalid section name." );
             return {};
         }
     }
@@ -380,7 +380,7 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
     {
         if (!((std::isalnum(c)) || (c == '_')))
         {
-            gLog.Write( Log::DEBUG, "Ini::IniFile::GetVal(): Failed to get value: Invalid key name." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get value: Invalid key name." );
             return {};
         }
     }
@@ -398,7 +398,7 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
                         return k.values;
     
     // Return empty vector if not found
-    gLog.Write( Log::DEBUG, "Ini::IniFile::GetVal(): Failed to get value: Not found." );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get value: Not found." );
     return {};
 }
 
@@ -408,7 +408,7 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
 {
     if (section == "NONE")
     {
-        gLog.Write( Log::ERROR, "Ini::IniFile::SetVal(): Failed to set value: Use of reserved section name." );
+        gLog.Write( Log::ERROR, FUNC_NAME, "Failed to set value: Use of reserved section name." );
         return Err::INVALID_PARAMETER;
     }
     
@@ -416,7 +416,7 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
     {
         if (!((std::isalnum(c)) || (c == '_')))
         {
-            gLog.Write( Log::DEBUG, "Ini::IniFile::SetVal(): Failed to set value: Invalid section name." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to set value: Invalid section name." );
             return Err::INVALID_PARAMETER;
         }
     }
@@ -425,7 +425,7 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
     {
         if (!((std::isalnum(c)) || (c == '_')))
         {
-            gLog.Write( Log::DEBUG, "Ini::IniFile::SetVal(): Failed to set value: Invalid key name." );
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to set value: Invalid key name." );
             return Err::INVALID_PARAMETER;
         }
     }

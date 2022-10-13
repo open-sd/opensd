@@ -23,6 +23,20 @@
 #include <string>
 #include <mutex>
 
+// Trim unwanted stuff off of __PRETTY_FUNCTION__ at compile time 
+consteval std::string_view ShortenPrettyFunction( const char* prettyString )
+{
+    std::string_view    sv(prettyString);
+    
+    unsigned int    end     = sv.rfind( "(" );
+    unsigned int    start   = sv.rfind( " ", end ) + 1;
+    unsigned int    len     = end - start;
+    
+    return sv.substr( start, len );
+}
+
+// Macro to get clean function/method names for Log::Write
+#define FUNC_NAME ShortenPrettyFunction(__PRETTY_FUNCTION__)
 
 // Simple thread-safe global logger
 class Log
@@ -38,8 +52,8 @@ public:
 
     void            SetFilterLevel( Log::Level logLevel );
     void            SetOutputMethod( Log::Method  method );
-    void            Write( Log::Level logLevel, std::string msg );
-    void            Write( Log::Level logLevel, std::wstring msg );
+    void            Write( Log::Level logLevel, std::string_view funcName, std::string msg );
+    void            Write( Log::Level logLevel, std::string msg ) { Write( logLevel, "", msg ); }
 
     Log();
     ~Log();

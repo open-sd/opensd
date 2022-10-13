@@ -17,40 +17,19 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "paths.hpp"
-#include "xdg.hpp"
-#include "log.hpp"
+#ifndef __FILES_HPP__
+#define __FILES_HPP__
 
 
-bool FilePaths::IsInstalled()
+namespace Files
 {
-    namespace fs = std::filesystem;
+    bool                IsInstalled();
+    bool                HasSysConfig();
+    bool                HasDevPaths();
+    bool                HasUserConfig();
     
-    fs::path            dir;
-    fs::path            file;
-    
-
-    dir = Xdg::SysDataDir();
-    if (dir.empty())
-    {
-        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): XDG system data dir is not defined." );
-        return false;
-    }
-    
-    dir += "/opensd/";
-    if (!fs::exists(dir))
-    {
-        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): Path '" + dir.string() + "' does not exist." );
-        return false;
-    }
-
-    if (!fs::is_directory(dir))
-    {
-        gLog.Write( Log::DEBUG, "FilePaths::IsInstalled(): Path '" + dir.string() + "' is not a directory." );
-        return false;
-    }
-    
-    file = dir + "
-    
-    return true;
+    int                 CreateUserConfig();
 }
+
+
+#endif // __FILES_HPP__
