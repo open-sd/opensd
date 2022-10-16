@@ -43,7 +43,7 @@ private:
     
 public:
     int                     Init();
-    int                     CreateUserConfig();
+    int                     CreateNewUserConfig();
     
     std::filesystem::path   GetConfigFilePath();
     std::filesystem::path   GetProfileFilePath( std::string fileName );
