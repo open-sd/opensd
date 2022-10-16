@@ -21,30 +21,41 @@
 
 #include "xdg.hpp"
 #include "log.hpp"
-#include <stdlib.h>
+#include <cstdlib>
 
 
 std::filesystem::path Xdg::UserHome()
 {
-    std::string     home = getenv( "HOME" );
+    std::string         dir;
+
+    if (getenv( "HOME" ))
+        dir = getenv( "HOME" );
+    else
+        return "";
     
-    if (home == "/")
-        home = "";
+    if (dir == "/")
+        dir = "";
         
-    if ((home == "/root") || (home == "/root/"))
+    if ((dir == "/root") || (dir == "/root/"))
         gLog.Write( Log::WARN, "It appears that OpenSD is being run as root!  DO NOT RUN OPENSD AS ROOT!  YOU HAVE BEEN WARNED!" );
     
-    return home;
+    return dir;
 }
 
 
 
 std::filesystem::path Xdg::ConfigHome()
 {
-    std::string     dir = getenv( "XDG_CONFIG_HOME" );
+    std::string         dir;
+    
+    if (getenv( "XDG_CONFIG_HOME" ))
+        dir = getenv( "XDG_CONFIG_HOME" );
     
     if (!dir.empty())
-        return dir;
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_CONFIG_HOME is set to '" + dir + "'" );
+        return dir + "/";
+    }
     
     dir = UserHome();
     if (dir.empty())
@@ -53,17 +64,26 @@ std::filesystem::path Xdg::ConfigHome()
         return "";
     }
     
-    return dir + "/.config/";
+    dir += "/.config/";
+    gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_CONFIG_HOME is not set, using default '" + dir + "'");
+    
+    return dir;
 }
 
 
 
 std::filesystem::path Xdg::CacheHome()
 {
-    std::string     dir = getenv( "XDG_CACHE_HOME" );
+    std::string     dir;
+    
+    if (getenv( "XDG_CACHE_HOME" ))
+        dir = getenv( "XDG_CACHE_HOME" );
     
     if (!dir.empty())
-        return dir;
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_CACHE_HOME is set to '" + dir + "'" );
+        return dir + "/";
+    }
     
     dir = UserHome();
     if (dir.empty())
@@ -71,18 +91,27 @@ std::filesystem::path Xdg::CacheHome()
         gLog.Write( Log::DEBUG, FUNC_NAME, "$HOME is not set." );
         return "";
     }
-    
-    return dir + "/.cache/";
+
+    dir += "/.cache/";
+    gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_CACHE_HOME is not set, using default '" + dir + "'");
+
+    return dir;
 }
 
 
 
 std::filesystem::path Xdg::DataHome()
 {
-    std::string     dir = getenv( "XDG_DATA_HOME" );
+    std::string     dir;
+    
+    if (getenv( "XDG_DATA_HOME" ))
+        dir = getenv( "XDG_DATA_HOME" );
     
     if (!dir.empty())
-        return dir;
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_DATA_HOME is set to '" + dir + "'" );
+        return dir + "/";
+    }
     
     dir = UserHome();
     if (dir.empty())
@@ -91,17 +120,26 @@ std::filesystem::path Xdg::DataHome()
         return "";
     }
     
-    return dir + "/.local/share/";
+    dir += "/.local/share/";
+    gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_DATA_HOME is not set, using default '" + dir + "'");
+    
+    return dir;
 }
 
 
 
 std::filesystem::path Xdg::StateHome()
 {
-    std::string     dir = getenv( "XDG_STATE_HOME" );
+    std::string     dir;
+
+    if (getenv( "XDG_STATE_HOME" ))
+        dir = getenv( "XDG_STATE_HOME" );
     
     if (!dir.empty())
-        return dir;
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_STATE_HOME is set to '" + dir + "'" );
+        return dir + "/";
+    }
     
     dir = UserHome();
     if (dir.empty())
@@ -110,7 +148,10 @@ std::filesystem::path Xdg::StateHome()
         return "";
     }
     
-    return dir + "/.local/state/";
+    dir += "/.local/state/";
+    gLog.Write( Log::DEBUG, FUNC_NAME, "XDG_STATE_HOME is not set, using default '" + dir + "'");
+    
+    return dir;
 }
 
 
@@ -124,5 +165,9 @@ std::filesystem::path Xdg::SysConfigDir()
 
 std::filesystem::path Xdg::SysDataDir()
 {
-    return "/usr/local/share/";
+    std::string     dir = "/usr/local/share/";
+
+    // TODO: Use cmake settings
+    
+    return dir;
 }

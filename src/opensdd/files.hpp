@@ -20,16 +20,34 @@
 #ifndef __FILES_HPP__
 #define __FILES_HPP__
 
+#include "../common/errors.hpp"
+#include <filesystem>
 
-namespace Files
+
+class FileMgr
 {
-    bool                IsInstalled();
-    bool                HasSysConfig();
-    bool                HasDevPaths();
-    bool                HasUserConfig();
+private:
+    std::filesystem::path   mDataDir;
+    std::filesystem::path   mConfigDir;
+    std::filesystem::path   mProfileDir;
+    bool                    mIsConfigDirWritable;
+    bool                    mIsProfileDirWritable;
+    bool                    IsInstalled();
+    bool                    IsLocalBuild();
+    bool                    HasUserHome();
+    bool                    HasSystemConfig();
+    int                     CreateUserConfigDir();
+    int                     CopyUserConfigFile();
+    int                     CreateUserProfileDir();
+    int                     CopyUserProfileFiles();
     
-    int                 CreateUserConfig();
-}
+public:
+    int                     Init();
+    int                     CreateUserConfig();
+    
+    std::filesystem::path   GetConfigFilePath();
+    std::filesystem::path   GetProfileFilePath( std::string fileName );
+};
 
 
 #endif // __FILES_HPP__

@@ -20,13 +20,15 @@
 #ifndef __DAEMON_HPP__
 #define __DAEMON_HPP__
 
+#include "files.hpp"
 #include "drivers/gamepad/driver.hpp"
-
 
 class Daemon
 {
 private:
+    FileMgr                         mFileMgr;
     Drivers::Gamepad::Driver*       mpGpDrv;
+    
    
 public:
     int                             Run();

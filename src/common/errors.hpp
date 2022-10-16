@@ -47,6 +47,7 @@ namespace Err
         // TODO: Clean up
         READ_FAILED,
         WRITE_FAILED,
+        COPY_FAILED,
         CANNOT_OPEN,
         NO_PERMISSION,      
         ALREADY_OPEN,

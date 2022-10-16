@@ -43,6 +43,7 @@ file( GLOB OPENSD_DAEMON_SRC
         "src/common/errors.cpp"
         "src/common/log.cpp"
         "src/common/ini.cpp"
+        "src/common/xdg.cpp"
         "src/common/prog_args.cpp"
         "src/common/input_event_names.cpp"
         "src/common/string_funcs.cpp"
@@ -70,10 +71,12 @@ file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.ini" )
 set( INSTALL_DATA_DIR "share/opensd/" )
 set( INSTALL_DATA_CONFIG_DIR "${INSTALL_DATA_DIR}/config/" )
 set( INSTALL_DATA_PROFILE_DIR "${INSTALL_DATA_DIR}/profiles/" )
-set( BUILD_DATA_CONFIG_DIR "${PROJECT_BINARY_DIR}/data/" )
+set( BUILD_DATA_CONFIG_DIR "${PROJECT_BINARY_DIR}/data/config/" )
 set( BUILD_DATA_PROFILE_DIR "${PROJECT_BINARY_DIR}/data/profiles/" )
 set( DEFAULT_CONFIG_FILENAME "config.ini" )
 set( DEFAULT_PROFILE_FILENAME "default.ini" )
+set( SYSTEM_CONFIG_DIR "/etc/opensd/" )
+set( SYSTEM_PROFILE_DIR "${SYSTEM_CONFIG_DIR}/profiles/" )
 configure_file( "${PROJECT_SOURCE_DIR}/src/common/config.hpp.in" "${PROJECT_BINARY_DIR}/gen/config.hpp" )
 include_directories( "${PROJECT_BINARY_DIR}/gen/" )
 
@@ -104,6 +107,8 @@ endif( BUILD_GUI )
 # where OpenSD is not already installed
 add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
                     COMMAND ${CMAKE_COMMAND} -E make_directory "${BUILD_DATA_PROFILE_DIR}" )
+add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
+                    COMMAND ${CMAKE_COMMAND} -E make_directory "${BUILD_DATA_CONFIG_DIR}" )
 add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
                     COMMAND ${CMAKE_COMMAND} -E copy "${OPENSD_CONFIG_FILE}" "${BUILD_DATA_CONFIG_DIR}" )
 add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 

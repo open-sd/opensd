@@ -107,8 +107,9 @@ int Drivers::Gamepad::Driver::OpenHid()
             }
         }
     }
-
-    return Err::UNKNOWN;
+    
+    gLog.Write( Log::ERROR, "Failed to find any compatible gamepad devices." );
+    return Err::NOT_FOUND;
 }
 
 
@@ -772,6 +773,7 @@ void Drivers::Gamepad::Driver::Run()
     mLizHandlerThread = std::thread( &Drivers::Gamepad::Driver::ThreadedLizardHandler, this );
     
     // Loop while driver is running
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Gamepad driver is now running..." );
     while (mRunning)
     {
         Poll();

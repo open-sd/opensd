@@ -57,9 +57,12 @@ int Daemon::Run()
     // Set up signal handlers
     signal( SIGINT, sig_handler );
 
-    if (!Files::IsInstalled())
+    // Initialize file manager
+    result = mFileMgr.Init();
+    if (result != Err::OK)
     {
-        gLog.Write( Log::WARN, "OpenSD does not appear to be installed.  Using local build files instead." );
+        gLog.Write( Log::ERROR, "Initialization failed." );
+        return Err::INIT_FAILED;
     }
     
     if (mpGpDrv != nullptr)

@@ -27,14 +27,16 @@ namespace Config
 {
 
     // Versioning
-    const std::string       VERSION_STR         = "@OpenSD_VERSION_MAJOR@.@OpenSD_VERSION_MINOR@";
-    const int               MAJOR_VER           = @OpenSD_VERSION_MAJOR@;
-    const int               MINOR_VER           = @OpenSD_VERSION_MINOR@;
+    const std::string       VERSION_STR                 = "@OpenSD_VERSION_MAJOR@.@OpenSD_VERSION_MINOR@";
+    const int               MAJOR_VER                   = @OpenSD_VERSION_MAJOR@;
+    const int               MINOR_VER                   = @OpenSD_VERSION_MINOR@;
     
     // Paths
     const std::string       INSTALL_DATA_DIR            = "@CMAKE_INSTALL_PREFIX@/@INSTALL_DATA_DIR@";
     const std::string       INSTALL_DATA_CONFIG_DIR     = "@CMAKE_INSTALL_PREFIX@/@INSTALL_DATA_CONFIG@";
     const std::string       INSTALL_DATA_PROFILE_DIR    = "@CMAKE_INSTALL_PREFIX@/@INSTALL_DATA_PROFILE@";
+    const std::string       SYSTEM_CONFIG_DIR           = "@SYSTEM_CONFIG_DIR@";
+    const std::string       SYSTEM_PROFILE_DIR          = "@SYSTEM_PROFILE_DIR@";
     
     // File names
     const std::string       DEFAULT_CONFIG_FILENAME     = "@DEFAULT_CONFIG_FILENAME@";
