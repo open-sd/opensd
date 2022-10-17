@@ -22,31 +22,34 @@
 
 #include "../common/errors.hpp"
 #include <filesystem>
+#include <vector>
+#include <string>
 
 
 class FileMgr
 {
 private:
-    std::filesystem::path   mDataDir;
-    std::filesystem::path   mConfigDir;
-    std::filesystem::path   mProfileDir;
-    bool                    mIsConfigDirWritable;
-    bool                    mIsProfileDirWritable;
-    bool                    IsInstalled();
-    bool                    IsLocalBuild();
-    bool                    HasUserHome();
-    bool                    HasSystemConfig();
-    int                     CreateUserConfigDir();
-    int                     CopyUserConfigFile();
-    int                     CreateUserProfileDir();
-    int                     CopyUserProfileFiles();
+    std::filesystem::path       mDataDir;
+    std::filesystem::path       mConfigDir;
+    std::filesystem::path       mProfileDir;
+    bool                        mIsConfigDirWritable;
+    bool                        mIsProfileDirWritable;
+    
+    bool                        IsInstalled();
+    bool                        IsLocalBuild();
+    bool                        HasUserHome();
+    bool                        HasSystemConfig();
+    int                         CreateUserConfigDir();
+    int                         CopyUserConfigFile();
+    int                         CreateUserProfileDir();
+    int                         CopyUserProfileFiles();
     
 public:
-    int                     Init();
-    int                     CreateNewUserConfig();
+    int                         Init();
     
-    std::filesystem::path   GetConfigFilePath();
-    std::filesystem::path   GetProfileFilePath( std::string fileName );
+    std::filesystem::path       GetConfigFilePath();
+    std::vector<std::string>    GetProfileList();
+    std::filesystem::path       GetProfileFilePath( std::string fileName );
 };
 
 

@@ -77,7 +77,7 @@ set( DEFAULT_CONFIG_FILENAME "config.ini" )
 set( DEFAULT_PROFILE_FILENAME "default.ini" )
 set( SYSTEM_CONFIG_DIR "/etc/opensd/" )
 set( SYSTEM_PROFILE_DIR "${SYSTEM_CONFIG_DIR}/profiles/" )
-configure_file( "${PROJECT_SOURCE_DIR}/src/common/config.hpp.in" "${PROJECT_BINARY_DIR}/gen/config.hpp" )
+configure_file( "${PROJECT_SOURCE_DIR}/src/common/cmake_vars.hpp.in" "${PROJECT_BINARY_DIR}/gen/cmake_vars.hpp" )
 include_directories( "${PROJECT_BINARY_DIR}/gen/" )
 
 # Build options

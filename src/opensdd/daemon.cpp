@@ -46,14 +46,10 @@ void sig_handler( int sig )
 }
 
 
-
-int Daemon::Run()
+int Daemon::Startup()
 {
-    int         result;
+    int             result;
     
-    
-    gLog.Write( Log::INFO, "Starting up..." );
-
     // Set up signal handlers
     signal( SIGINT, sig_handler );
 
@@ -65,13 +61,18 @@ int Daemon::Run()
         return Err::INIT_FAILED;
     }
     
+    // Load config.ini
+    
+    
+    
+
+    // Create gamepad driver object
     if (mpGpDrv != nullptr)
     {
         gLog.Write( Log::ERROR, "Gamepad driver object already exists." );
         return Err::INIT_FAILED;
     }
     
-    // Create gamepad driver object
     try 
     {
         mpGpDrv = new Drivers::Gamepad::Driver;
@@ -82,7 +83,7 @@ int Daemon::Run()
         return Err::CANNOT_CREATE;
     }
     
-    // Load default profile
+    // Load gamepad driver profile
     Drivers::Gamepad::Profile       profile;
     Drivers::Gamepad::ProfileIni    ini;
     
@@ -93,15 +94,41 @@ int Daemon::Run()
         return Err::NOT_INITIALIZED;
     }
     
-    //mGpDrv->SetProfile( Drivers::Gamepad::Presets::DEFAULT );
     mpGpDrv->SetProfile( profile );
-    
-    
-    // Start threaded gamepad driver
+ 
+    // Start threaded drivers
     mpGpDrv->Start();
+   
+    return Err::OK;
+}
 
-    // TODO: proper loop with IPC
+
+
+void Daemon::Shutdown()
+{
+    // Stop gamepad driver thread
+    if (mpGpDrv != nullptr)
+        mpGpDrv->Stop();
     
+    if (mpGpDrv != nullptr)
+        delete mpGpDrv;
+        
+    mpGpDrv         = nullptr;
+    gDaemonRunning  = false;
+}
+
+
+
+int Daemon::Run()
+{
+    int         result;
+    
+    gLog.Write( Log::INFO, "Starting up..." );
+    result = Startup();
+    if (result != Err::OK)
+        return result;
+    
+
     // Loop until interrupt signal
     while (gDaemonRunning)
     {
@@ -109,12 +136,8 @@ int Daemon::Run()
         usleep( 100000 );
     }
 
-
     gLog.Write( Log::INFO, "Shutting down..." );
-
-    // Stop gamepad driver thread
-    mpGpDrv->Stop();
-    
+    Shutdown();
     
     // Done
     return Err::OK;
@@ -139,9 +162,5 @@ Daemon::Daemon()
 
 Daemon::~Daemon()
 {
-    if (mpGpDrv != nullptr)
-        delete mpGpDrv;
-        
-    mpGpDrv         = nullptr;
-    gDaemonRunning  = false;
+    Shutdown();
 }

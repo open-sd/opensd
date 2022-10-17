@@ -17,13 +17,13 @@
 //    You should have received a copy of the GNU General Public License along with this program.
 //    If not, see <https://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
+#ifndef __CMAKE_VARS_HPP__
+#define __CMAKE_VARS_HPP__
 
 #include <string>
 
 
-namespace Config
+namespace CMakeVar
 {
 
     // Versioning
@@ -44,4 +44,4 @@ namespace Config
 
 }
 
-#endif // __CONFIG_HPP__
+#endif // __CMAKE_VARS_HPP__

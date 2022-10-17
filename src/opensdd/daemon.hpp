@@ -29,6 +29,8 @@ private:
     FileMgr                         mFileMgr;
     Drivers::Gamepad::Driver*       mpGpDrv;
     
+    int                             Startup();
+    void                            Shutdown();
    
 public:
     int                             Run();
