@@ -17,33 +17,32 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __DAEMON_HPP__
-#define __DAEMON_HPP__
+#ifndef __CONFIG_HPP__
+#define __CONFIG_HPP__
 
-#include "files.hpp"
-#include "config.hpp"
-#include "drivers/gamepad/driver.hpp"
+#include "../common/ini.hpp"
+#include "../common/errors.hpp"
+#include <cstdint>
+#include <string>
+#include <filesystem>
 
-class Daemon
+
+class Config
 {
 private:
-    FileMgr                         mFileMgr;
-    Config                          mConfig;
-    Drivers::Gamepad::Driver*       mpGpDrv;
-    
-    int                             LoadProfile( std::string fileName );
+    Ini::IniFile        mIni;
 
-    int                             Startup();
-    void                            Shutdown();
-   
 public:
-    int                             Run();
-    void                            Stop();
+    bool                mAllowClients;
+    uint16_t            mPort;
+    std::string         mProfileName;
+
+    int                 Load( std::filesystem::path configFile );
+    int                 Save( std::filesystem::path configFile );
     
-    Daemon();
-    ~Daemon();
+    Config();
+    ~Config();
 };
 
 
-
-#endif // __DAEMON_HPP__
+#endif // __CONFIG_HPP__

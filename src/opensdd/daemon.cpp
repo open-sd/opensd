@@ -46,6 +46,45 @@ void sig_handler( int sig )
 }
 
 
+
+int Daemon::LoadProfile( std::string fileName )
+{
+    namespace       fs = std::filesystem;
+    fs::path        path;
+    int             result;
+    
+    // Make sure we have a gamepad object first
+    if (mpGpDrv == nullptr)
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Gamepad driver object does not exist." );
+        gLog.Write( Log::ERROR, "Failed to load profile: Initialization error." );
+        return Err::NOT_INITIALIZED;
+    }
+    
+    // Load gamepad profile
+    Drivers::Gamepad::ProfileIni    profile_ini;
+    Drivers::Gamepad::Profile       profile;
+
+    path = mFileMgr.GetProfileFilePath( fileName );
+    if (path.empty())
+    {
+        gLog.Write( Log::ERROR, "Failed to find profile '" + fileName + "'" );
+        return Err::FILE_NOT_FOUND;
+    }
+    
+    result = profile_ini.Load( path, profile );
+    if (result != Err::OK)
+    {
+        gLog.Write( Log::ERROR, "Failed to load gamepad profile." );
+        return Err::NOT_INITIALIZED;
+    }
+    mpGpDrv->SetProfile( profile );
+    
+    return Err::OK;
+}
+
+
+
 int Daemon::Startup()
 {
     int             result;
@@ -54,19 +93,19 @@ int Daemon::Startup()
     signal( SIGINT, sig_handler );
 
     // Initialize file manager
+    gLog.Write( Log::INFO, "Initializing file manager..." );
     result = mFileMgr.Init();
     if (result != Err::OK)
-    {
-        gLog.Write( Log::ERROR, "Initialization failed." );
         return Err::INIT_FAILED;
-    }
     
     // Load config.ini
+    gLog.Write( Log::INFO, "Loading config file..." );
+    result = mConfig.Load( mFileMgr.GetConfigFilePath() );
+    if (result != Err::OK)
+        return Err::INIT_FAILED;
     
-    
-    
-
     // Create gamepad driver object
+    gLog.Write( Log::INFO, "Creating gamepad driver object..." );
     if (mpGpDrv != nullptr)
     {
         gLog.Write( Log::ERROR, "Gamepad driver object already exists." );
@@ -84,19 +123,13 @@ int Daemon::Startup()
     }
     
     // Load gamepad driver profile
-    Drivers::Gamepad::Profile       profile;
-    Drivers::Gamepad::ProfileIni    ini;
-    
-    result = ini.Load( "../test.ini", profile );
+    gLog.Write( Log::INFO, "Loading gamepad profile..." );
+    result = LoadProfile( mConfig.mProfileName );
     if (result != Err::OK)
-    {
-        gLog.Write( Log::ERROR, "Failed to load gamepad profile." );
-        return Err::NOT_INITIALIZED;
-    }
-    
-    mpGpDrv->SetProfile( profile );
+        return Err::CANNOT_OPEN;
  
     // Start threaded drivers
+    gLog.Write( Log::INFO, "Starting gamepad driver..." );
     mpGpDrv->Start();
    
     return Err::OK;
@@ -119,6 +152,9 @@ void Daemon::Shutdown()
 
 
 
+
+
+
 int Daemon::Run()
 {
     int         result;
@@ -126,8 +162,10 @@ int Daemon::Run()
     gLog.Write( Log::INFO, "Starting up..." );
     result = Startup();
     if (result != Err::OK)
+    {
+        gLog.Write( Log::ERROR, "Initialization failure.  Aborting." );
         return result;
-    
+    }
 
     // Loop until interrupt signal
     while (gDaemonRunning)

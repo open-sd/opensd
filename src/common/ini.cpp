@@ -28,6 +28,7 @@
 
 int Ini::IniFile::LoadFile( std::filesystem::path filePath )
 {
+    namespace               fs = std::filesystem;
     std::string             line;
     std::ifstream           file;
     Section                 t_sec;
@@ -36,10 +37,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
     unsigned int            key_count = 0;
     unsigned int            value_count = 0;
     
-    
-    namespace fs = std::filesystem;
     mData.clear();
-    
     if (!fs::exists(filePath))
     {
         gLog.Write( Log::ERROR, FUNC_NAME, "File '" + filePath.string() + "' not found." );
@@ -328,9 +326,9 @@ std::vector<std::string> Ini::IniFile::GetSectionList()
 {
     std::vector<std::string>    sv;
     
-    for (auto& v : mData)
-        if (v.name != "NONE")
-            sv.push_back( v.name );
+    for (auto const& s : mData)
+        if (s.name != "NONE")
+            sv.push_back( s.name );
     
     return sv;
 }
@@ -342,9 +340,9 @@ std::vector<std::string> Ini::IniFile::GetKeyList( std::string section )
     std::vector<std::string>    sv;
     section = Str::Uppercase(section);
     
-    for (auto& s : mData)
+    for (auto const& s : mData)
         if (Str::Uppercase(s.name) == section)
-            for (auto& k : s.keys)
+            for (auto const& k : s.keys)
                 if (!k.comment)
                     sv.push_back( k.name );
     
@@ -390,9 +388,9 @@ std::vector<std::string> Ini::IniFile::GetVal( std::string section, std::string 
     key = Str::Uppercase(key);
     
     // Loop through date looking section+key and return value
-    for (auto& s : mData)
+    for (auto const& s : mData)
         if (Str::Uppercase(s.name) == section)
-            for (auto& k : s.keys)
+            for (auto const& k : s.keys)
                 if (!k.comment)
                     if (Str::Uppercase(k.name) == key)
                         return k.values;
@@ -477,6 +475,61 @@ int Ini::IniFile::SetVal( std::string section, std::string key, std::vector<std:
 
 
 
+int Ini::IniFile::SetStringVal( std::string section, std::string key, std::string val )
+{
+    return SetVal( section, key, {val} );
+}
+
+
+
+int Ini::IniFile::SetIntVal( std::string section, std::string key, int val )
+{
+    return SetVal( section, key, {std::to_string(val)} );
+}
+
+
+
+int Ini::IniFile::SetDoubleVal( std::string section, std::string key, double val )
+{
+    return SetVal( section, key, {std::to_string(val)} );
+}
+
+
+
+int Ini::IniFile::SetBoolVal( std::string section, std::string key, bool val )
+{
+    std::string     s = val ? "true" : "false";
+    
+    return SetVal( section, key, {s} );
+}
+
+
+
+bool Ini::IniFile::DoesSectionExist( std::string section )
+{
+    section = Str::Uppercase( section );
+    
+    for (auto const& s : mData)
+        if (s.name != "NONE")
+            if (Str::Uppercase(s.name) == section)
+                return true;
+    
+    // Return false if not found
+    return false;
+}
+
+
+
+bool Ini::IniFile::DoesKeyExist( std::string section, std::string key )
+{
+    ValVec          val;
+    val = GetVal( section, key );
+    
+    return val.Count();
+}
+
+
+
 void Ini::IniFile::Clear()
 {
     mData.clear();
@@ -512,7 +565,10 @@ unsigned int Ini::ValVec::Count()
 std::string Ini::ValVec::String( unsigned int index )
 {
     if (index >= mData.size())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Index is out of range." );
         return "";
+    }
         
     return mData.at(index);
 }
@@ -524,10 +580,14 @@ int Ini::ValVec::Int( unsigned int index )
     int             i = 0;
     
     if (index >= mData.size())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Index is out of range." );
         return 0;
+    }
     
     try { i = std::stoi( mData.at(index) ); } catch (...)
     {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "No integer conversion possible." );
         return 0;
     }
     
@@ -541,16 +601,51 @@ double Ini::ValVec::Double( unsigned int index )
     double          d = 0;
     
     if (index >= mData.size())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Index is out of range." );
         return 0;
+    }
     
     try { d = std::stod( mData.at(index) ); } catch (...)
     {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "No double conversion possible." );
         return 0;
     }
     
     return d;
 }
 
+
+
+bool Ini::ValVec::Bool( unsigned int index )
+{
+    bool            b = false;
+    std::string     s;
+    
+    if (index >= mData.size())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Index is out of range." );
+        return false;
+    }
+    
+    s = Str::Uppercase( mData.at(index) );
+    
+    if ((s == "TRUE") || (s == "YES"))
+        return true;
+    
+    if ((s == "FALSE") || (s == "NO"))
+        return false;
+    
+    // If val doesnt match a known string, test for integer value
+    try { b = std::stoi( mData.at(index) ); } catch (...)
+    {
+        // Return false if no conversion
+        gLog.Write( Log::DEBUG, FUNC_NAME, "No integer conversion possible." );
+        return false;
+    }
+    
+    return b;
+}
 
 
 std::string Ini::ValVec::FullString()
