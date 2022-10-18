@@ -77,13 +77,20 @@ set( DEFAULT_CONFIG_FILENAME "config.ini" )
 set( DEFAULT_PROFILE_FILENAME "default.ini" )
 set( SYSTEM_CONFIG_DIR "/etc/opensd/" )
 set( SYSTEM_PROFILE_DIR "${SYSTEM_CONFIG_DIR}/profiles/" )
+set( SYSTEMD_USER_DIR "lib/systemd/user/" )
+set( OPENSD_UDEV_RULE_FILE "${PROJECT_SOURCE_DIR}/udev/60-opensd.rules" )
+set( OPENSD_SYSD_SERVICE_FILE "${PROJECT_SOURCE_DIR}/systemd/opensd.service" )
 configure_file( "${PROJECT_SOURCE_DIR}/src/common/cmake_vars.hpp.in" "${PROJECT_BINARY_DIR}/gen/cmake_vars.hpp" )
 include_directories( "${PROJECT_BINARY_DIR}/gen/" )
+set( UDEV_RULE_DIR "/etc/udev/rules.d/" CACHE STRING "Install directory for udev rules" )
 
 # Build options
-option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" ON )
-option( BUILD_CLI "Build OpenSD CLI tool (opensd-cli)" OFF )
-option( BUILD_GUI "Build OpenSD GUI tool (opensd-gui)" OFF )
+option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" TRUE )
+option( BUILD_CLI "Build OpenSD CLI tool (opensd-cli)" FALSE )
+option( BUILD_GUI "Build OpenSD GUI tool (opensd-gui)" FALSE )
+option( OPT_INSTALL_UDEV_RULE "Install udev rules" TRUE )
+option( OPT_ADD_GROUP "Add 'opensd' group and make current user a member" TRUE )
+option( OPT_INSTALL_SYSD_SERVICE "Install systemd user service" TRUE )
 
 # Build driver daemon binary
 if( BUILD_DAEMON )
@@ -104,7 +111,7 @@ if( BUILD_GUI )
 endif( BUILD_GUI )
 
 # Copy data files to build directory for development and testing on systems 
-# where OpenSD is not already installed
+# where OpenSD is not installed
 add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
                     COMMAND ${CMAKE_COMMAND} -E make_directory "${BUILD_DATA_PROFILE_DIR}" )
 add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD 
@@ -117,3 +124,16 @@ add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD
 # Data files to be installed
 install( FILES ${OPENSD_CONFIG_FILE} DESTINATION "${INSTALL_DATA_CONFIG_DIR}" )
 install( FILES ${OPENSD_PROFILE_FILES} DESTINATION "${INSTALL_DATA_PROFILE_DIR}" )
+
+if( OPT_INSTALL_SYSD_SERVICE )
+    install( FILES "${OPENSD_SYSD_SERVICE_FILE}" DESTINATION "${SYSTEMD_USER_DIR}" )
+endif( OPT_INSTALL_SYSD_SERVICE )
+
+if( OPT_INSTALL_UDEV_RULE )
+    install( FILES "${OPENSD_UDEV_RULE_FILE}" DESTINATION "${UDEV_RULE_DIR}" )
+    install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/reload_udev.sh )" )
+endif( OPT_INSTALL_UDEV_RULE )
+
+if( OPT_ADD_GROUP )
+    install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/opensd_group.sh )" )
+endif( OPT_ADD_GROUP )
