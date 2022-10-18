@@ -19,7 +19,7 @@
 ####################################################################################################
 cmake_minimum_required( VERSION 3.10 )
 
-project( OpenSD VERSION 0.35 )
+project( OpenSD VERSION 0.36 )
 
 # Compiler settings
 set( CMAKE_CXX_STANDARD 20 )
@@ -89,7 +89,7 @@ option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" TRUE )
 option( BUILD_CLI "Build OpenSD CLI tool (opensd-cli)" FALSE )
 option( BUILD_GUI "Build OpenSD GUI tool (opensd-gui)" FALSE )
 option( OPT_INSTALL_UDEV_RULE "Install udev rules" TRUE )
-option( OPT_ADD_GROUP "Add 'opensd' group and make current user a member" TRUE )
+option( OPT_INSTALL_GROUP "Add 'opensd' group and make current user a member" TRUE )
 option( OPT_INSTALL_SYSD_SERVICE "Install systemd user service" TRUE )
 
 # Build driver daemon binary
@@ -125,15 +125,19 @@ add_custom_command( TARGET "${OPENSD_DAEMON_BIN}" POST_BUILD
 install( FILES ${OPENSD_CONFIG_FILE} DESTINATION "${INSTALL_DATA_CONFIG_DIR}" )
 install( FILES ${OPENSD_PROFILE_FILES} DESTINATION "${INSTALL_DATA_PROFILE_DIR}" )
 
+# Install systemd service file if enabled
 if( OPT_INSTALL_SYSD_SERVICE )
     install( FILES "${OPENSD_SYSD_SERVICE_FILE}" DESTINATION "${SYSTEMD_USER_DIR}" )
 endif( OPT_INSTALL_SYSD_SERVICE )
 
+# Install udev rule and reload udev if enabled
 if( OPT_INSTALL_UDEV_RULE )
     install( FILES "${OPENSD_UDEV_RULE_FILE}" DESTINATION "${UDEV_RULE_DIR}" )
     install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/reload_udev.sh )" )
 endif( OPT_INSTALL_UDEV_RULE )
 
-if( OPT_ADD_GROUP )
+# Add 'opensd' group for udev rule and add current user to that group. 
+# Gets correct username when installing with sudo.
+if( OPT_INSTALL_GROUP )
     install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/opensd_group.sh )" )
-endif( OPT_ADD_GROUP )
+endif( OPT_INSTALL_GROUP )

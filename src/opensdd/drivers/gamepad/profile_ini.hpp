@@ -22,6 +22,7 @@
 
 #include "profile.hpp"
 #include "../../../common/ini.hpp"
+// C++
 #include <filesystem>
 
 
@@ -69,7 +70,6 @@ namespace Drivers::Gamepad
     };
     
 } // namespace Drivers::Gamepad
-
 
 
 #endif // __GAMEPAD__PROFILE_INI_HPP__

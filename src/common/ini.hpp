@@ -110,7 +110,7 @@ namespace Ini
         ~ValVec(){};
     };
 
-}
+} // namespace Ini
 
 
 #endif // __INI_HPP__

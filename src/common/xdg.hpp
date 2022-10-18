@@ -24,6 +24,8 @@
 #include <stdlib.h>
 
 
+// Functions for getting the XDG paths from the environment, or use the default
+// paths if not defined.
 namespace Xdg
 {
     std::filesystem::path       UserHome();

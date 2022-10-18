@@ -20,7 +20,7 @@
 #ifndef __INPUT_EVENT_NAMES_HPP__
 #define __INPUT_EVENT_NAMES_HPP__
 
-// event definitions
+// Event definitions
 #include <linux/input.h>
 // C++
 #include <map>
@@ -31,9 +31,12 @@
 #define EVIL(n) { #n , n },
 
 
+// String/int maps of event codes as defined in linux/input-event-codes.h as
+// well as some helper functions to look them up. We need this so we can 
+// reference event names in our gamepad profiles.
 namespace EvName
 {
-    // This is gonna suck
+    // Map of key/button names
     const std::map<std::string, unsigned int> KEY_MAP = 
     {
         EVIL(KEY_ESC)
@@ -700,7 +703,7 @@ namespace EvName
         EVIL(BTN_TRIGGER_HAPPY40)
     };
 
-
+    // Map of all absolute axis names
     const std::map<std::string, unsigned int> ABS_MAP = 
     {
         EVIL(ABS_X)
@@ -748,7 +751,7 @@ namespace EvName
         EVIL(ABS_MT_TOOL_Y)
     };
 
-
+    // Map of all relative axis names
     const std::map<std::string, unsigned int> REL_MAP = 
     {
         EVIL(REL_X)
@@ -765,12 +768,17 @@ namespace EvName
         EVIL(REL_HWHEEL_HI_RES)
     };
     
+    // Helper functions
     
+    // Get event type
+    // Returns event type for the event name based on prefix (KEY_X = EV_KEY)
     int GetEvType( std::string codeName);
+    
+    // Get event code
+    // Returns the numeric code associated with a name as defined in input-event-codes.h
     int GetEvCode( std::string codeName );
     
 } // namespace EvName
-
 
 
 #endif // __INPUT_EVENT_NAMES_HPP__

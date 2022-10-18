@@ -21,6 +21,7 @@
 #define __GAMEPAD__PRESET_TEMPLATE_HPP__
 
 #include "profile.hpp"
+// Event codes
 #include <linux/input.h>
 
 

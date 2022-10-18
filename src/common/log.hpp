@@ -23,6 +23,7 @@
 #include <string>
 #include <mutex>
 
+
 // Trim unwanted stuff off of __PRETTY_FUNCTION__ at compile time 
 consteval std::string_view ShortenPrettyFunction( const char* prettyString )
 {
@@ -37,6 +38,7 @@ consteval std::string_view ShortenPrettyFunction( const char* prettyString )
 
 // Macro to get clean function/method names for Log::Write
 #define FUNC_NAME ShortenPrettyFunction(__PRETTY_FUNCTION__)
+
 
 // Simple thread-safe global logger
 class Log
@@ -61,5 +63,6 @@ public:
 
 // Global instance
 extern Log     gLog;
+
 
 #endif // __LOG_HPP__

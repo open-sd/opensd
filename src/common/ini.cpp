@@ -551,7 +551,6 @@ Ini::IniFile::~IniFile()
 
 
 
-
 //////////////////////////////////////////////////////////
 //  ValVec Helper class
 //////////////////////////////////////////////////////////
@@ -646,6 +645,7 @@ bool Ini::ValVec::Bool( unsigned int index )
     
     return b;
 }
+
 
 
 std::string Ini::ValVec::FullString()

@@ -42,7 +42,7 @@ const std::string   LICENSE_BLOCK =
 {
     "    This program comes with ABSOLUTELY NO WARRANTY.\n"
     "    This is free software, and you are welcome to redistribute it under certain\n"
-    "    conditions.  See https://gitlab.com/open-sd/opensd for license.\n"
+    "    conditions.  For full license, see https://www.gnu.org/licenses/gpl-3.0.txt\n"
 };
 
 const std::string   HELP_BLOCK =
@@ -89,10 +89,6 @@ int main( int argc, char **argv )
     
     // Set initial Logging level
     gLog.SetFilterLevel( Log::WARN );
-
-
-
-
 
     // Handle command line arguments
     

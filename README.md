@@ -20,7 +20,7 @@ This goal of this project is to reverse engineer, document the hardware, and pro
 ## Features
 Development is still early, so many of the features and support is incomplete.  What's listed is the current scope of the project.  See the Roadmap section for feature implmentation.
 
-- Fast and tiny driver daemon
+- Small and fast driver daemon
 - Fully configurable and mappable
 - Default device profiles for common controllers
 - Customizable device profiles
@@ -71,31 +71,56 @@ ccmake ..
 <br>
 
 ## Installation
-TODO:  Better instructions + install script
+Once you've successfully built OpenSD, just run
+```
+sudo make install
+```
 
-There's no install script yet, so it must be manually built and executed.
-
-The OpenSD daemon `opensdd` requires access to the underlying hardware via the hidraw kernel subsystem, it then wites the events to the uinput subsystem.  This means the user running the daemon must have access to those devices.  
-
-A udev rule is provided to make setting this up easier -- or you can configure it your own way, but it's NOT recommended to run `opensdd` as root.
-
-once the uder rule is loaded and the user has been made a member of the relevant group(s), it should be able to run.  You will need to logout for group changes to take effect on your current user.
+By default, this will
+ - Install a systemd user service file.
+ - Install a udev rule to give hardware access to the 'opensd' group
+ - Reload udev rules
+ - Create the 'opensd' group and make the current user a member of that group.
+ 
+Note:  Group changes will not take effect until after logout.
 
 <br>
 
 ## Usage
-TODO
+Make sure that whichever user is running OpenSD is a member of the 'opensd' group (or otherwise has access to the Steam Deck hidraw devices).
 
-Build the binaries, then run the daemon.  Again, make sure the user that runs this has access to the Steam Deck gamepad hidraw nodes AND the uinput device, or it it will fail.
-
-If your permissions are correct, run from a terminal:
+If you've installed OpenSD, you can run the daemon from a terminal with
 ```
 opensdd
 ```
+or using the systemd user service with
+```
+systemctl --user start opensd
+```
 
-Once the daemon finished starting up and the program is running you should be able to read joystick/gamepad the event devices from other software.
+This means OpenSD can also be enabled on login by using
+```
+systemctl --user enable opensd
+```
 
-You can use tools `evtest` and `jstest-gtk` to test if it's working.
+CLI options can be shown using
+```
+opensdd --help
+```
+
+Once the daemon is running, you should be able to read joystick/gamepad the event devices from other software.
+You can use tools like `evtest` and `jstest-gtk` to test it.
+
+## Configuration
+OpenSD is highly configurable and easy to use.  
+Currently, OpenSD can be configured using ini files, and eventually, there will be a GUI configuration tool as well.
+
+Configuration is broken into two parts, the daemon configuration and the gamepad profile.  By default (XDG standards are correctly followed), you can find them in `~/.config/opensd/`.
+The `config.ini` file contains settings for the daemon (not much implemented so far), including which profile file to load (from the user profile directory)
+
+The ini files in the `~/.config/opensd/profiles/` directory are used to configure the gamepad features and mappings.  If you want to create a new profile, it's recommended to copy the `default.ini` to `yourprofilename.ini` instead of editing it directly.  
+The `default.ini` profile is documented to explain how to configure your device.  Don't forget to set it to be loaded in the 'config.ini'.  There's no limit to the number of device profiles you can make.
+
 
 <br>
 
@@ -112,7 +137,7 @@ Feature progress:
         - [x]   Universal binding system
         - [x]   Profile support
         - [x]   Profile ini loading
-        - [ ]   Configuration directories
+        - [x]   Configuration directories
         - [x]   Multithreaded
         - [x]   Buttons
         - [x]   Sticks
@@ -129,15 +154,16 @@ Feature progress:
         - [ ]   Automatic control
     - [ ]   Volume control
     - [ ]   IPC
-    - [ ]   Config file loading
+    - [x]   Config file loading
         - [ ]   Global config file
-        - [ ]   User config files
-        - [ ]   User profile files
+        - [x]   User config files
+        - [x]   User profile files
 - [ ]   Battery reporting
 - [ ]   CLI config tool
 - [ ]   GUI config tool
-- [ ]   Install script
+- [x]   Install script
 - [ ]   Packaging
+- [ ]   Man files
 
 <br>
 

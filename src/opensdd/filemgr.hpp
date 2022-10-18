@@ -17,8 +17,8 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __FILES_HPP__
-#define __FILES_HPP__
+#ifndef __FILEMGR_HPP__
+#define __FILEMGR_HPP__
 
 #include "../common/errors.hpp"
 #include <filesystem>
@@ -53,4 +53,4 @@ public:
 };
 
 
-#endif // __FILES_HPP__
+#endif // __FILEMGR_HPP__

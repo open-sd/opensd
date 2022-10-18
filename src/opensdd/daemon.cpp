@@ -18,7 +18,7 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "daemon.hpp"
-#include "files.hpp"
+#include "filemgr.hpp"
 #include "../common/log.hpp"
 #include "../common/errors.hpp"
 #include "drivers/gamepad/presets.hpp"
@@ -60,18 +60,19 @@ int Daemon::LoadProfile( std::string fileName )
         gLog.Write( Log::ERROR, "Failed to load profile: Initialization error." );
         return Err::NOT_INITIALIZED;
     }
-    
-    // Load gamepad profile
-    Drivers::Gamepad::ProfileIni    profile_ini;
-    Drivers::Gamepad::Profile       profile;
 
+    // Get the full file path for the profile
     path = mFileMgr.GetProfileFilePath( fileName );
     if (path.empty())
     {
         gLog.Write( Log::ERROR, "Failed to find profile '" + fileName + "'" );
         return Err::FILE_NOT_FOUND;
     }
+
+    Drivers::Gamepad::ProfileIni    profile_ini;
+    Drivers::Gamepad::Profile       profile;
     
+    // Parse profile file into profile object
     result = profile_ini.Load( path, profile );
     if (result != Err::OK)
     {

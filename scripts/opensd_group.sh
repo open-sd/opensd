@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Get current user when installing with sudo
 curr_user=${SUDO_USER:-$USER}
 
 printf "%s" "Adding 'opensd' group..."

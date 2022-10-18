@@ -387,6 +387,7 @@ int Uinput::Device::UpdateAbs( uint16_t code, double value )
 }
 
 
+
 int Uinput::Device::UpdateRel( uint16_t code, int32_t value )
 {
     if (!mEvBuff.rel.count(code))

@@ -20,9 +20,10 @@
 #ifndef __DAEMON_HPP__
 #define __DAEMON_HPP__
 
-#include "files.hpp"
+#include "filemgr.hpp"
 #include "config.hpp"
 #include "drivers/gamepad/driver.hpp"
+
 
 class Daemon
 {
@@ -43,7 +44,6 @@ public:
     Daemon();
     ~Daemon();
 };
-
 
 
 #endif // __DAEMON_HPP__

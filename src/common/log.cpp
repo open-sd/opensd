@@ -26,6 +26,7 @@
 Log gLog;
 
 
+
 Log::Log()
 {
     mFilter = Log::WARN;
