@@ -39,12 +39,12 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
     search_string = Str::Uint16ToHex( vid ) + ":" + Str::Uint16ToHex( pid ) + 
                     "." + Str::Uint16ToHex( iFaceNum + 1 ) + "/hidraw";
     
-    gLog.Write( Log::VERB, "Hidraw::FindHidrawNode(): Searching for device string '" + search_string + "'..." );
+    gLog.Write( Log::VERB, FUNC_NAME, "Searching for device string '" + search_string + "'..." );
 
     // Check if sysfs exists
     if (fs::exists( sysfs ))
     {
-        gLog.Write( Log::VERB, "Hidraw::FindHidrawNode(): Found sysfs path" );
+        gLog.Write( Log::VERB, FUNC_NAME, "Found sysfs path" );
         
         // scan through /sys/devices recursively looking for a matching 
         // identifier at the end of the path
@@ -53,7 +53,7 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
             if (i.path().string().length() > search_string.length())
                 if (i.path().string().substr( i.path().string().length() - search_string.length() ) == search_string)
                 {
-                    gLog.Write( Log::VERB, "Hidraw::FindHidrawNode(): Found matching device at '" + i.path().string() + "'" );
+                    gLog.Write( Log::VERB, FUNC_NAME, "Found matching device at '" + i.path().string() + "'" );
                     // Found the device, make sure it's a directory
                     if (fs::is_directory(i))
                     {
@@ -71,13 +71,13 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
                                 if (fs::is_character_file(hidraw_node))
                                 {
                                     // Got it, cool.
-                                    gLog.Write( Log::VERB, "Hidraw::FindHidrawNode(): Found matching hidraw device at '" + hidraw_node.string() + "'." );
+                                    gLog.Write( Log::VERB, FUNC_NAME, "Found matching hidraw device at '" + hidraw_node.string() + "'." );
                                     return hidraw_node;
                                 }
                                 else
                                 {
                                     // Not a character device
-                                    gLog.Write( Log::DEBUG, "Hidraw::FindHidrawNode(): '" + hidraw_node.string() + "' is not a character device." );
+                                    gLog.Write( Log::DEBUG, FUNC_NAME, "'" + hidraw_node.string() + "' is not a character device." );
                                     return std::filesystem::path();
                                 }
                             }
@@ -87,7 +87,7 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
     }
     
     // No luck.  Return empty string on failure.
-    gLog.Write( Log::DEBUG, "Hidraw::FindHidrawNode(): Failed to find any hidraw device matching '" + search_string + "'." );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to find any hidraw device matching '" + search_string + "'." );
     return std::filesystem::path();
 }
 
@@ -100,23 +100,23 @@ int Hidraw::Open( std::filesystem::path hidrawPath )
     
     if (!fs::exists( hidrawPath ))
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Open(): hidraw path '" + hidrawPath.string() + " does not exist." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "hidraw path '" + hidrawPath.string() + " does not exist." );
         return Err::INVALID_PARAMETER;
     }
 
     if (!fs::is_character_file( hidrawPath ))
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Open(): hidraw path '" + hidrawPath.string() + " is not a character file." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "hidraw path '" + hidrawPath.string() + " is not a character file." );
         return Err::INVALID_PARAMETER;
     }
 
     if (IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Open(): Hidraw object already has an open fd." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Hidraw object already has an open fd." );
         return Err::ALREADY_OPEN;
     }
     
-    gLog.Write( Log::VERB, "Hidraw::Open(): Opening hidraw device on '" + hidrawPath.string() + "'." );
+    gLog.Write( Log::VERB, FUNC_NAME, "Opening hidraw device on '" + hidrawPath.string() + "'." );
 
     // Multithreaded access guard
     std::lock_guard<std::mutex>     lock( mMutex );
@@ -125,12 +125,12 @@ int Hidraw::Open( std::filesystem::path hidrawPath )
     if (mFd < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::Open(): Failed to open device on '" + hidrawPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open device on '" + hidrawPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         Close();
         return Err::CANNOT_OPEN;
     }
 
-    gLog.Write( Log::VERB, "Hidraw::Open(): Successfully opened hidraw device on '" + hidrawPath.string() + "'." );
+    gLog.Write( Log::VERB, FUNC_NAME, "Successfully opened hidraw device on '" + hidrawPath.string() + "'." );
     mPath = hidrawPath;
     
     return Err::OK;
@@ -156,7 +156,7 @@ void Hidraw::Close()
 
     if (IsOpen())
     {
-        gLog.Write( Log::VERB, "Hidraw::Close(): Closing device '" + mPath.string() + "'." );
+        gLog.Write( Log::VERB, FUNC_NAME, "Closing device '" + mPath.string() + "'." );
         close( mFd );
         mFd = -1;
     }
@@ -176,7 +176,7 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Read(): Device is not open. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open. " );
         return Err::NOT_OPEN;
     }
 
@@ -187,13 +187,13 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::Read(): Failed to read '" + mPath.string() + "': error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read '" + mPath.string() + "': error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     
     if (result != sizeof(buff))
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Read(): Read " + std::to_string(result) + " bytes, but expected to read " + std::to_string(sizeof(buff)) + " bytes." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Read " + std::to_string(result) + " bytes, but expected to read " + std::to_string(sizeof(buff)) + " bytes." );
         return Err::READ_FAILED;
     }
     
@@ -211,7 +211,7 @@ int Hidraw::Write( const std::vector<uint8_t>& rData )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::Write(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
@@ -222,11 +222,11 @@ int Hidraw::Write( const std::vector<uint8_t>& rData )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::Write(): Failed to write '" + mPath.string() + " with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write '" + mPath.string() + " with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::WRITE_FAILED;
     }
 
-    //gLog.Write( Log::VERB, "Hidraw::Write(): Successfully wrote " + std::to_string(result) + " bytes to '" + mPath.string() );
+    //gLog.Write( Log::VERB, FUNC_NAME, "Successfully wrote " + std::to_string(result) + " bytes to '" + mPath.string() );
     
     return Err::OK;
 }
@@ -245,7 +245,7 @@ int Hidraw::GetReportDescriptor( hidraw_report_descriptor& rDesc )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetReportDescriptor(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
@@ -256,7 +256,7 @@ int Hidraw::GetReportDescriptor( hidraw_report_descriptor& rDesc )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetReportDescriptor(): Failed to get report descriptor size on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get report descriptor size on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     
@@ -265,7 +265,7 @@ int Hidraw::GetReportDescriptor( hidraw_report_descriptor& rDesc )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetReportDescriptor(): Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     
@@ -285,7 +285,7 @@ std::string Hidraw::GetName()
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetRawName(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return "";
     }
     
@@ -296,7 +296,7 @@ std::string Hidraw::GetName()
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetRawName(): Failed to read '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return "";
     }
     
@@ -313,7 +313,7 @@ std::string Hidraw::GetPhysLocation()
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetPhysicalLocation(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return "";
     }
     
@@ -324,7 +324,7 @@ std::string Hidraw::GetPhysLocation()
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetPhysicalLocation(): Failed to read '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return "";
     }
     
@@ -344,7 +344,7 @@ int Hidraw::GetInfo( hidraw_devinfo& rInfo )
     
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetInfo(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
@@ -355,7 +355,7 @@ int Hidraw::GetInfo( hidraw_devinfo& rInfo )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetInfo(): Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     
@@ -374,13 +374,13 @@ int Hidraw::GetFeatureReport( std::vector<uint8_t>& rData )
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetFeatureReport(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
     if (rData.empty())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::GetFeatureReport(): No report number specified in first byte. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "No report number specified in first byte. " );
         return Err::INVALID_PARAMETER;
     }
 
@@ -395,7 +395,7 @@ int Hidraw::GetFeatureReport( std::vector<uint8_t>& rData )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::GetFeatureReport(): Failed to read feature report on '" + mPath.string() + " with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read feature report on '" + mPath.string() + " with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     
@@ -422,13 +422,13 @@ int Hidraw::SetFeatureReport( const std::vector<uint8_t>& rData )
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::SetFeatureReport(): Device is not open." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
     
     if (rData.empty())
     {
-        gLog.Write( Log::DEBUG, "Hidraw::SetFeatureReport(): Report is empty." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Report is empty." );
         return Err::INVALID_PARAMETER;
     }
     
@@ -439,7 +439,7 @@ int Hidraw::SetFeatureReport( const std::vector<uint8_t>& rData )
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, "Hidraw::SetFeatureReport(): Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get report descriptor on '" + mPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
         return Err::READ_FAILED;
     }
     

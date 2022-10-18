@@ -35,7 +35,7 @@ int ProgArgs::HasOpt( std::string shortOpt, std::string longOpt )
     // Return 0 if no short or long options specified
     if ((shortOpt.empty()) && (longOpt.empty()))
     {
-        gLog.Write( Log::DEBUG, "ProgArgs::HasOpt(): No options specified." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "No options specified." );
         ++mErrorCount;
         return 0;
     }
@@ -83,7 +83,7 @@ int ProgArgs::HasOpt( std::string shortOpt, std::string longOpt )
     // Multiple matches returns error
     if (count > 1)
     {
-        gLog.Write( Log::DEBUG, "GetOpt(): Multiple options definitions." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Multiple options definitions." );
         ++mErrorCount;
         return 0;
     }

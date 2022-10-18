@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenSD open-source userspace driver for Steam Deck hardware
+
+[Service]
+Type=simple
+StandardOutput=journal
+ExecStart=opensdd -l info
+
+[Install]
+WantedBy=default.target

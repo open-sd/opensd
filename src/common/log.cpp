@@ -26,6 +26,7 @@
 Log gLog;
 
 
+
 Log::Log()
 {
     mFilter = Log::WARN;
@@ -67,7 +68,7 @@ void Log::SetFilterLevel( Log::Level logLevel )
 
 
 
-void Log::Write( Log::Level logLevel, std::string msg )
+void Log::Write( Log::Level logLevel, std::string_view funcName, std::string msg )
 {
     std::string     pfx;
 
@@ -84,7 +85,10 @@ void Log::Write( Log::Level logLevel, std::string msg )
         logLevel = Log::VERB;
     if (logLevel > Log::ERROR)
         logLevel = Log::ERROR;
-
+    
+    // A bit hacky, but it works and keeps consteval macro simple
+    if (!funcName.empty())
+        msg = "(): " + msg;
 
     switch (logLevel)
     {
@@ -115,14 +119,14 @@ void Log::Write( Log::Level logLevel, std::string msg )
         case Log::STDOUT:
         {
             std::lock_guard<std::mutex> write_lock( mMutex );
-            std::cout << "[" << pfx << "]  " << msg << "\n";
+            std::cout << "[" << pfx << "]  " << funcName << msg << "\n";
         }
         break;
 
         case Log::STDERR:
         {
             std::lock_guard<std::mutex> write_lock( mMutex );
-            std::cerr << "[" << pfx << "]  " << msg << "\n";
+            std::cerr << "[" << pfx << "]  " << funcName << msg << "\n";
         }
         break;
 
@@ -138,77 +142,3 @@ void Log::Write( Log::Level logLevel, std::string msg )
     return;
 }
 
-
-
-void Log::Write( Log::Level logLevel, std::wstring msg )
-{
-    std::wstring     pfx;
-
-    if (mMethod == Log::NONE)
-        return;
-        
-    if (!msg.length())
-        return;
-
-    if (logLevel < mFilter)
-        return;
-        
-    if (logLevel < Log::VERB)
-        logLevel = Log::VERB;
-    if (logLevel > Log::ERROR)
-        logLevel = Log::ERROR;
-
-
-    switch (logLevel)
-    {
-        case Log::DEBUG:
-            pfx = L"DEBUG"; 
-        break;
-
-        case Log::INFO:   
-            pfx = L"INFO"; 
-        break;
-
-        case Log::WARN:
-            pfx = L"WARN"; 
-        break;
-
-        case Log::ERROR:
-            pfx = L"ERROR"; 
-        break;
-        
-        case Log::VERB:   
-        default:
-            pfx = L"VERB";
-        break;
-    }
-
-    switch (mMethod)
-    {
-        case Log::STDOUT:
-        {
-            std::lock_guard<std::mutex> write_lock( mMutex );
-            std::wcout << L"[" << pfx << L"]  " << msg << L"\n";
-        }
-        break;
-
-        case Log::STDERR:
-        {
-            std::lock_guard<std::mutex> write_lock( mMutex );
-            std::wcerr << L"[" << pfx << L"]  " << msg << L"\n";
-        }
-        break;
-
-        case Log::SYSLOG:
-            // TODO
-        break;
-
-        default:
-            return;
-        break;
-    }
-
-    return;
-}   
-        
-    

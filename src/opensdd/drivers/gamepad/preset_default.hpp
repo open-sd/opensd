@@ -21,6 +21,7 @@
 #define __GAMEPAD__PRESET_DEFAULT_HPP__
 
 #include "profile.hpp"
+// Event codes
 #include <linux/input.h>
 
 

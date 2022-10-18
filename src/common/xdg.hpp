@@ -17,32 +17,22 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
 
-#include "../common/ini.hpp"
-#include "../common/errors.hpp"
-#include <cstdint>
+
 #include <string>
 #include <filesystem>
+#include <stdlib.h>
 
 
-class Config
+// Functions for getting the XDG paths from the environment, or use the default
+// paths if not defined.
+namespace Xdg
 {
-private:
-    Ini::IniFile        mIni;
-
-public:
-    bool                mAllowClients;
-    uint16_t            mPort;
-    std::string         mProfileName;
-
-    int                 Load( std::filesystem::path configFile );
-    int                 Save( std::filesystem::path configFile );
-    
-    Config();
-    ~Config();
-};
-
-
-#endif // __CONFIG_HPP__
+    std::filesystem::path       UserHome();
+    std::filesystem::path       ConfigHome();
+    std::filesystem::path       CacheHome();
+    std::filesystem::path       DataHome();
+    std::filesystem::path       StateHome();
+    std::filesystem::path       SysConfigDir();
+    std::filesystem::path       SysDataDir();
+}

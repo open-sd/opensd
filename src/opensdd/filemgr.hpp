@@ -17,32 +17,40 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __CONFIG_HPP__
-#define __CONFIG_HPP__
+#ifndef __FILEMGR_HPP__
+#define __FILEMGR_HPP__
 
-#include "../common/ini.hpp"
 #include "../common/errors.hpp"
-#include <cstdint>
-#include <string>
 #include <filesystem>
+#include <vector>
+#include <string>
 
 
-class Config
+class FileMgr
 {
 private:
-    Ini::IniFile        mIni;
-
-public:
-    bool                mAllowClients;
-    uint16_t            mPort;
-    std::string         mProfileName;
-
-    int                 Load( std::filesystem::path configFile );
-    int                 Save( std::filesystem::path configFile );
+    std::filesystem::path       mDataDir;
+    std::filesystem::path       mConfigDir;
+    std::filesystem::path       mProfileDir;
+    bool                        mIsConfigDirWritable;
+    bool                        mIsProfileDirWritable;
     
-    Config();
-    ~Config();
+    bool                        IsInstalled();
+    bool                        IsLocalBuild();
+    bool                        HasUserHome();
+    bool                        HasSystemConfig();
+    int                         CreateUserConfigDir();
+    int                         CopyUserConfigFile();
+    int                         CreateUserProfileDir();
+    int                         CopyUserProfileFiles();
+    
+public:
+    int                         Init();
+    
+    std::filesystem::path       GetConfigFilePath();
+    std::vector<std::string>    GetProfileList();
+    std::filesystem::path       GetProfileFilePath( std::string fileName );
 };
 
 
-#endif // __CONFIG_HPP__
+#endif // __FILEMGR_HPP__

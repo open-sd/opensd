@@ -76,7 +76,6 @@ namespace Uinput
         ~Device();
     };
 
-
 } // namespace Uinput
 
 

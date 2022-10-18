@@ -28,8 +28,6 @@
 #include <filesystem>
 
 
-
-
 namespace Ini
 {
     class IniFile
@@ -57,6 +55,14 @@ namespace Ini
         
         std::vector<std::string>        GetVal( std::string section, std::string key );
         int                             SetVal( std::string section, std::string key, std::vector<std::string> vals );
+        
+        int                             SetStringVal( std::string section, std::string key, std::string val );
+        int                             SetIntVal( std::string section, std::string key, int val );
+        int                             SetDoubleVal( std::string section, std::string key, double val );
+        int                             SetBoolVal( std::string section, std::string key, bool val );
+
+        bool                            DoesSectionExist( std::string section );
+        bool                            DoesKeyExist( std::string section, std::string key );
         
         void                            Clear();
         
@@ -91,6 +97,11 @@ namespace Ini
         // Defaults to first string if no parameter is supplied.
         double                      Double( unsigned int index = 0 );
         
+        // Convers the selected string to a boolean value and returns it.
+        // Recognized values are zero/non-zero, true/false, yes/no;
+        // Defaults to first string if no parameter is supplied.
+        bool                        Bool( unsigned int index = 0 );
+        
         // Returns all values as a single string separated by spaces.
         // Used for text lines
         std::string                 FullString();
@@ -99,7 +110,7 @@ namespace Ini
         ~ValVec(){};
     };
 
-}
+} // namespace Ini
 
 
 #endif // __INI_HPP__

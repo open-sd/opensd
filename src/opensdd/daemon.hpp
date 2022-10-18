@@ -20,13 +20,22 @@
 #ifndef __DAEMON_HPP__
 #define __DAEMON_HPP__
 
+#include "filemgr.hpp"
+#include "config.hpp"
 #include "drivers/gamepad/driver.hpp"
 
 
 class Daemon
 {
 private:
-    Drivers::Gamepad::Driver*       mGpDrv;
+    FileMgr                         mFileMgr;
+    Config                          mConfig;
+    Drivers::Gamepad::Driver*       mpGpDrv;
+    
+    int                             LoadProfile( std::string fileName );
+
+    int                             Startup();
+    void                            Shutdown();
    
 public:
     int                             Run();
@@ -35,7 +44,6 @@ public:
     Daemon();
     ~Daemon();
 };
-
 
 
 #endif // __DAEMON_HPP__

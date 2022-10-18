@@ -38,13 +38,16 @@ namespace Err
         INVALID_FORMAT,
         OUT_OF_RANGE,
         OUT_OF_MEMORY,
+        ENVIRONMENT_ERROR,
 
         // Files
         FILE_NOT_FOUND,
+        DIR_NOT_FOUND,
 
         // TODO: Clean up
         READ_FAILED,
         WRITE_FAILED,
+        COPY_FAILED,
         CANNOT_OPEN,
         NO_PERMISSION,      
         ALREADY_OPEN,
