@@ -36,6 +36,8 @@ void sig_handler( int sig )
     switch (sig)
     {
         case SIGINT:
+        case SIGTERM:
+        case SIGKILL:
             gDaemonRunning = false;
         break;
         
@@ -92,6 +94,8 @@ int Daemon::Startup()
     
     // Set up signal handlers
     signal( SIGINT, sig_handler );
+    signal( SIGTERM, sig_handler );
+    signal( SIGKILL, sig_handler );
 
     // Initialize file manager
     gLog.Write( Log::INFO, "Initializing file manager..." );

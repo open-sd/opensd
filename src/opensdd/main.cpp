@@ -38,12 +38,16 @@ const std::string   INFO_BLOCK      =
     "Licensed under the GNU GPLv3+\n"
 };
 
+
+
 const std::string   LICENSE_BLOCK =
 {
     "    This program comes with ABSOLUTELY NO WARRANTY.\n"
     "    This is free software, and you are welcome to redistribute it under certain\n"
     "    conditions.  For full license, see https://www.gnu.org/licenses/gpl-3.0.txt\n"
 };
+
+
 
 const std::string   HELP_BLOCK =
 {
