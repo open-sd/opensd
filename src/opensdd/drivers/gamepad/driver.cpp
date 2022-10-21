@@ -682,6 +682,12 @@ int Drivers::Gamepad::Driver::Poll()
                 gLog.Write( Log::ERROR, "Failed to read input from gamepad device." );
                 return Err::READ_FAILED;
             break;
+            
+            case Err::DEVICE_LOST:
+                gLog.Write( Log::ERROR, "Gamepad device has been lost.  Terminating gamepad driver." );
+                mRunning = false;
+                return Err::DEVICE_LOST;
+            break;
 
             default:
                 gLog.Write( Log::ERROR, "An unhandled error while occurred reading gamepad device." );

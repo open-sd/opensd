@@ -37,6 +37,8 @@ class Hidraw
 private:
     int                     mFd;
     int                     mReadTimeout;
+    int                     mTimeoutCount;
+    int                     mMaxTimeouts;
     std::filesystem::path   mPath;
     std::mutex              mMutex;
     

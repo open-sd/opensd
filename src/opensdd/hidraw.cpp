@@ -227,9 +227,18 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
         if (result == 0)
         {
             gLog.Write( Log::DEBUG, FUNC_NAME, "Device timeout." );
+            ++mTimeoutCount;
+            
+            if (mTimeoutCount > mMaxTimeouts)
+            {
+                gLog.Write( Log::ERROR, "Maximum timout count exceeded for hidraw device." );
+                Close();
+                return Err::DEVICE_LOST;
+            }
         }
         else
         {
+            mTimeoutCount = 0;
             result = read( mFd, buff, sizeof(buff) );
             if (result < 0)
             {
@@ -515,6 +524,8 @@ Hidraw::Hidraw()
 {
     mFd = -1;
     mReadTimeout = 1000; // in ms
+    mTimeoutCount = 0;
+    mMaxTimeouts = 5;
     mPath.clear();
 }
 

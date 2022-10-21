@@ -56,6 +56,7 @@ namespace Err
         NOT_INITIALIZED,
         NOT_FOUND,
         NO_DEVICE,
+        DEVICE_LOST,
         CANNOT_CREATE,
         CANNOT_SET_PROP,
         WRONG_SIZE,
