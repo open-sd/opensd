@@ -25,70 +25,102 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/hidraw.h>
+#include <linux/input.h>
+
+
+bool MatchHidrawInfo( std::filesystem::path path, uint16_t vid, uint16_t pid, uint16_t iFaceNum )
+{
+    int             fd;
+    int             result;
+    
+    fd = open( path.c_str(), O_RDONLY | O_NONBLOCK );
+    if (fd < 0)
+    {
+        // Cannot open device to read info
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open '" + path.string() + "': " + Err::GetErrnoString( e ) );
+        return false;
+    }
+    else
+    {
+        // Device open, now read hidraw info
+        char                buffer[1024] = {};
+        hidraw_devinfo      dev_info = {};
+        std::string         dev_name;
+        
+        // Get hidraw device info
+        result = ioctl( fd, HIDIOCGRAWINFO, &dev_info );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get hidraw device info from '" + path.string() + 
+                        "': " + Err::GetErrnoString( e ) );
+        }
+        else
+        {
+            // Got device info, check it against bus type and vid/pid
+            if ((dev_info.bustype == BUS_USB) && (dev_info.product == pid) && (dev_info.vendor == vid))
+            {
+                // VID / PID match, now check interface
+                result = ioctl( fd, HIDIOCGRAWPHYS(sizeof(buffer)), buffer );
+                if (result < 0)
+                {
+                    int e = errno;
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get hidraw physical location from '" + path.string() + 
+                                "': " + Err::GetErrnoString( e ) );
+                }
+                else
+                {
+                    // Compare interface name
+                    std::string         iface_name = "input" + std::to_string(iFaceNum);
+                    std::string         buff_str( buffer );
+                    
+                    if (buff_str.ends_with( iface_name ))
+                    {
+                        // Got a match
+                        gLog.Write( Log::VERB, FUNC_NAME, "Device at '" + path.string() + "' matches search params." );
+                        close( fd );
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    gLog.Write( Log::VERB, FUNC_NAME, "Device at '" + path.string() + "' did not match search params." );
+    if (fd >= 0)
+        close( fd );
+    return false;
+}
+
 
 
 std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t iFaceNum )
 {
-    namespace fs = std::filesystem;
+    namespace           fs = std::filesystem;
     
-    fs::path            sysfs = "/sys/devices";
-    fs::path            device_sysfs_path;
-    fs::path            hidraw_node;
-    std::string         search_string;
-    
-    search_string = Str::Uint16ToHex( vid ) + ":" + Str::Uint16ToHex( pid ) + 
-                    "." + Str::Uint16ToHex( iFaceNum + 1 ) + "/hidraw";
-    
-    gLog.Write( Log::VERB, FUNC_NAME, "Searching for device string '" + search_string + "'..." );
-
-    // Check if sysfs exists
-    if (fs::exists( sysfs ))
-    {
-        gLog.Write( Log::VERB, FUNC_NAME, "Found sysfs path" );
+    fs::path            dev_path = "/dev/";
+    fs::path            hidraw_path;
+    std::string         search_name = Str::Uint16ToHex(vid) + ":" + Str::Uint16ToHex(pid) + ":" + std::to_string(iFaceNum);
         
-        // scan through /sys/devices recursively looking for a matching 
-        // identifier at the end of the path
-        for (const auto& i : fs::recursive_directory_iterator( sysfs ))
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Scanning hidraw nodes..." );
+    for (auto const& i : fs::directory_iterator( dev_path ))
+    {
+        // Look for character files in /dev/ that begin with "hidraw"
+        if ((i.path().filename().string().starts_with( "hidraw" )) && (fs::is_character_file( i.path() )))
         {
-            if (i.path().string().length() > search_string.length())
-                if (i.path().string().substr( i.path().string().length() - search_string.length() ) == search_string)
-                {
-                    gLog.Write( Log::VERB, FUNC_NAME, "Found matching device at '" + i.path().string() + "'" );
-                    // Found the device, make sure it's a directory
-                    if (fs::is_directory(i))
-                    {
-                        // Get list of subdirectories, which should also be the
-                        // filenames of hidraw char devices in /dev/
-                        for (const auto& ii : fs::directory_iterator(i))
-                            device_sysfs_path = ii.path();
-                        
-                        // If a directory is returned that's our device's hidraw* name
-                        if (!device_sysfs_path.string().empty())
-                            if (fs::is_directory(device_sysfs_path))
-                            {
-                                // Make sure /dev/hidraw* exists and is a char device
-                                hidraw_node = "/dev/" + device_sysfs_path.filename().string();
-                                if (fs::is_character_file(hidraw_node))
-                                {
-                                    // Got it, cool.
-                                    gLog.Write( Log::VERB, FUNC_NAME, "Found matching hidraw device at '" + hidraw_node.string() + "'." );
-                                    return hidraw_node;
-                                }
-                                else
-                                {
-                                    // Not a character device
-                                    gLog.Write( Log::DEBUG, FUNC_NAME, "'" + hidraw_node.string() + "' is not a character device." );
-                                    return std::filesystem::path();
-                                }
-                            }
-                    }
-                }
+            gLog.Write( Log::VERB, "Checking '" + i.path().string() + "' for matching device info..." );
+            if (MatchHidrawInfo( i.path(), vid, pid, iFaceNum ))
+            {
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Found device matching '" + search_name + "' at '" + i.path().string() + "'" );
+                return i.path();
+            }
         }
     }
-    
+        
     // No luck.  Return empty string on failure.
-    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to find any hidraw device matching '" + search_string + "'." );
-    return std::filesystem::path();
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to find any hidraw device matching '" + search_name + "'." );
+    return "";
 }
 
 
@@ -96,7 +128,6 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
 int Hidraw::Open( std::filesystem::path hidrawPath )
 {
     namespace fs = std::filesystem;
-
     
     if (!fs::exists( hidrawPath ))
     {
