@@ -24,6 +24,7 @@
 #include "../common/errors.hpp"
 // Linux
 #include <linux/hidraw.h>
+#include <poll.h>
 // C++
 #include <cstdint>
 #include <filesystem>
@@ -35,8 +36,12 @@ class Hidraw
 {
 private:
     int                     mFd;
+    int                     mReadTimeout;
+    int                     mTimeoutCount;
+    int                     mMaxTimeouts;
     std::filesystem::path   mPath;
     std::mutex              mMutex;
+    
 
 public:
     std::filesystem::path   FindDevNode( uint16_t vid, uint16_t pid, uint16_t iFaceNum );

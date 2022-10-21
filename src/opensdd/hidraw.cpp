@@ -26,6 +26,7 @@
 #include <sys/ioctl.h>
 #include <linux/hidraw.h>
 #include <linux/input.h>
+#include <poll.h>
 
 
 bool MatchHidrawInfo( std::filesystem::path path, uint16_t vid, uint16_t pid, uint16_t iFaceNum )
@@ -200,7 +201,7 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
 {
     int             result;
     uint8_t         buff[64];
-    
+    pollfd          pfd = { .fd = mFd, .events = POLLIN, .revents = 0 };
 
     // Make sure our return vector is empty
     rData.clear();
@@ -214,21 +215,49 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
     // Multithreaded access guard
     std::lock_guard<std::mutex>     lock( mMutex );
 
-    result = read( mFd, buff, sizeof(buff) );
+    result = poll( &pfd, 1, mReadTimeout );
     if (result < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read '" + mPath.string() + "': error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Error while waiting for device: " + Err::GetErrnoString( e ) );
         return Err::READ_FAILED;
     }
-    
-    if (result != sizeof(buff))
+    else
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Read " + std::to_string(result) + " bytes, but expected to read " + std::to_string(sizeof(buff)) + " bytes." );
-        return Err::READ_FAILED;
+        if (result == 0)
+        {
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Device timeout." );
+            ++mTimeoutCount;
+            
+            if (mTimeoutCount > mMaxTimeouts)
+            {
+                gLog.Write( Log::ERROR, "Maximum timout count exceeded for hidraw device." );
+                Close();
+                return Err::DEVICE_LOST;
+            }
+        }
+        else
+        {
+            mTimeoutCount = 0;
+            result = read( mFd, buff, sizeof(buff) );
+            if (result < 0)
+            {
+                int e = errno;
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to read '" + mPath.string() + "': error " + 
+                            std::to_string(e) + ": " + Err::GetErrnoString(e) );
+                return Err::READ_FAILED;
+            }
+            
+            if (result != sizeof(buff))
+            {
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Read " + std::to_string(result) + " bytes, but expected to read " + 
+                            std::to_string(sizeof(buff)) + " bytes." );
+                return Err::READ_FAILED;
+            }
+            
+            rData.assign( buff, buff + result );
+        }
     }
-    
-    rData.assign( buff, buff + result );
     
     return Err::OK;
 }
@@ -494,6 +523,9 @@ int Hidraw::SetFeatureReport( uint8_t reportId, const std::vector<uint8_t>& rDat
 Hidraw::Hidraw()
 {
     mFd = -1;
+    mReadTimeout = 1000; // in ms
+    mTimeoutCount = 0;
+    mMaxTimeouts = 5;
     mPath.clear();
 }
 
