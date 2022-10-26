@@ -539,14 +539,14 @@ void Ini::IniFile::Clear()
 
 Ini::IniFile::IniFile()
 {
-    // Nothing to do
+    //
 }
 
 
 
 Ini::IniFile::~IniFile()
 {
-    mData.clear();
+    //
 }
 
 
@@ -648,13 +648,19 @@ bool Ini::ValVec::Bool( unsigned int index )
 
 
 
-std::string Ini::ValVec::FullString()
+std::string Ini::ValVec::FullString( unsigned int index )
 {
     std::string     s;
     
-    // Concatenate all values, separated by a space.
-    for (auto& v : mData)
-        s = s + v + " ";
+    if (index >= mData.size())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Index is out of range." );
+        return "";
+    }
+    
+    // Concatenate all value starting with index into a single string, separated by a space.
+    for (unsigned int i = index; i < mData.size(); ++i)
+        s = s + mData.at(i) + " ";
         
     // Trim trailing space.
     if (s.ends_with(' '))

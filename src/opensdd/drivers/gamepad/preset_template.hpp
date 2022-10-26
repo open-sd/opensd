@@ -139,102 +139,102 @@ namespace Drivers::Gamepad::Presets
             // The price of designated initialization is using designated initialization
             .dpad
             {
-                .up                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .down               = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .left               = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .right              = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                .up                 = {},
+                .down               = {},
+                .left               = {},
+                .right              = {},
             },
             .btn
             {
-                .a                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .b                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .x                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .y                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .l1                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .l2                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .l3                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .l4                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .l5                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r1                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r2                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r3                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r4                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r5                 = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .menu               = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .options            = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .steam              = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .quick_access       = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
+                .a                  = {},
+                .b                  = {},
+                .x                  = {},
+                .y                  = {},
+                .l1                 = {},
+                .l2                 = {},
+                .l3                 = {},
+                .l4                 = {},
+                .l5                 = {},
+                .r1                 = {},
+                .r2                 = {},
+                .r3                 = {},
+                .r4                 = {},
+                .r5                 = {},
+                .menu               = {},
+                .options            = {},
+                .steam              = {},
+                .quick_access       = {}
             },
             .trigg
             {
-                .l                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                .r                  = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
+                .l                  = {},
+                .r                  = {},
             },
             .stick
             {
                 .l
                 {
-                    .up             = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
+                    .up             = {},
+                    .down           = {},
+                    .left           = {},
+                    .right          = {},
+                    .touch          = {},
+                    .force          = {}
                 },
                 .r
                 {
-                    .up             = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
+                    .up             = {},
+                    .down           = {},
+                    .left           = {},
+                    .right          = {},
+                    .touch          = {},
+                    .force          = {}
                 },
             },
             .pad
             {
                 .l
                 {
-                    .up             = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .rel_x          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .rel_y          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .press          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
+                    .up             = {},
+                    .down           = {},
+                    .left           = {},
+                    .right          = {},
+                    .rel_x          = {},
+                    .rel_y          = {},
+                    .touch          = {},
+                    .press          = {},
+                    .force          = {}
                 },
                 .r
                 {
-                    .up             = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .down           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .left           = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .right          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .rel_x          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .rel_y          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .touch          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .press          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 },
-                    .force          = { .dev = NONE,    .type = NONE,   .code = NONE,       .dir = 0 }
+                    .up             = {},
+                    .down           = {},
+                    .left           = {},
+                    .right          = {},
+                    .rel_x          = {},
+                    .rel_y          = {},
+                    .touch          = {},
+                    .press          = {},
+                    .force          = {}
                 },
             },
             .accel
             {
-                .x_plus             = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .x_minus            = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .y_plus             = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .y_minus            = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .z_plus             = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .z_minus            = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
+                .x_plus             = {},
+                .x_minus            = {},
+                .y_plus             = {},
+                .y_minus            = {},
+                .z_plus             = {},
+                .z_minus            = {},
             },
             .att
             {
-                .roll_plus          = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .roll_minus         = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .pitch_plus         = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .pitch_minus        = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .yaw_plus           = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
-                .yaw_minus          = { .dev = NONE,    .type = NONE,    .code = NONE,      .dir = 0 },
+                .roll_plus          = {},
+                .roll_minus         = {},
+                .pitch_plus         = {},
+                .pitch_minus        = {},
+                .yaw_plus           = {},
+                .yaw_minus          = {},
             }
         }
     }; // end profile

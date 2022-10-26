@@ -55,39 +55,40 @@ namespace Drivers::Gamepad
     class Driver : public Drivers::DrvBase
     {
     private:
-        Hidraw                  mHid;
-        DeviceState             mState;
-        Uinput::Device*         mpGamepad;
-        Uinput::Device*         mpMotion;
-        Uinput::Device*         mpMouse;
-        BindMap                 mMap;
-        std::atomic<bool>       mLizardMode;
-        std::thread             mLizHandlerThread;
+        Hidraw                      mHid;
+        DeviceState                 mState;
+        Uinput::Device*             mpGamepad;
+        Uinput::Device*             mpMotion;
+        Uinput::Device*             mpMouse;
+        BindMap                     mMap;
+        std::atomic<bool>           mLizardMode;
+        std::thread                 mLizHandlerThread;
         
         // Hid functions
-        int                     OpenHid();
-        int                     SetHidRegister( uint8_t reg, uint16_t value );
-        int                     ClearMapping();
+        int                         OpenHid();
+        int                         SetHidRegister( uint8_t reg, uint16_t value );
+        int                         ClearMapping();
         // Uinput
-        int                     CreateUinputDevs();
-        void                    DestroyUinputDevs();
+        int                         CreateUinputDevs();
+        void                        DestroyUinputDevs();
         // Update loop functions
-        void                    UpdateState( v1::PackedInputReport* pIr );
-        void                    TransEvent( const Binding& bind, double state, BindMode mode );
-        void                    Translate();
-        void                    Flush();
+        void                        UpdateState( v1::PackedInputReport* pIr );
+        void                        TransEvent( Binding& bind, double state, BindMode mode );
+        void                        Translate();
+        void                        Flush();
         
     protected:
-        int                     Poll();
-        void                    ThreadedLizardHandler();
+        int                         Poll();
+        void                        ThreadedLizardHandler();
         
     public:
-        int                     SetProfile( const Drivers::Gamepad::Profile& rProf );
-        int                     SetLizardMode( bool enabled );
-        void                    SetDeadzone( AxisEnum axis, double dz );
-        void                    SetStickFiltering( bool enabled );
-        void                    SetPadFiltering( bool enabled );
-        void                    Run();
+        int                         SetProfile( const Drivers::Gamepad::Profile& rProf );
+        int                         SetLizardMode( bool enabled );
+        void                        SetDeadzone( AxisEnum axis, double dz );
+        void                        SetStickFiltering( bool enabled );
+        void                        SetPadFiltering( bool enabled );
+        std::vector<std::string>    GetCommandList();
+        void                        Run();
 
         Driver();
         ~Driver();

@@ -20,6 +20,7 @@
 #include "driver.hpp"
 #include "compat.hpp"
 #include "../../../common/log.hpp"
+#include "../../runner.hpp"
 // Linux
 #include <unistd.h>
 // C++
@@ -27,7 +28,8 @@
 #include <bitset>
 #include <cmath>
 #include <iostream>
-#include <ctime>
+//#include <ctime>
+#include <chrono>
 
 
 void FilterStickCoords( double& rX, double& rY, double deadzone, double scale )
@@ -289,7 +291,7 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
 
 
 
-void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, BindMode mode )
+void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode mode )
 {
     Uinput::Device*     device = nullptr;
     
@@ -297,12 +299,11 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
     // Select which uinput device we need to write to
     switch (bind.dev)
     {
-        case NONE:
-            // No binding, do nothing
+        case NONE: // No binding, do nothing
             return;
         break;
         
-        case GAME:
+        case GAME:  // Gamepad device binding
             // Abort if there is no gamepad uinput device to write to
             if (mpGamepad == nullptr)
                 return;
@@ -310,18 +311,35 @@ void Drivers::Gamepad::Driver::TransEvent( const Binding& bind, double state, Bi
                 device = mpGamepad;
         break;
         
-        case MOTION:
+        case MOTION:  // Motion device binding
             if (mpMotion == nullptr)
                 return;
             else
                 device = mpMotion;
         break;
         
-        case MOUSE:
+        case MOUSE:  // Mouse device binding
             if (mpMouse == nullptr)
                 return;
             else
                 device = mpMouse;
+        break;
+        
+        case COMMAND:  // Run a command
+            if (state)
+            {
+                if (bind.delay > 0)
+                {
+                    // Handle repeat-delay (in ms) if set
+                    uint64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+                    if (time < bind.timestamp)
+                        return;
+                    bind.timestamp = time + bind.delay;
+                }
+                // Run command from separate thread to avoid packet loss or stopping driver
+                gRunner.Exec( bind.cmd, bind.id );
+            }
+            return;
         break;
         
         default:

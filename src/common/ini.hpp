@@ -104,7 +104,7 @@ namespace Ini
         
         // Returns all values as a single string separated by spaces.
         // Used for text lines
-        std::string                 FullString();
+        std::string                 FullString( unsigned int index = 0 );
         
         ValVec(){};
         ~ValVec(){};

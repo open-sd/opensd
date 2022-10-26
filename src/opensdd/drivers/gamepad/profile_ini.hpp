@@ -22,6 +22,7 @@
 
 #include "profile.hpp"
 #include "../../../common/ini.hpp"
+#include "../../../common/errors.hpp"
 // C++
 #include <filesystem>
 
@@ -52,7 +53,9 @@ namespace Drivers::Gamepad
         Drivers::Gamepad::Profile   mProf;
         _axisranges                 mAxisRange;
         Ini::IniFile                mIni;
+        uint32_t                    mBindIdCounter;
         
+        void                        Reset();
         void                        AddKeyEvent( uint16_t device, uint16_t code );
         void                        AddAbsEvent( uint16_t device, uint16_t code, int32_t min, int32_t max );
         void                        AddRelEvent( uint16_t device, uint16_t code );
@@ -60,6 +63,8 @@ namespace Drivers::Gamepad
         void                        GetFeatEnable( std::string key, bool& rValue );
         void                        GetDeadzone( std::string key, double& rValue );
         void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax );
+        Drivers::Gamepad::Binding   GetEventBinding( std::string key );
+        Drivers::Gamepad::Binding   GetCommandBinding( std::string key );
         void                        GetBinding( std::string key, Drivers::Gamepad::Binding& rBind );
         
     public:
