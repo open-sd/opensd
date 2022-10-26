@@ -199,21 +199,26 @@ void Drivers::Gamepad::ProfileIni::GetDeadzone( std::string key, double& rValue 
 {
     Ini::ValVec         val;
     
-    // rValue is unaltered (i.e. uses default) if key is not found
-
     val = mIni.GetVal( "Deadzones", key );
-    if (val.Count())
+
+    if (!val.Count())
     {
-        double v = val.Double();
-        
-        // Clamp range
-        if (v > 0.9)
-            v = 0.9;
-        if (v < 0)
-            v = 0;
-            
-        rValue = v;
+        // rValue is unaltered (i.e. uses default) if key is not found
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Deadzone for '" + key + "' is missing value." );
+        return;
     }
+    
+    double v = val.Double();
+    
+    // Clamp range
+    if (v > 0.9)
+        v = 0.9;
+    if (v < 0)
+        v = 0;
+        
+    rValue = v;
+    
+    gLog.Write( Log::VERB, "Setting deadzone for '" + key + "' to " + std::to_string(v) );
 }
 
 
@@ -240,7 +245,7 @@ void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string section, std::strin
         {
             rMin = min;
             rMax = max;
-            gLog.Write( Log::DEBUG, FUNC_NAME, key + " is " + std::to_string(min) + " to " + std::to_string(max) );
+            gLog.Write( Log::VERB, "Setting axis range for " + key + ": " + std::to_string(min) + " to " + std::to_string(max) );
         }
     }
 }
@@ -250,7 +255,8 @@ void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string section, std::strin
 Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::string key )
 {
     Drivers::Gamepad::Binding   temp_bind;
-    std::string                 temp_str;
+    std::string                 dev_str;
+    std::string                 ev_str;
     Ini::ValVec                 val;
     int                         ev_type = 0;
     int                         result;
@@ -265,19 +271,33 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
     }
 
     // Get device type
-    temp_str = Str::Uppercase(val.String(0));
-    if (temp_str == "GAMEPAD")
+    dev_str = Str::Uppercase(val.String(0));
+    if (dev_str == "GAMEPAD")
+    {
         temp_bind.dev = GAME;
+        dev_str = "Gamepad";
+    }
     else
-        if (temp_str == "MOTION")
+        if (dev_str == "MOTION")
+        {
             temp_bind.dev = MOTION;
+            dev_str = "Motion";
+        }
         else
-            if (temp_str == "MOUSE")
+            if (dev_str == "MOUSE")
+            {
                 temp_bind.dev = MOUSE;
+                dev_str = "Mouse";
+            }
+            else
+            {
+                temp_bind.dev = COMMAND + 100;
+                dev_str = "Unknown";
+            }
 
     // Get 2nd param, which should be the event code, from which we extract the event type
-    temp_str = val.String(1);
-    result = EvName::GetEvType( temp_str );
+    ev_str = Str::Uppercase( val.String(1) );
+    result = EvName::GetEvType( ev_str );
     if (result < 0)
     {
         gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to get event type. " );
@@ -291,7 +311,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
         case EV_KEY: // Button / key
             temp_bind.type  = EV_KEY;
 
-            result = EvName::GetEvCode( temp_str );
+            result = EvName::GetEvCode( ev_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Unrecognized KEY / BTN event code.  Ignoring." );
@@ -302,6 +322,8 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
             
             // Enable key event to the specified device
             AddKeyEvent( temp_bind.dev, temp_bind.code );
+
+            gLog.Write( Log::VERB, "Added binding: " + key + " = " + dev_str + " " + ev_str );
         break;
         
         case EV_ABS: // Absolute axis event
@@ -315,7 +337,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
             temp_bind.type  = EV_ABS;
             
             // Get the event code + any offset
-            result = EvName::GetEvCode( temp_str );
+            result = EvName::GetEvCode( ev_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Unrecognized ABS event code.  Ignoring." );
@@ -336,12 +358,13 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
                 }
             
             // !! The axis is not enabled enabled here, but from the GamepadAxes / MotionAxes section
+            gLog.Write( Log::VERB, "Added binding: " + key + " = " + dev_str + " " + ev_str + (temp_bind.dir ? "+" : "-") );
         break;
         
         case EV_REL:
             temp_bind.type  = EV_REL;
 
-            result = EvName::GetEvCode( temp_str );
+            result = EvName::GetEvCode( ev_str );
             if (result < 0)
             {
                 gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Unrecognized REL event code.  Ignoring." );
@@ -352,6 +375,8 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
             
             // Enable relative axis event
             AddRelEvent( temp_bind.dev, temp_bind.code );
+            
+            gLog.Write( Log::VERB, "Added binding: " + key + " = " + dev_str + " " + ev_str );
         break;
         
         default:
@@ -360,6 +385,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
         break;
     }
     
+        
     return temp_bind;
 }
 
@@ -416,7 +442,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetCommandBinding( std::
     }
     bind.cmd = temp_str;
     
-    gLog.Write( Log::DEBUG, "Loaded binding: " + key + " = Command " + (bind.id ? "true" : "false") + " " + 
+    gLog.Write( Log::VERB, "Added binding: " + key + " = Command " + (bind.id ? "true" : "false") + " " + 
                 std::to_string(bind.delay) + " " + bind.cmd );
 
     return bind;
