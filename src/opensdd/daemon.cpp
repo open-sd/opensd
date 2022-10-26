@@ -21,7 +21,6 @@
 #include "filemgr.hpp"
 #include "../common/log.hpp"
 #include "../common/errors.hpp"
-#include "drivers/gamepad/presets.hpp"
 #include "drivers/gamepad/profile_ini.hpp"
 // Linux
 #include <signal.h>

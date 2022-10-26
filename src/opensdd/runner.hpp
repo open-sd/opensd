@@ -17,23 +17,43 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __GAMEPAD__PRESETS_HPP__
-#define __GAMEPAD__PRESETS_HPP__
+#ifndef __RUNNER_HPP__
+#define __RUNNER_HPP__
 
-#include "profile.hpp"
-#include "preset_default.hpp"
+#include "../common/errors.hpp"
+// C++
+#include <thread>
+#include <string>
+#include <cstdint>
 #include <vector>
 
 
-namespace Drivers::Gamepad::Presets
+class Runner
 {
-    // List of built-in profile presets
-    const std::vector<const Drivers::Gamepad::Profile*> PRESET_LIST =
+private:
+    struct ProcInfo
     {
-        &Drivers::Gamepad::Presets::DEFAULT
+        int                 pid;    // Process ID
+        uint32_t            bid;    // binding ID
     };
     
-} // namespace Drivers::Gamepad::Presets
+    std::atomic<bool>       mIsRunning;
+    std::thread             mThread;
+    std::mutex              mCmdMutex;
+    std::vector<ProcInfo>   mProcList;
+    
+    void                    Daemon();
+    
+public:
+    int                 Exec( std::string command, uint32_t bindingId );
+    
+    Runner();
+    ~Runner();
+};
+
+// Global instance
+extern Runner gRunner;
 
 
-#endif // __GAMEPAD__PRESETS_HPP__
+
+#endif // __RUNNER_HPP__

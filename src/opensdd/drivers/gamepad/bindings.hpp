@@ -20,8 +20,11 @@
 #ifndef __GAMEPAD__BINDINGS_HPP__
 #define __GAMEPAD__BINDINGS_HPP__
 
-#include <cstdint>
+// Linux
 #include <linux/input.h>
+// C++ 
+#include <cstdint>
+#include <string>
 
 
 namespace Drivers::Gamepad
@@ -29,10 +32,13 @@ namespace Drivers::Gamepad
     // Shorthand enums
     enum
     {
+        // Devices
         NONE    = 0,
         GAME    = 100,
         MOTION  = 200,
         MOUSE   = 300,
+        COMMAND = 400,
+        // Event types
         KEY     = EV_KEY,
         BTN     = EV_KEY,
         ABS     = EV_ABS,
@@ -43,10 +49,21 @@ namespace Drivers::Gamepad
     struct Binding
     {
         uint16_t                dev;            // Determines which uinput device the event is sent to
-                                                // Must be: NONE, GAME, MOTION or MOUSE
+                                                // Must be: NONE, GAME, MOTION, MOUSE or COMMAND
         uint16_t                type;           // Input event type
         uint16_t                code;           // Input event code
         bool                    dir;            // Axis direction.  true = Axis+, false = Axis-
+        std::string             cmd;            // If dev is COMMAND, this string will be executed in a shell environment
+        uint32_t                id;             // Unique binding ID for commands, or zero to disable wait_for_exit
+        uint64_t                delay;          // Minimum delay between repeated commands
+        uint64_t                timestamp;      // Timestamp of binding execution in ms
+        
+        Binding():
+            dev(NONE), type(NONE), code(NONE), dir(false), cmd(""), id(0), delay(0), timestamp(0) {};
+        Binding( uint16_t deviceType, uint16_t eventType, uint16_t eventCode, bool direction ):
+            dev(deviceType), type(eventType), code(eventCode), dir(direction), cmd(""), id(0), delay(0), timestamp(0) {};
+        Binding( std::string s, uint32_t uniqueId, uint64_t repeatDelay ): 
+            dev(COMMAND), type(NONE), code(NONE), cmd(s), id(uniqueId), delay(repeatDelay), timestamp(0) {};
     };
 
     struct BindMap
