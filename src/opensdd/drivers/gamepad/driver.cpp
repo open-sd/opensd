@@ -281,6 +281,82 @@ void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
         FilterPadCoords( mState.pad.l.x, mState.pad.l.y, mState.pad.l.deadzone, mState.pad.l.scale );
         FilterPadCoords( mState.pad.r.x, mState.pad.r.y, mState.pad.r.deadzone, mState.pad.r.scale );
     }
+    // Left trackpad directional "buttons"
+    if (mState.pad.l.press)
+    {
+        // Triangular Quadrants
+        mState.pad.l.btn_quad_up        = ((mState.pad.l.y < 0) && (fabs(mState.pad.l.y) > fabs(mState.pad.l.x)));
+        mState.pad.l.btn_quad_down      = ((mState.pad.l.y > 0) && (fabs(mState.pad.l.y) > fabs(mState.pad.l.x)));
+        mState.pad.l.btn_quad_left      = ((mState.pad.l.x < 0) && (fabs(mState.pad.l.x) > fabs(mState.pad.l.y)));
+        mState.pad.l.btn_quad_right     = ((mState.pad.l.x > 0) && (fabs(mState.pad.l.x) > fabs(mState.pad.l.y)));
+        // Orthogonal (dpad-like)
+        mState.pad.l.btn_orth_up        = (mState.pad.l.y < -0.333);
+        mState.pad.l.btn_orth_down      = (mState.pad.l.y > 0.333);
+        mState.pad.l.btn_orth_left      = (mState.pad.l.x < -0.333);
+        mState.pad.l.btn_orth_right     = (mState.pad.l.x > 0.333);
+        // 2x2 Grid
+        mState.pad.l.btn_2x2_1          = ((mState.pad.l.x < 0) && (mState.pad.l.y < 0));
+        mState.pad.l.btn_2x2_2          = ((mState.pad.l.x > 0) && (mState.pad.l.y < 0));
+        mState.pad.l.btn_2x2_3          = ((mState.pad.l.x < 0) && (mState.pad.l.y > 0));
+        mState.pad.l.btn_2x2_4          = ((mState.pad.l.x > 0) && (mState.pad.l.y > 0));
+        // 3x3 Grid
+        int row_3x3 = (mState.pad.l.y < -0.333) ? 0 : (mState.pad.l.y < 0.333) ? 1 : 2;
+        int col_3x3 = (mState.pad.l.x < -0.333) ? 0 : (mState.pad.l.x < 0.333) ? 1 : 2;
+        mState.pad.l.btn_3x3_1         = ((row_3x3 == 0) && (col_3x3 == 0));
+        mState.pad.l.btn_3x3_2         = ((row_3x3 == 0) && (col_3x3 == 1));
+        mState.pad.l.btn_3x3_3         = ((row_3x3 == 0) && (col_3x3 == 2));
+        mState.pad.l.btn_3x3_4         = ((row_3x3 == 1) && (col_3x3 == 0));
+        mState.pad.l.btn_3x3_5         = ((row_3x3 == 1) && (col_3x3 == 1));
+        mState.pad.l.btn_3x3_6         = ((row_3x3 == 1) && (col_3x3 == 2));
+        mState.pad.l.btn_3x3_7         = ((row_3x3 == 2) && (col_3x3 == 0));
+        mState.pad.l.btn_3x3_8         = ((row_3x3 == 2) && (col_3x3 == 1));
+        mState.pad.l.btn_3x3_9         = ((row_3x3 == 2) && (col_3x3 == 2));
+    }
+    else
+    {
+        mState.pad.l.btn_quad_up = mState.pad.l.btn_quad_down = mState.pad.l.btn_quad_left = mState.pad.l.btn_quad_right = false;
+        mState.pad.l.btn_orth_up = mState.pad.l.btn_orth_down = mState.pad.l.btn_orth_left = mState.pad.l.btn_orth_right = false;
+        mState.pad.l.btn_2x2_1 = mState.pad.l.btn_2x2_2 = mState.pad.l.btn_2x2_3 = mState.pad.l.btn_2x2_4 = false;
+        mState.pad.l.btn_3x3_1 = mState.pad.l.btn_3x3_2 = mState.pad.l.btn_3x3_3 = mState.pad.l.btn_3x3_4 = mState.pad.l.btn_3x3_5 = mState.pad.l.btn_3x3_6 = mState.pad.l.btn_3x3_7 = mState.pad.l.btn_3x3_8 = mState.pad.l.btn_3x3_9 = false;
+    }
+    // Right Trackpad directional "buttons"
+    if (mState.pad.r.press)
+    {
+        // Triangular Quadrants
+        mState.pad.r.btn_quad_up        = ((mState.pad.r.y < 0) && (fabs(mState.pad.r.y) > fabs(mState.pad.r.x)));
+        mState.pad.r.btn_quad_down      = ((mState.pad.r.y > 0) && (fabs(mState.pad.r.y) > fabs(mState.pad.r.x)));
+        mState.pad.r.btn_quad_left      = ((mState.pad.r.x < 0) && (fabs(mState.pad.r.x) > fabs(mState.pad.r.y)));
+        mState.pad.r.btn_quad_right     = ((mState.pad.r.x > 0) && (fabs(mState.pad.r.x) > fabs(mState.pad.r.y)));
+        // Orthogonal (dpad-like)
+        mState.pad.r.btn_orth_up        = (mState.pad.r.y < -0.333);
+        mState.pad.r.btn_orth_down      = (mState.pad.r.y > 0.333);
+        mState.pad.r.btn_orth_left      = (mState.pad.r.x < -0.333);
+        mState.pad.r.btn_orth_right     = (mState.pad.r.x > 0.333);
+        // 2x2 Grid
+        mState.pad.r.btn_2x2_1          = ((mState.pad.r.x < 0) && (mState.pad.r.y < 0));
+        mState.pad.r.btn_2x2_2          = ((mState.pad.r.x > 0) && (mState.pad.r.y < 0));
+        mState.pad.r.btn_2x2_3          = ((mState.pad.r.x < 0) && (mState.pad.r.y > 0));
+        mState.pad.r.btn_2x2_4          = ((mState.pad.r.x > 0) && (mState.pad.r.y > 0));
+        // 3x3 Grid
+        int row_3x3 = (mState.pad.r.y < -0.333) ? 0 : (mState.pad.r.y < 0.333) ? 1 : 2;
+        int col_3x3 = (mState.pad.r.x < -0.333) ? 0 : (mState.pad.r.x < 0.333) ? 1 : 2;
+        mState.pad.r.btn_3x3_1         = ((row_3x3 == 0) && (col_3x3 == 0));
+        mState.pad.r.btn_3x3_2         = ((row_3x3 == 0) && (col_3x3 == 1));
+        mState.pad.r.btn_3x3_3         = ((row_3x3 == 0) && (col_3x3 == 2));
+        mState.pad.r.btn_3x3_4         = ((row_3x3 == 1) && (col_3x3 == 0));
+        mState.pad.r.btn_3x3_5         = ((row_3x3 == 1) && (col_3x3 == 1));
+        mState.pad.r.btn_3x3_6         = ((row_3x3 == 1) && (col_3x3 == 2));
+        mState.pad.r.btn_3x3_7         = ((row_3x3 == 2) && (col_3x3 == 0));
+        mState.pad.r.btn_3x3_8         = ((row_3x3 == 2) && (col_3x3 == 1));
+        mState.pad.r.btn_3x3_9         = ((row_3x3 == 2) && (col_3x3 == 2));
+    }
+    else
+    {
+        mState.pad.r.btn_quad_up = mState.pad.r.btn_quad_down = mState.pad.r.btn_quad_left = mState.pad.r.btn_quad_right = false;
+        mState.pad.r.btn_orth_up = mState.pad.r.btn_orth_down = mState.pad.r.btn_orth_left = mState.pad.r.btn_orth_right = false;
+        mState.pad.r.btn_2x2_1 = mState.pad.r.btn_2x2_2 = mState.pad.r.btn_2x2_3 = mState.pad.r.btn_2x2_4 = false;
+        mState.pad.r.btn_3x3_1 = mState.pad.r.btn_3x3_2 = mState.pad.r.btn_3x3_3 = mState.pad.r.btn_3x3_4 = mState.pad.r.btn_3x3_5 = mState.pad.r.btn_3x3_6 = mState.pad.r.btn_3x3_7 = mState.pad.r.btn_3x3_8 = mState.pad.r.btn_3x3_9 = false;
+    }
     
     // Accelerometers
     // TODO
@@ -409,7 +485,7 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit the state as a positive or negative relative axis 
                     // value depending on the direction specified in the binding.
                     if (state < 0)
-                        device->UpdateRel( bind.code, (bind.dir) ? fabs(state) : state);  // TODO Some kind of axis scaling / multiplier
+                        device->UpdateRel( bind.code, (bind.dir) ? fabs(state) : state );  // TODO Some kind of axis scaling / multiplier
                 break;
                 
                 default:
@@ -488,72 +564,121 @@ void Drivers::Gamepad::Driver::Translate()
 
     // Map normalized event values using the pregenerated map and write them to
     // our uinput event buffer
-    TransEvent( mMap.dpad.up,           mState.dpad.up,             BindMode::BUTTON );
-    TransEvent( mMap.dpad.down,         mState.dpad.down,           BindMode::BUTTON );
-    TransEvent( mMap.dpad.left,         mState.dpad.left,           BindMode::BUTTON );
-    TransEvent( mMap.dpad.right,        mState.dpad.right,          BindMode::BUTTON );
-    TransEvent( mMap.btn.a,             mState.btn.a,               BindMode::BUTTON );
-    TransEvent( mMap.btn.b,             mState.btn.b,               BindMode::BUTTON );
-    TransEvent( mMap.btn.x,             mState.btn.x,               BindMode::BUTTON );
-    TransEvent( mMap.btn.y,             mState.btn.y,               BindMode::BUTTON );
-    TransEvent( mMap.btn.l1,            mState.btn.l1,              BindMode::BUTTON );
-    TransEvent( mMap.btn.l2,            mState.btn.l2,              BindMode::BUTTON );
-    TransEvent( mMap.btn.l3,            mState.btn.l3,              BindMode::BUTTON );
-    TransEvent( mMap.btn.l4,            mState.btn.l4,              BindMode::BUTTON );
-    TransEvent( mMap.btn.l5,            mState.btn.l5,              BindMode::BUTTON );
-    TransEvent( mMap.btn.r1,            mState.btn.r1,              BindMode::BUTTON );
-    TransEvent( mMap.btn.r2,            mState.btn.r2,              BindMode::BUTTON );
-    TransEvent( mMap.btn.r3,            mState.btn.r3,              BindMode::BUTTON );
-    TransEvent( mMap.btn.r4,            mState.btn.r4,              BindMode::BUTTON );
-    TransEvent( mMap.btn.r5,            mState.btn.r5,              BindMode::BUTTON );
-    TransEvent( mMap.btn.menu,          mState.btn.menu,            BindMode::BUTTON );
-    TransEvent( mMap.btn.options,       mState.btn.options,         BindMode::BUTTON );
-    TransEvent( mMap.btn.steam,         mState.btn.steam,           BindMode::BUTTON );
-    TransEvent( mMap.btn.quick_access,  mState.btn.quick_access,    BindMode::BUTTON );
-    TransEvent( mMap.trigg.l,           mState.trigg.l.z,           BindMode::PRESSURE );
-    TransEvent( mMap.trigg.r,           mState.trigg.r.z,           BindMode::PRESSURE );
-    TransEvent( mMap.stick.l.up,        mState.stick.l.y,           BindMode::AXIS_MINUS );
-    TransEvent( mMap.stick.l.down,      mState.stick.l.y,           BindMode::AXIS_PLUS );
-    TransEvent( mMap.stick.l.left,      mState.stick.l.x,           BindMode::AXIS_MINUS );
-    TransEvent( mMap.stick.l.right,     mState.stick.l.x,           BindMode::AXIS_PLUS );
-    TransEvent( mMap.stick.l.touch,     mState.stick.l.touch,       BindMode::BUTTON );
-    TransEvent( mMap.stick.l.force,     mState.stick.l.force,       BindMode::PRESSURE );
-    TransEvent( mMap.stick.r.up,        mState.stick.r.y,           BindMode::AXIS_MINUS );
-    TransEvent( mMap.stick.r.down,      mState.stick.r.y,           BindMode::AXIS_PLUS );
-    TransEvent( mMap.stick.r.left,      mState.stick.r.x,           BindMode::AXIS_MINUS );
-    TransEvent( mMap.stick.r.right,     mState.stick.r.x,           BindMode::AXIS_PLUS );
-    TransEvent( mMap.stick.r.touch,     mState.stick.r.touch,       BindMode::BUTTON );
-    TransEvent( mMap.stick.r.force,     mState.stick.r.force,       BindMode::PRESSURE );
-    TransEvent( mMap.pad.l.up,          mState.pad.l.y,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.pad.l.down,        mState.pad.l.y,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.pad.l.left,        mState.pad.l.x,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.pad.l.right,       mState.pad.l.x,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.pad.l.rel_x,       mState.pad.l.dx,            BindMode::RELATIVE );
-    TransEvent( mMap.pad.l.rel_y,       mState.pad.l.dy,            BindMode::RELATIVE );
-    TransEvent( mMap.pad.l.touch,       mState.pad.l.touch,         BindMode::BUTTON );
-    TransEvent( mMap.pad.l.press,       mState.pad.l.press,         BindMode::BUTTON );
-    TransEvent( mMap.pad.l.force,       mState.pad.l.force,         BindMode::PRESSURE );
-    TransEvent( mMap.pad.r.up,          mState.pad.r.y,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.pad.r.down,        mState.pad.r.y,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.pad.r.left,        mState.pad.r.x,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.pad.r.right,       mState.pad.r.x,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.pad.r.rel_x,       mState.pad.r.dx,            BindMode::RELATIVE );
-    TransEvent( mMap.pad.r.rel_y,       mState.pad.r.dy,            BindMode::RELATIVE );
-    TransEvent( mMap.pad.r.touch,       mState.pad.r.touch,         BindMode::BUTTON );
-    TransEvent( mMap.pad.r.press,       mState.pad.r.press,         BindMode::BUTTON );
-    TransEvent( mMap.pad.r.force,       mState.pad.r.force,         BindMode::PRESSURE );
-    TransEvent( mMap.accel.x_plus,      mState.accel.x,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.accel.x_minus,     mState.accel.x,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.accel.y_plus,      mState.accel.y,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.accel.y_minus,     mState.accel.y,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.accel.z_plus,      mState.accel.z,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.accel.z_minus,     mState.accel.z,             BindMode::AXIS_MINUS );
-    TransEvent( mMap.att.roll_plus,     mState.att.roll,            BindMode::AXIS_PLUS );
-    TransEvent( mMap.att.roll_minus,    mState.att.roll,            BindMode::AXIS_MINUS );
-    TransEvent( mMap.att.pitch_plus,    mState.att.pitch,           BindMode::AXIS_PLUS );
-    TransEvent( mMap.att.pitch_minus,   mState.att.pitch,           BindMode::AXIS_MINUS );
-    TransEvent( mMap.att.yaw_plus,      mState.att.yaw,             BindMode::AXIS_PLUS );
-    TransEvent( mMap.att.yaw_minus,     mState.att.yaw,             BindMode::AXIS_MINUS );
+    // Dpad
+    TransEvent( mMap.dpad.up,               mState.dpad.up,                 BindMode::BUTTON );
+    TransEvent( mMap.dpad.down,             mState.dpad.down,               BindMode::BUTTON );
+    TransEvent( mMap.dpad.left,             mState.dpad.left,               BindMode::BUTTON );
+    TransEvent( mMap.dpad.right,            mState.dpad.right,              BindMode::BUTTON );
+    // Buttons
+    TransEvent( mMap.btn.a,                 mState.btn.a,                   BindMode::BUTTON );
+    TransEvent( mMap.btn.b,                 mState.btn.b,                   BindMode::BUTTON );
+    TransEvent( mMap.btn.x,                 mState.btn.x,                   BindMode::BUTTON );
+    TransEvent( mMap.btn.y,                 mState.btn.y,                   BindMode::BUTTON );
+    TransEvent( mMap.btn.l1,                mState.btn.l1,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.l2,                mState.btn.l2,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.l3,                mState.btn.l3,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.l4,                mState.btn.l4,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.l5,                mState.btn.l5,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.r1,                mState.btn.r1,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.r2,                mState.btn.r2,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.r3,                mState.btn.r3,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.r4,                mState.btn.r4,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.r5,                mState.btn.r5,                  BindMode::BUTTON );
+    TransEvent( mMap.btn.menu,              mState.btn.menu,                BindMode::BUTTON );
+    TransEvent( mMap.btn.options,           mState.btn.options,             BindMode::BUTTON );
+    TransEvent( mMap.btn.steam,             mState.btn.steam,               BindMode::BUTTON );
+    TransEvent( mMap.btn.quick_access,      mState.btn.quick_access,        BindMode::BUTTON );
+    // Triggers
+    TransEvent( mMap.trigg.l,               mState.trigg.l.z,               BindMode::PRESSURE );
+    TransEvent( mMap.trigg.r,               mState.trigg.r.z,               BindMode::PRESSURE );
+    // Sticks
+    TransEvent( mMap.stick.l.up,            mState.stick.l.y,               BindMode::AXIS_MINUS );
+    TransEvent( mMap.stick.l.down,          mState.stick.l.y,               BindMode::AXIS_PLUS );
+    TransEvent( mMap.stick.l.left,          mState.stick.l.x,               BindMode::AXIS_MINUS );
+    TransEvent( mMap.stick.l.right,         mState.stick.l.x,               BindMode::AXIS_PLUS );
+    TransEvent( mMap.stick.l.touch,         mState.stick.l.touch,           BindMode::BUTTON );
+    TransEvent( mMap.stick.l.force,         mState.stick.l.force,           BindMode::PRESSURE );
+    TransEvent( mMap.stick.r.up,            mState.stick.r.y,               BindMode::AXIS_MINUS );
+    TransEvent( mMap.stick.r.down,          mState.stick.r.y,               BindMode::AXIS_PLUS );
+    TransEvent( mMap.stick.r.left,          mState.stick.r.x,               BindMode::AXIS_MINUS );
+    TransEvent( mMap.stick.r.right,         mState.stick.r.x,               BindMode::AXIS_PLUS );
+    TransEvent( mMap.stick.r.touch,         mState.stick.r.touch,           BindMode::BUTTON );
+    TransEvent( mMap.stick.r.force,         mState.stick.r.force,           BindMode::PRESSURE );
+    // Pads
+    TransEvent( mMap.pad.l.up,              mState.pad.l.y,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.pad.l.down,            mState.pad.l.y,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.l.left,            mState.pad.l.x,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.pad.l.right,           mState.pad.l.x,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.l.rel_x,           mState.pad.l.dx,                BindMode::RELATIVE );
+    TransEvent( mMap.pad.l.rel_y,           mState.pad.l.dy,                BindMode::RELATIVE );
+    TransEvent( mMap.pad.l.touch,           mState.pad.l.touch,             BindMode::BUTTON );
+    TransEvent( mMap.pad.l.press,           mState.pad.l.press,             BindMode::BUTTON );
+    TransEvent( mMap.pad.l.force,           mState.pad.l.force,             BindMode::PRESSURE );
+    TransEvent( mMap.pad.l.btn_quad_up,     mState.pad.l.btn_quad_up,       BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_quad_down,   mState.pad.l.btn_quad_down,     BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_quad_left,   mState.pad.l.btn_quad_left,     BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_quad_right,  mState.pad.l.btn_quad_right,    BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_orth_up,     mState.pad.l.btn_orth_up,       BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_orth_down,   mState.pad.l.btn_orth_down,     BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_orth_left,   mState.pad.l.btn_orth_left,     BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_orth_right,  mState.pad.l.btn_orth_right,    BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_2x2_1,       mState.pad.l.btn_2x2_1,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_2x2_2,       mState.pad.l.btn_2x2_2,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_2x2_3,       mState.pad.l.btn_2x2_3,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_2x2_4,       mState.pad.l.btn_2x2_4,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_1,       mState.pad.l.btn_3x3_1,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_2,       mState.pad.l.btn_3x3_2,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_3,       mState.pad.l.btn_3x3_3,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_4,       mState.pad.l.btn_3x3_4,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_5,       mState.pad.l.btn_3x3_5,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_6,       mState.pad.l.btn_3x3_6,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_7,       mState.pad.l.btn_3x3_7,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_8,       mState.pad.l.btn_3x3_8,         BindMode::BUTTON );
+    TransEvent( mMap.pad.l.btn_3x3_9,       mState.pad.l.btn_3x3_9,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.up,              mState.pad.r.y,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.pad.r.down,            mState.pad.r.y,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.r.left,            mState.pad.r.x,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.pad.r.right,           mState.pad.r.x,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.pad.r.rel_x,           mState.pad.r.dx,                BindMode::RELATIVE );
+    TransEvent( mMap.pad.r.rel_y,           mState.pad.r.dy,                BindMode::RELATIVE );
+    TransEvent( mMap.pad.r.touch,           mState.pad.r.touch,             BindMode::BUTTON );
+    TransEvent( mMap.pad.r.press,           mState.pad.r.press,             BindMode::BUTTON );
+    TransEvent( mMap.pad.r.force,           mState.pad.r.force,             BindMode::PRESSURE );
+    TransEvent( mMap.pad.r.btn_quad_up,     mState.pad.r.btn_quad_up,       BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_quad_down,   mState.pad.r.btn_quad_down,     BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_quad_left,   mState.pad.r.btn_quad_left,     BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_quad_right,  mState.pad.r.btn_quad_right,    BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_orth_up,     mState.pad.r.btn_orth_up,       BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_orth_down,   mState.pad.r.btn_orth_down,     BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_orth_left,   mState.pad.r.btn_orth_left,     BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_orth_right,  mState.pad.r.btn_orth_right,    BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_2x2_1,       mState.pad.r.btn_2x2_1,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_2x2_2,       mState.pad.r.btn_2x2_2,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_2x2_3,       mState.pad.r.btn_2x2_3,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_2x2_4,       mState.pad.r.btn_2x2_4,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_1,       mState.pad.r.btn_3x3_1,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_2,       mState.pad.r.btn_3x3_2,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_3,       mState.pad.r.btn_3x3_3,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_4,       mState.pad.r.btn_3x3_4,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_5,       mState.pad.r.btn_3x3_5,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_6,       mState.pad.r.btn_3x3_6,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_7,       mState.pad.r.btn_3x3_7,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_8,       mState.pad.r.btn_3x3_8,         BindMode::BUTTON );
+    TransEvent( mMap.pad.r.btn_3x3_9,       mState.pad.r.btn_3x3_9,         BindMode::BUTTON );
+    // Accelerometers
+    TransEvent( mMap.accel.x_plus,          mState.accel.x,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.accel.x_minus,         mState.accel.x,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.accel.y_plus,          mState.accel.y,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.accel.y_minus,         mState.accel.y,                 BindMode::AXIS_MINUS );
+    TransEvent( mMap.accel.z_plus,          mState.accel.z,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.accel.z_minus,         mState.accel.z,                 BindMode::AXIS_MINUS );
+    // Gyros
+    TransEvent( mMap.att.roll_plus,         mState.att.roll,                BindMode::AXIS_PLUS );
+    TransEvent( mMap.att.roll_minus,        mState.att.roll,                BindMode::AXIS_MINUS );
+    TransEvent( mMap.att.pitch_plus,        mState.att.pitch,               BindMode::AXIS_PLUS );
+    TransEvent( mMap.att.pitch_minus,       mState.att.pitch,               BindMode::AXIS_MINUS );
+    TransEvent( mMap.att.yaw_plus,          mState.att.yaw,                 BindMode::AXIS_PLUS );
+    TransEvent( mMap.att.yaw_minus,         mState.att.yaw,                 BindMode::AXIS_MINUS );
 }
 
 

@@ -65,6 +65,7 @@ namespace Drivers::Gamepad
         void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax );
         Drivers::Gamepad::Binding   GetEventBinding( std::string key );
         Drivers::Gamepad::Binding   GetCommandBinding( std::string key );
+        Drivers::Gamepad::Binding   GetProfileBinding( std::string key );
         void                        GetBinding( std::string key, Drivers::Gamepad::Binding& rBind );
         
     public:
