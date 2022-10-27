@@ -33,27 +33,24 @@ namespace Drivers::Gamepad
     enum
     {
         // Devices
-        NONE    = 0,
-        GAME    = 100,
-        MOTION  = 200,
-        MOUSE   = 300,
-        COMMAND = 400,
-        // Event types
-        KEY     = EV_KEY,
-        BTN     = EV_KEY,
-        ABS     = EV_ABS,
-        REL     = EV_REL
+        NONE = 0,
+        GAME,
+        MOTION,
+        MOUSE,
+        COMMAND,
+        PROFILE
     };
 
     // Event map element
     struct Binding
     {
         uint16_t                dev;            // Determines which uinput device the event is sent to
-                                                // Must be: NONE, GAME, MOTION, MOUSE or COMMAND
+                                                // Must be: NONE, GAME, MOTION, MOUSE, COMMAND or PROFILE
         uint16_t                type;           // Input event type
         uint16_t                code;           // Input event code
         bool                    dir;            // Axis direction.  true = Axis+, false = Axis-
         std::string             cmd;            // If dev is COMMAND, this string will be executed in a shell environment
+                                                // If dev is PROFILE, this holds the filename of the profile ini to load
         uint32_t                id;             // Unique binding ID for commands, or zero to disable wait_for_exit
         uint64_t                delay;          // Minimum delay between repeated commands
         uint64_t                timestamp;      // Timestamp of binding execution in ms

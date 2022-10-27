@@ -290,10 +290,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetEventBinding( std::st
                 dev_str = "Mouse";
             }
             else
-            {
-                temp_bind.dev = COMMAND + 100;
-                dev_str = "Unknown";
-            }
+                temp_bind.dev = NONE;
 
     // Get 2nd param, which should be the event code, from which we extract the event type
     ev_str = Str::Uppercase( val.String(1) );
@@ -400,7 +397,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetCommandBinding( std::
 
     val = mIni.GetVal( "Bindings", key );
 
-    // Need at least 2 params for event bindings
+    // Need at least 4 params for Command bindings
     if (val.Count() < 4)
     {
         gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Command bindings must have at least four parameters." );
@@ -450,6 +447,33 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetCommandBinding( std::
 
 
 
+Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetProfileBinding( std::string key )
+{
+    Drivers::Gamepad::Binding   bind;
+    Ini::ValVec                 val;
+
+    val = mIni.GetVal( "Bindings", key );
+
+    // Need 2 params for Profile bindings
+    if (val.Count() < 2)
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Profile bindings must have at least two parameters." );
+        return Drivers::Gamepad::Binding();
+    }
+    
+    bind.dev = PROFILE;
+    
+    bind.cmd = val.String(1);
+    if (bind.cmd.empty())
+        return Drivers::Gamepad::Binding();
+    
+    gLog.Write( Log::VERB, "Added binding: " + key + " = Profile " + bind.cmd );
+    
+    return bind;
+}
+
+
+
 void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad::Binding& rBind )
 {
     Ini::ValVec                 val;
@@ -476,10 +500,13 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
             if (temp_str == "COMMAND")
                 rBind = GetCommandBinding( key );
             else
-            {                        
-                gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Unknown bind type '" + temp_str + "'" );
-                return;
-            }
+                if (temp_str == "PROFILE")
+                    rBind = GetProfileBinding( key );
+                else
+                {                        
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "Error in binding " + key + ": Unknown bind type '" + temp_str + "'" );
+                    return;
+                }
     }
         
 }
