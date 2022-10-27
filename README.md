@@ -2,6 +2,7 @@
 An open-source Linux userspace driver for Valve's Steam Deck hardware.
 
 [![](https://img.shields.io/badge/License-GPLv3-blueviolet?style=for-the-badge)]() [![](https://img.shields.io/badge/Written%20in-C%2B%2B-f34b7d?style=for-the-badge)]() [![](https://img.shields.io/badge/PayPal-Donate-blue?style=for-the-badge&logo=paypal)](https://paypal.me/seekdev)
+![](https://img.shields.io/badge/Version-0.40-lightgrey)
 
 
 <br>
@@ -142,6 +143,8 @@ Feature progress:
         - [x]   Buttons
         - [x]   Sticks
         - [x]   Trackpads
+        - [x]   Trackpad button emulation
+        - [x]   Run commands / scripts with bindings
         - [ ]   Accelerometers
         - [ ]   Gyros
         - [x]   "Lizard Mode" control
@@ -163,7 +166,10 @@ Feature progress:
 - [ ]   GUI config tool
 - [x]   Install script
 - [ ]   Packaging
+- [ ]   Documentation
 - [ ]   Man files
+- [ ]   Wiki
+
 
 <br>
 
