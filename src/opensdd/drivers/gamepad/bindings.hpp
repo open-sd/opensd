@@ -128,6 +128,31 @@ namespace Drivers::Gamepad
             Binding             touch;
             Binding             press;
             Binding             force;
+            // Triangular quadrant "buttons"
+            Binding             btn_quad_up;
+            Binding             btn_quad_down;
+            Binding             btn_quad_left;
+            Binding             btn_quad_right;
+            // Orthogonal directional "buttons" (dpad-like)
+            Binding             btn_orth_up;
+            Binding             btn_orth_down;
+            Binding             btn_orth_left;
+            Binding             btn_orth_right;
+            // 2x2 "button" grid
+            Binding             btn_2x2_1;
+            Binding             btn_2x2_2;
+            Binding             btn_2x2_3;
+            Binding             btn_2x2_4;
+            // 3x3 "button" grid
+            Binding             btn_3x3_1;
+            Binding             btn_3x3_2;
+            Binding             btn_3x3_3;
+            Binding             btn_3x3_4;
+            Binding             btn_3x3_5;
+            Binding             btn_3x3_6;
+            Binding             btn_3x3_7;
+            Binding             btn_3x3_8;
+            Binding             btn_3x3_9;
         };
 
         struct _touchpads

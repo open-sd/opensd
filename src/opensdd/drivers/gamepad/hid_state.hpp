@@ -105,6 +105,28 @@ namespace Drivers::Gamepad
             bool            touch;
             bool            press;
             double          force;
+            // Directional "button" input
+            bool            btn_quad_up;
+            bool            btn_quad_down;
+            bool            btn_quad_left;
+            bool            btn_quad_right;
+            bool            btn_orth_up;
+            bool            btn_orth_down;
+            bool            btn_orth_left;
+            bool            btn_orth_right;
+            bool            btn_2x2_1;
+            bool            btn_2x2_2;
+            bool            btn_2x2_3;
+            bool            btn_2x2_4;
+            bool            btn_3x3_1;
+            bool            btn_3x3_2;
+            bool            btn_3x3_3;
+            bool            btn_3x3_4;
+            bool            btn_3x3_5;
+            bool            btn_3x3_6;
+            bool            btn_3x3_7;
+            bool            btn_3x3_8;
+            bool            btn_3x3_9;
             // Configuration
             double          deadzone;
             double          scale;
