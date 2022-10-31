@@ -25,19 +25,45 @@
 // C++
 #include <atomic>
 #include <thread>
+#include <string>
+#include <queue>
 
 
 namespace Drivers
 {
+    constexpr unsigned int                  MAX_DRIVER_MESSAGES = 20;
+    
+    enum class MsgType
+    {
+        NONE,
+        PROFILE
+    };
+    
+    struct Message
+    {
+        MsgType                             type;
+        std::string                         msg;
+        double                              val;
+    };
+    
     // Threaded driver base class
     class DrvBase
     {
     private:
         std::thread                         mThread;
+        std::queue<Message>                 mMsgQueue;
+        std::mutex                          mMsgMutex;
 
     protected:
         std::atomic<bool>                   mRunning;
         virtual void                        Run(){ mRunning = false; };
+        void                                PushMessage( const Message& msg )
+        {
+            std::lock_guard<std::mutex>     lock( mMsgMutex );
+            if (mMsgQueue.size() >= MAX_DRIVER_MESSAGES)
+                return;
+            mMsgQueue.push( msg );
+        }
 
     public:
         // Public driver functions
@@ -56,7 +82,25 @@ namespace Drivers
         {
             return mRunning;
         }
-
+        
+        bool                                HasMessage()
+        {
+            std::lock_guard<std::mutex>     lock( mMsgMutex );
+            return !mMsgQueue.empty();
+        }
+        
+        Message                             PopMessage()
+        {
+            std::lock_guard<std::mutex> lock( mMsgMutex );
+            Message         msg = { .type = MsgType::NONE, .msg = "", .val = 0 };
+            if (mMsgQueue.empty())
+                return msg;
+            msg = mMsgQueue.front();
+            mMsgQueue.pop();
+            return msg;
+        }
+        
+        // Non-virtual constructor
         DrvBase(): mThread(), mRunning(false) {};
 
         // Destructor

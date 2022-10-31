@@ -63,6 +63,9 @@ namespace Drivers::Gamepad
         BindMap                     mMap;
         std::atomic<bool>           mLizardMode;
         std::thread                 mLizHandlerThread;
+        std::mutex                  mPollMutex;
+        uint64_t                    mProfSwitchDelay;       // In milliseconds
+        uint64_t                    mProfSwitchTimestamp;   // In milliseconds
         
         // Hid functions
         int                         OpenHid();

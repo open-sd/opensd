@@ -418,6 +418,22 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
             return;
         break;
         
+        case PROFILE:  // Request profile switch
+            if (state)
+            {
+                // Enforce a timeout for profile switching when called from binding
+                uint64_t time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+                if (time < mProfSwitchTimestamp)
+                    return;
+                mProfSwitchTimestamp = time + mProfSwitchDelay;
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Profile switch request" );
+
+                // Let the daemon know the user wants to switch profiles
+                PushMessage( { .type = Drivers::MsgType::PROFILE, .msg = bind.cmd, .val = 0 } );
+            }
+            return;
+        break;
+        
         default:
             // Unhandled device type
             gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled device type occurred." );
@@ -703,6 +719,8 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     gLog.Write( Log::INFO, "Setting gamepad profile..." );
 
     // Lock driver so we can make changes
+    std::lock_guard<std::mutex>     lock( mPollMutex );
+    
     // Wait 50ms for threads to hit the mutex just to be safe
     usleep( 50000 );
     
@@ -808,6 +826,8 @@ int Drivers::Gamepad::Driver::Poll()
     static std::vector<uint8_t>     buff;
     int                             result;
     
+    // Prevent other public functions from being called while handling device input
+    std::lock_guard<std::mutex>     lock( mPollMutex );
 
     using namespace v1;
     
@@ -926,6 +946,9 @@ void Drivers::Gamepad::Driver::Run()
     while (mRunning)
     {
         Poll();
+        
+        // Polling interval is about 4ms so we can sleep a little
+        usleep( 250 );
     }
     
     // Rejoin threads after driver exits
@@ -1058,10 +1081,12 @@ Drivers::Gamepad::Driver::Driver()
     int             result;
     DeviceState     initstate = {};
    
-    mpGamepad           = nullptr;
-    mpMotion            = nullptr;
-    mpMouse             = nullptr;
-    mState              = initstate;
+    mpGamepad               = nullptr;
+    mpMotion                = nullptr;
+    mpMouse                 = nullptr;
+    mState                  = initstate;
+    mProfSwitchDelay        = 2000;         //  Default: 2 seconds
+    mProfSwitchTimestamp    = 0;
     
     result = OpenHid();
     if (result != Err::OK)
