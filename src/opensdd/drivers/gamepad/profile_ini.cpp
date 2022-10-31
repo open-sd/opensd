@@ -462,7 +462,7 @@ Drivers::Gamepad::Binding Drivers::Gamepad::ProfileIni::GetProfileBinding( std::
     
     bind.dev = PROFILE;
     
-    bind.cmd = val.String(1);
+    bind.cmd = val.FullString(1);
     if (bind.cmd.empty())
         return Drivers::Gamepad::Binding();
     

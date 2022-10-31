@@ -61,6 +61,8 @@ int Daemon::LoadProfile( std::string fileName )
         gLog.Write( Log::ERROR, "Failed to load profile: Initialization error." );
         return Err::NOT_INITIALIZED;
     }
+    
+    gLog.Write( Log::INFO, "Loading gamepad profile '" + fileName + "'..." );
 
     // Get the full file path for the profile
     path = mFileMgr.GetProfileFilePath( fileName );
@@ -92,7 +94,7 @@ int Daemon::Startup()
     int             result;
     
     // Set up signal handlers
-    signal( SIGINT, sig_handler );
+    signal( SIGINT,  sig_handler );
     signal( SIGTERM, sig_handler );
     signal( SIGKILL, sig_handler );
 
@@ -127,7 +129,6 @@ int Daemon::Startup()
     }
     
     // Load gamepad driver profile
-    gLog.Write( Log::INFO, "Loading gamepad profile..." );
     result = LoadProfile( mConfig.mProfileName );
     if (result != Err::OK)
         return Err::CANNOT_OPEN;
@@ -156,9 +157,6 @@ void Daemon::Shutdown()
 
 
 
-
-
-
 int Daemon::Run()
 {
     int         result;
@@ -176,6 +174,32 @@ int Daemon::Run()
     {
         // ZzZzZzzz...
         usleep( 100000 );
+        
+        // Handle gamepad driver messages
+        if (mpGpDrv->HasMessage())
+        {
+            Drivers::Message    msg = mpGpDrv->PopMessage();
+            switch (msg.type)
+            {
+                case Drivers::MsgType::NONE:
+                    // Nada, shouldn't happen
+                break;
+                
+                case Drivers::MsgType::PROFILE:
+                    // Request profile switch via binding
+                    if (!msg.msg.empty())
+                    {
+                        gLog.Write( Log::DEBUG, FUNC_NAME, "Received message from gamepad driver: Switch profile." );
+                        LoadProfile( msg.msg );
+                    }
+                break;
+                
+                default:
+                    // Shouldn't happen since we're using an enum class switch, but lets be thorough
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "Received unknown message type from gamepad driver." );
+                break;
+            }
+        }
     }
 
     gLog.Write( Log::INFO, "Shutting down..." );
