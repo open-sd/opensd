@@ -65,7 +65,7 @@ file( GLOB OPENSD_GUI_SRC
 
 # OpenSD data files
 set( OPENSD_CONFIG_FILE "${PROJECT_SOURCE_DIR}/data/config/config.ini" )
-file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.ini" )
+file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.profile" )
 
 # Global project configuration
 set( INSTALL_DATA_DIR "share/opensd/" )
@@ -74,7 +74,7 @@ set( INSTALL_DATA_PROFILE_DIR "${INSTALL_DATA_DIR}/profiles/" )
 set( BUILD_DATA_CONFIG_DIR "${PROJECT_BINARY_DIR}/data/config/" )
 set( BUILD_DATA_PROFILE_DIR "${PROJECT_BINARY_DIR}/data/profiles/" )
 set( DEFAULT_CONFIG_FILENAME "config.ini" )
-set( DEFAULT_PROFILE_FILENAME "default.ini" )
+set( DEFAULT_PROFILE_FILENAME "default.profile" )
 set( SYSTEM_CONFIG_DIR "/etc/opensd/" )
 set( SYSTEM_PROFILE_DIR "${SYSTEM_CONFIG_DIR}/profiles/" )
 set( SYSTEMD_USER_DIR "lib/systemd/user/" )

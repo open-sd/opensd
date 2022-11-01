@@ -552,7 +552,6 @@ int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers:
         return result;
     }
     
-        
     // ----------------------------- [Profile] section -----------------------------
     // Name =
     val = mIni.GetVal( "Profile", "Name" );
