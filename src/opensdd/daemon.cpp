@@ -18,10 +18,9 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "daemon.hpp"
-#include "filemgr.hpp"
+#include "profile_ini.hpp"
 #include "../common/log.hpp"
 #include "../common/errors.hpp"
-#include "drivers/gamepad/profile_ini.hpp"
 // Linux
 #include <signal.h>
 
@@ -72,11 +71,11 @@ int Daemon::LoadProfile( std::string fileName )
         return Err::FILE_NOT_FOUND;
     }
 
-    Drivers::Gamepad::ProfileIni    profile_ini;
+    ProfileIni                      ini;
     Drivers::Gamepad::Profile       profile;
     
-    // Parse profile file into profile object
-    result = profile_ini.Load( path, profile );
+    // Read profile file and update profile reference if successful
+    result = ini.Load( path, profile );
     if (result != Err::OK)
     {
         gLog.Write( Log::ERROR, "Failed to load gamepad profile." );
