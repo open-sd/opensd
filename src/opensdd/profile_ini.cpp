@@ -18,37 +18,18 @@
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "profile_ini.hpp"
-#include "preset_template.hpp"
-#include "../../../common/log.hpp"
-#include "../../../common/input_event_names.hpp"
-#include "../../../common/string_funcs.hpp"
+#include "profile_template.hpp"
+#include "../common/log.hpp"
+#include "../common/input_event_names.hpp"
+#include "../common/string_funcs.hpp"
 // C++
 #include <fstream>
 
-
-void Drivers::Gamepad::ProfileIni::Reset()
-{
-    // Default values
-    mProf = Drivers::Gamepad::Presets::TEMPLATE;
-    mBindIdCounter = 1;
-    
-    mAxisRange.hat.min      = -1;
-    mAxisRange.hat.max      = 1;
-    mAxisRange.stick.min    = -32767;
-    mAxisRange.stick.max    = 32767;
-    mAxisRange.trigg.min    = 0;
-    mAxisRange.trigg.max    = 32767;
-    mAxisRange.pad.min      = -32767;
-    mAxisRange.pad.max      = 32767;
-    mAxisRange.accel.min    = -32767;
-    mAxisRange.accel.max    = 32767;
-    mAxisRange.gyro.min     = -32767;
-    mAxisRange.gyro.max     = 32767;
-}
+// Less messy
+using namespace Drivers::Gamepad;
 
 
-
-void Drivers::Gamepad::ProfileIni::AddKeyEvent( Drivers::Gamepad::BindType bindType, uint16_t code )
+void ProfileIni::AddKeyEvent( BindType bindType, uint16_t code )
 {
     bool    found = false;
     
@@ -90,7 +71,7 @@ void Drivers::Gamepad::ProfileIni::AddKeyEvent( Drivers::Gamepad::BindType bindT
 
 
 
-void Drivers::Gamepad::ProfileIni::AddAbsEvent( Drivers::Gamepad::BindType bindType, uint16_t code, int32_t min, int32_t max )
+void ProfileIni::AddAbsEvent( BindType bindType, uint16_t code, int32_t min, int32_t max )
 {
     bool    found = false;
     
@@ -146,7 +127,7 @@ void Drivers::Gamepad::ProfileIni::AddAbsEvent( Drivers::Gamepad::BindType bindT
 
 
 
-void Drivers::Gamepad::ProfileIni::AddRelEvent( Drivers::Gamepad::BindType bindType, uint16_t code )
+void ProfileIni::AddRelEvent( BindType bindType, uint16_t code )
 {
     bool    found = false;
     
@@ -191,7 +172,7 @@ void Drivers::Gamepad::ProfileIni::AddRelEvent( Drivers::Gamepad::BindType bindT
 
 
 
-void Drivers::Gamepad::ProfileIni::GetFeatEnable( std::string key, bool& rValue )
+void ProfileIni::GetFeatEnable( std::string key, bool& rValue )
 {
     Ini::ValVec         val;
     
@@ -209,7 +190,7 @@ void Drivers::Gamepad::ProfileIni::GetFeatEnable( std::string key, bool& rValue 
 
 
 
-void Drivers::Gamepad::ProfileIni::GetDeadzone( std::string key, double& rValue )
+void ProfileIni::GetDeadzone( std::string key, double& rValue )
 {
     Ini::ValVec         val;
     
@@ -237,7 +218,7 @@ void Drivers::Gamepad::ProfileIni::GetDeadzone( std::string key, double& rValue 
 
 
 
-void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax )
+void ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax )
 {
     Ini::ValVec         val;
     
@@ -266,14 +247,14 @@ void Drivers::Gamepad::ProfileIni::GetAxisRange( std::string section, std::strin
 
 
 
-void Drivers::Gamepad::ProfileIni::GetEventBinding( std::string key, Drivers::Gamepad::Binding& rBind )
+void ProfileIni::GetEventBinding( std::string key, Binding& rBind )
 {
-    Drivers::Gamepad::Binding   bind;
-    std::string                 dev_str;
-    std::string                 ev_str;
-    Ini::ValVec                 val;
-    int                         ev_type = 0;
-    int                         result;
+    Binding                 bind;
+    std::string             dev_str;
+    std::string             ev_str;
+    Ini::ValVec             val;
+    int                     ev_type = 0;
+    int                     result;
     
     val = mIni.GetVal( "Bindings", key );
 
@@ -402,12 +383,13 @@ void Drivers::Gamepad::ProfileIni::GetEventBinding( std::string key, Drivers::Ga
 
 
 
-void Drivers::Gamepad::ProfileIni::GetCommandBinding( std::string key, Drivers::Gamepad::Binding& rBind )
+void ProfileIni::GetCommandBinding( std::string key, Binding& rBind )
 {
-    Drivers::Gamepad::Binding   bind;
-    Ini::ValVec                 val;
-    std::string                 temp_str;
-    int                         result;
+    Binding             bind;
+    Ini::ValVec         val;
+    std::string         temp_str;
+    int                 result;
+    static uint32_t     uid = 1;  // Unique ID for each command binding
 
     val = mIni.GetVal( "Bindings", key );
 
@@ -423,14 +405,14 @@ void Drivers::Gamepad::ProfileIni::GetCommandBinding( std::string key, Drivers::
     // wait_for_exit field
     if (val.Bool(1))
     {
-        // Wait for exit, set unique binding ID
-        if (mBindIdCounter == 0)
-            ++mBindIdCounter;
-        bind.id = mBindIdCounter;
+        // wait_for_exit = true, so set a unique binding ID
+        bind.id = uid;
+        ++uid;
     }
     else
     {
-        // Do not wait for exit
+        // wait_for_exit = false, so use an ID of zero to signal that we need to
+        // ignore pid checking for this binding
         bind.id = 0;
     }
     
@@ -462,10 +444,10 @@ void Drivers::Gamepad::ProfileIni::GetCommandBinding( std::string key, Drivers::
 
 
 
-void Drivers::Gamepad::ProfileIni::GetProfileBinding( std::string key, Drivers::Gamepad::Binding& rBind )
+void ProfileIni::GetProfileBinding( std::string key, Binding& rBind )
 {
-    Drivers::Gamepad::Binding   bind;
-    Ini::ValVec                 val;
+    Binding                 bind;
+    Ini::ValVec             val;
 
     val = mIni.GetVal( "Bindings", key );
 
@@ -490,11 +472,11 @@ void Drivers::Gamepad::ProfileIni::GetProfileBinding( std::string key, Drivers::
 
 
 
-void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad::Binding& rBind )
+void ProfileIni::GetBinding( std::string key, Binding& rBind )
 {
-    Ini::ValVec                 val;
-    std::string                 temp_str;
-    std::string                 sub_str;
+    Ini::ValVec             val;
+    std::string             temp_str;
+    std::string             sub_str;
     
     // Find the key in the Bindings section
     val = mIni.GetVal( "Bindings", key );
@@ -528,29 +510,31 @@ void Drivers::Gamepad::ProfileIni::GetBinding( std::string key, Drivers::Gamepad
 
 
 
-int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers::Gamepad::Profile& rProf )
+int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
 {
-    Ini::ValVec         val;
-    int                 result;
+    Ini::ValVec             val;
+    int                     result;
     
     namespace fs = std::filesystem;
 
-    // Reset to default values
-    Reset();
+    // Set to default values
+    mProf = PROFILE_TEMPLATE;
+    mIni.Clear();
     
     if (!fs::exists(filePath))
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "File '" + filePath.string() + "' not found." );
-        return Err::CANNOT_OPEN;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Profile file '" + filePath.string() + "' not found." );
+        return Err::FILE_NOT_FOUND;
     }
     
-    mIni.Clear();
     result = mIni.LoadFile( filePath );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to parse file '" + filePath.string() + "'" );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to parse profile file '" + filePath.string() + "'" );
         return result;
     }
+    
+    // Begin reading values from profile file
     
     // ----------------------------- [Profile] section -----------------------------
     // Name =
@@ -748,14 +732,14 @@ int Drivers::Gamepad::ProfileIni::Load( std::filesystem::path filePath, Drivers:
 
 
 
-Drivers::Gamepad::ProfileIni::ProfileIni()
+ProfileIni::ProfileIni()
 {
-    Reset();
+    mProf = PROFILE_TEMPLATE;
 }
 
 
 
-Drivers::Gamepad::ProfileIni::~ProfileIni()
+ProfileIni::~ProfileIni()
 {
     mIni.Clear();
 }
