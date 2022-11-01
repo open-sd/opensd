@@ -476,7 +476,7 @@ std::filesystem::path FileMgr::GetProfileFilePath( std::string fileName )
     // Turn filename into a full path
     path = mProfileDir.string() + fileName;
     if (!path.has_extension())
-        path += ".ini";
+        path += ".profile";
     
     // Check if profile exists
     if ((!fs::exists( path )) || (!fs::is_regular_file( path )))

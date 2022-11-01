@@ -185,7 +185,7 @@ ABS_RZ          = -32767    32767
 #     to the user profile directory, so only specify the filename itself.
 #
 #     Example:
-#       L5 = Profile left_hand_mouse.ini
+#       L5 = Profile left_hand_mouse.profile
 #       
 #
 #   Valid binding types are:  Gamepad, Mouse, Motion, Command, Profile
