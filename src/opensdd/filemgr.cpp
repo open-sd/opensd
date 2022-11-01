@@ -259,9 +259,13 @@ int FileMgr::CopyUserProfileFiles()
     {
         if (fs::is_regular_file( p ))
         {
-            dst = mProfileDir.string() + p.path().filename().string();
-            gLog.Write( Log::DEBUG, FUNC_NAME, "Copying '" + p.path().string() + "' to '" + dst.string() + "'..." );
-            fs::copy_file( p, dst );
+            // Copy if file doesnt exist
+            if (!fs::exists( dst / p.path().filename() ))
+            {
+                dst = mProfileDir.string() + p.path().filename().string();
+                gLog.Write( Log::DEBUG, FUNC_NAME, "Copying '" + p.path().string() + "' to '" + dst.string() + "'..." );
+                fs::copy_file( p, dst );
+            }
         }
     }
     gLog.Write( Log::DEBUG, FUNC_NAME, "Copy OK." );
@@ -366,19 +370,12 @@ int FileMgr::Init()
         // Check if user profile dir exists
         if (!fs::exists(mProfileDir))
         {
+            // Create user profile directory if it does not exist
             gLog.Write( Log::DEBUG, FUNC_NAME, "User profile directory '" + mProfileDir.string() + "' does not exist." );
             result = CreateUserProfileDir();
             if (result != Err::OK)
             {
                 gLog.Write( Log::ERROR, "Failed to create user profile directory.  Check your file permissions." );
-                return result;
-            }
-            
-            // Only copy profiles if directory does not exist
-            result = CopyUserProfileFiles();
-            if (result != Err::OK)
-            {
-                gLog.Write( Log::ERROR, "Failed to create user profile files.  Check your file permissions." );
                 return result;
             }
         }
@@ -391,6 +388,16 @@ int FileMgr::Init()
                 return Err::DIR_NOT_FOUND;
             }
         }
+
+        // Copy default profiles to user profile directory if they do not
+        // already exist.  Does not replace old / modified files.
+        result = CopyUserProfileFiles();
+        if (result != Err::OK)
+        {
+            gLog.Write( Log::ERROR, "Failed to create user profile files.  Check your file permissions." );
+            return result;
+        }
+        
     }
     else
     {
