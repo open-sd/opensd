@@ -90,7 +90,6 @@ namespace Drivers::Gamepad
         void                        SetDeadzone( AxisEnum axis, double dz );
         void                        SetStickFiltering( bool enabled );
         void                        SetPadFiltering( bool enabled );
-        std::vector<std::string>    GetCommandList();
         void                        Run();
 
         Driver();

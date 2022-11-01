@@ -30,10 +30,10 @@
 namespace Drivers::Gamepad
 {
     // Shorthand enums
-    enum
+    enum class BindType
     {
         // Devices
-        NONE = 0,
+        NONE,
         GAME,
         MOTION,
         MOUSE,
@@ -41,28 +41,30 @@ namespace Drivers::Gamepad
         PROFILE
     };
 
-    // Event map element
+    // Input binding
     struct Binding
     {
-        uint16_t                dev;            // Determines which uinput device the event is sent to
-                                                // Must be: NONE, GAME, MOTION, MOUSE, COMMAND or PROFILE
-        uint16_t                type;           // Input event type
-        uint16_t                code;           // Input event code
+        BindType                type;           // Determines how binding is handled / what uinput device to emit from
+        uint16_t                ev_type;        // Input event type
+        uint16_t                ev_code;        // Input event code
         bool                    dir;            // Axis direction.  true = Axis+, false = Axis-
-        std::string             cmd;            // If dev is COMMAND, this string will be executed in a shell environment
+        std::string             str;            // If dev is COMMAND, this string will be executed in a shell environment
                                                 // If dev is PROFILE, this holds the filename of the profile ini to load
         uint32_t                id;             // Unique binding ID for commands, or zero to disable wait_for_exit
         uint64_t                delay;          // Minimum delay between repeated commands
         uint64_t                timestamp;      // Timestamp of binding execution in ms
         
         Binding():
-            dev(NONE), type(NONE), code(NONE), dir(false), cmd(""), id(0), delay(0), timestamp(0) {};
-        Binding( uint16_t deviceType, uint16_t eventType, uint16_t eventCode, bool direction ):
-            dev(deviceType), type(eventType), code(eventCode), dir(direction), cmd(""), id(0), delay(0), timestamp(0) {};
-        Binding( std::string s, uint32_t uniqueId, uint64_t repeatDelay ): 
-            dev(COMMAND), type(NONE), code(NONE), cmd(s), id(uniqueId), delay(repeatDelay), timestamp(0) {};
+            type(BindType::NONE), ev_type(0), ev_code(0), dir(false), str(""), id(0), delay(0), timestamp(0) {};
+            
+        Binding( BindType bindType, uint16_t eventType, uint16_t eventCode, bool direction ):
+            type(bindType), ev_type(eventType), ev_code(eventCode), dir(direction), str(""), id(0), delay(0), timestamp(0) {};
+            
+        Binding( std::string commandStr, uint32_t uniqueId, uint64_t repeatDelay ): 
+            type(BindType::COMMAND), ev_type(0), ev_code(0), str(commandStr), id(uniqueId), delay(repeatDelay), timestamp(0) {};
     };
 
+    // List of all gamepad input bindings are defined here
     struct BindMap
     {
         struct _dpad
@@ -103,10 +105,12 @@ namespace Drivers::Gamepad
 
         struct _stick
         {
+            // Absolute axes
             Binding             up;
             Binding             down;
             Binding             left;
             Binding             right;
+            // Thumbstick touch sensors
             Binding             touch;
             Binding             force;
         };
@@ -119,12 +123,15 @@ namespace Drivers::Gamepad
 
         struct _touchpad
         {
+            // Absolute axes
             Binding             up;
             Binding             down;
             Binding             left;
             Binding             right;
+            // Relative axes
             Binding             rel_x;
             Binding             rel_y;
+            // Force sensor
             Binding             touch;
             Binding             press;
             Binding             force;
