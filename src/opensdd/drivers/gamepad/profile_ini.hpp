@@ -30,7 +30,7 @@
 namespace Drivers::Gamepad
 {
     
-    // Free function to load (and test) external gamepad profiles
+    // Class for loading gamepad profiles
     class ProfileIni
     {
     private:
@@ -56,16 +56,16 @@ namespace Drivers::Gamepad
         uint32_t                    mBindIdCounter;
         
         void                        Reset();
-        void                        AddKeyEvent( uint16_t device, uint16_t code );
-        void                        AddAbsEvent( uint16_t device, uint16_t code, int32_t min, int32_t max );
-        void                        AddRelEvent( uint16_t device, uint16_t code );
+        void                        AddKeyEvent( Drivers::Gamepad::BindType bindType, uint16_t code );
+        void                        AddAbsEvent( Drivers::Gamepad::BindType bindType, uint16_t code, int32_t min, int32_t max );
+        void                        AddRelEvent( Drivers::Gamepad::BindType bindType, uint16_t code );
         
         void                        GetFeatEnable( std::string key, bool& rValue );
         void                        GetDeadzone( std::string key, double& rValue );
         void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax );
-        Drivers::Gamepad::Binding   GetEventBinding( std::string key );
-        Drivers::Gamepad::Binding   GetCommandBinding( std::string key );
-        Drivers::Gamepad::Binding   GetProfileBinding( std::string key );
+        void                        GetEventBinding( std::string key, Drivers::Gamepad::Binding& rBind );
+        void                        GetCommandBinding( std::string key, Drivers::Gamepad::Binding& rBind );
+        void                        GetProfileBinding( std::string key, Drivers::Gamepad::Binding& rBind );
         void                        GetBinding( std::string key, Drivers::Gamepad::Binding& rBind );
         
     public:

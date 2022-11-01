@@ -28,7 +28,6 @@
 #include <bitset>
 #include <cmath>
 #include <iostream>
-//#include <ctime>
 #include <chrono>
 
 
@@ -373,13 +372,13 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
     
     
     // Select which uinput device we need to write to
-    switch (bind.dev)
+    switch (bind.type)
     {
-        case NONE: // No binding, do nothing
+        case BindType::NONE: // No binding, do nothing
             return;
         break;
         
-        case GAME:  // Gamepad device binding
+        case BindType::GAME:  // Gamepad device binding
             // Abort if there is no gamepad uinput device to write to
             if (mpGamepad == nullptr)
                 return;
@@ -387,21 +386,21 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                 device = mpGamepad;
         break;
         
-        case MOTION:  // Motion device binding
+        case BindType::MOTION:  // Motion device binding
             if (mpMotion == nullptr)
                 return;
             else
                 device = mpMotion;
         break;
         
-        case MOUSE:  // Mouse device binding
+        case BindType::MOUSE:  // Mouse device binding
             if (mpMouse == nullptr)
                 return;
             else
                 device = mpMouse;
         break;
         
-        case COMMAND:  // Run a command
+        case BindType::COMMAND:  // Run a command
             if (state)
             {
                 if (bind.delay > 0)
@@ -413,12 +412,12 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     bind.timestamp = time + bind.delay;
                 }
                 // Run command from separate thread to avoid packet loss or stopping driver
-                gRunner.Exec( bind.cmd, bind.id );
+                gRunner.Exec( bind.str, bind.id );
             }
             return;
         break;
         
-        case PROFILE:  // Request profile switch
+        case BindType::PROFILE:  // Request profile switch
             if (state)
             {
                 // Enforce a timeout for profile switching when called from binding
@@ -426,10 +425,9 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                 if (time < mProfSwitchTimestamp)
                     return;
                 mProfSwitchTimestamp = time + mProfSwitchDelay;
-                gLog.Write( Log::DEBUG, FUNC_NAME, "Profile switch request" );
 
                 // Let the daemon know the user wants to switch profiles
-                PushMessage( { .type = Drivers::MsgType::PROFILE, .msg = bind.cmd, .val = 0 } );
+                PushMessage( { .type = Drivers::MsgType::PROFILE, .msg = bind.str, .val = 0 } );
             }
             return;
         break;
@@ -446,12 +444,12 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
     {
         // State is a button
         case BindMode::BUTTON:
-            switch (bind.type)
+            switch (bind.ev_type)
             {
                 // Button press emits a key/button event
                 case EV_KEY:
                     if (state)
-                        device->UpdateKey( bind.code, true );
+                        device->UpdateKey( bind.ev_code, true );
                 break;
                 
                 // Button press emits an absolute axis value
@@ -459,14 +457,14 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit an maximum absolute axis value in the direction specified by
                     // the binding
                     if (state)
-                        device->UpdateAbs( bind.code, (bind.dir) ? 1.0 : -1.0 );
+                        device->UpdateAbs( bind.ev_code, (bind.dir) ? 1.0 : -1.0 );
                 break;
                 
                 // Button press emits a relative axis value
                 case EV_REL:
                     // If triggered, emit a relative value in the direction specified in the binding
                     if (state) 
-                        device->UpdateRel( bind.code, (bind.dir) ? 1 : -1 );  // TODO: Some kind of scaling / multiplier
+                        device->UpdateRel( bind.ev_code, (bind.dir) ? 1 : -1 );  // TODO: Some kind of scaling / multiplier
                 break;
                 
                 default:
@@ -479,12 +477,12 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
 
         // State is an normalized absolute axis with a negative value
         case BindMode::AXIS_MINUS:
-            switch (bind.type)
+            switch (bind.ev_type)
             {
                 // Axis UP/LEFT emits a key/button event
                 case EV_KEY:
                     if (state < 0)
-                        device->UpdateKey( bind.code, true );
+                        device->UpdateKey( bind.ev_code, true );
                 break;
                 
                 // Axis UP/LEFT emits an absolute axis event
@@ -492,7 +490,7 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit the state as a positive or negive absolute axis
                     // value depending on the direction specified in the binding.
                     if (state < 0)
-                        device->UpdateAbs( bind.code, (bind.dir) ? fabs(state) : state );
+                        device->UpdateAbs( bind.ev_code, (bind.dir) ? fabs(state) : state );
                         
                 break;
 
@@ -501,7 +499,7 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit the state as a positive or negative relative axis 
                     // value depending on the direction specified in the binding.
                     if (state < 0)
-                        device->UpdateRel( bind.code, (bind.dir) ? fabs(state) : state );  // TODO Some kind of axis scaling / multiplier
+                        device->UpdateRel( bind.ev_code, (bind.dir) ? fabs(state) : state );  // TODO Some kind of axis scaling / multiplier
                 break;
                 
                 default:
@@ -515,12 +513,12 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
         // State is a normalized absolute axis with a positive value
         case BindMode::PRESSURE:
         case BindMode::AXIS_PLUS:
-            switch (bind.type)
+            switch (bind.ev_type)
             {
                 // Axis DOWN/RIGHT emits a key/button event
                 case EV_KEY:
                     if (state > 0)
-                        device->UpdateKey( bind.code, true );
+                        device->UpdateKey( bind.ev_code, true );
                 break;
                 
                 // Axis DOWN/RIGHT emits an absolute axis event
@@ -528,7 +526,7 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit the state as a positive or negive absolute axis
                     // value depending on the direction specified in the binding.
                     if (state > 0)
-                        device->UpdateAbs( bind.code, (bind.dir) ? state : state * -1.0 );
+                        device->UpdateAbs( bind.ev_code, (bind.dir) ? state : state * -1.0 );
                 break;
 
                 // Axis UP/LEFT emits an absolute axis event
@@ -536,7 +534,7 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                     // If triggered, emit the state as a positive or negative relative axis 
                     // value depending on the direction specified in the binding.
                     if (state > 0)
-                        device->UpdateRel( bind.code, (bind.dir) ? state : state * -1.0 );  // TODO Some kind of axis scaling / multiplier
+                        device->UpdateRel( bind.ev_code, (bind.dir) ? state : state * -1.0 );  // TODO Some kind of axis scaling / multiplier
                 break;
                 
                 default:
@@ -548,12 +546,12 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
         break;
         
         case BindMode::RELATIVE:
-            switch (bind.type)
+            switch (bind.ev_type)
             {
                 // TODO: handle other bind types?  Is it practical?
                 
                 case EV_REL:
-                    device->UpdateRel( bind.code, state );
+                    device->UpdateRel( bind.ev_code, state );
                 break;
                 
                 default:
@@ -971,6 +969,8 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         return Err::NOT_OPEN;
     }
     
+    // Pause main driver thread to set mode
+    std::lock_guard<std::mutex>     lock( mPollMutex );
     // Wait 50ms for drivers to hit the mutex just to be safe
     usleep( 50000 );
     

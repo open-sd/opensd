@@ -28,7 +28,6 @@
 
 namespace Drivers::Gamepad
 {
-    
     struct Profile
     {
         std::string                             profile_name;
