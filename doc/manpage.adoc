@@ -1,0 +1,27 @@
+= OpenSD
+seek
+:doctype: manpage
+:manmanual: opensd
+:mansource: oepnsd
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+opensd - A highly-configurable open-source driver for Valve's Steam Deck.
+
+[#daemon_synopsis]
+== SYNOPSIS
+Daemon::
+----
+opensdd [options]
+----
+
+[#daemon_cli_options]
+== OPTIONS
+*-h    --help*:: Display help screen.
+*-v    --version*:: Output version number and exit.
+*-l    --log-level <log level>*:: Set minumum logging level. Valid options are: *verbose*, *debug*, *info*, *warn*, *error*.  (Default: *warn*)
+
+
+
+'''
+<<<
