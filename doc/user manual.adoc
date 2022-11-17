@@ -522,7 +522,7 @@ LTrigg          = Gamepad   ABS_Z       +
 
 A full list of gamepad input names can be seen in the <<Example Profile>> section.  A detailed explanation of each can be found in the <<placeholder>> section.
 
-NOTE: *ABS* events must have a defined range in the <<profile_fmt_gamepadaxes>>
+NOTE: *ABS* events must have a defined range in the <<prof_section_gamepadaxes>>
 
 
 
@@ -647,6 +647,108 @@ Example:
 [Bindings]
 L5      = Profile   left_hand_mouse.profile
 ----
+
+
+
+'''
+<<<
+[#input_types]
+== Input Types
+As briefly described in the <<prof_section_bindings>>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of `X`/`Y` axes (`LStickUp`, `LStickLeft`, ...), which, as a primitive type are absolute, but the thumbsticks also have a *touch sensor* at the top which can be read as a binary *button* primitive (`LStickTouch`) as well as a pressure level (`LStickForce`) which is read as a single `absolute axis` like a *trigger* would be.
+
+The intent is for each input name to be as _simple and intuitive as possible_, but that's always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a *binding* ; )
+
+
+=== Directional Pad
+The directional pad is just a set of four buttons which are diametrically exclusive -- you can press *up* and *left* simultaneously but you cannot press *left* and *right* simultaneously.
+
+Naming Convention:: 
+* `DPad{Up|Down|Left|Right}`
+
+Descriptions::
+* `DPadUp`: The top button on the directional pad.
+* `DPadDown`: The botton button on the directional pad.
+* `DPadLeft`: The left button on the directional pad.
+* `DPadRight`: The right button on the directional pad.
+
+Use::
+While you can bind them to nearly anything, these buttons are usually bound to pair of https://en.wikipedia.org/wiki/Joystick#Hat_switch[*Hat*] axes, which are _typically_ axes with a range of *-1* to *1* and *0* when resting / released.  See the *[Bindings]* section of the <<prof_example_profile>> for a common configuration.
+* Button bindings to `KEY_` and `BTN_` events work directly as you might expect.
+* Buttons bound to `ABS_` events emit the axis limit in the given direction.
+
+'''
+=== Buttons
+These are pretty straightforward. As you probably expect, buttons have two states.  They're *true* when pressed and *false* when released.  The Steam Deck borrows common names for most buttons, but also adds a few of it's own.  It's debatable how to organize or classify these, so I'll just sorta go by the legacy naming standards.
+
+Naming conventions::
+* `A` `B` `X` `Y` `{L|R}{1|2|3|4|5}` `Menu` `Options` `Steam` `QuickAccess`
+
+Descriptions::
+* `A`: Same as it appears on the front of the Steam Deck.
+* `B`: Same as it appears on the front of the Steam Deck.
+* `X`: Same as it appears on the front of the Steam Deck.
+* `Y`: Same as it appears on the front of the Steam Deck.
+* `L1`: The top left bumper / shoulder button.
+* `R1`: The top right bumper / shoulder button.
+* `L2`: Button nested inside the pressure sensor of the left trigger.
+* `R2`: Button nested inside the pressure sensor of the Right trigger.
+* `L3`: Button nested at the bottom of the left stick.  Activated by pressing down until it clicks.
+* `R3`: Button nested at the bottom of the right stick.  Activated by pressing down until it clicks.
+* `L4`: Upper paddle button located on the back-left side of the Steam Deck.
+* `R4`: Upper paddle button located on the back-right side of the Steam Deck.
+* `L5`: Lower paddle button located on the back-left side of the Steam Deck.
+* `R5`: Lower paddle button located on the back-right side of the Steam Deck.
+* `Menu`: Raised https://en.wikipedia.org/wiki/Hamburger_button[hamburger button] (☰) located above the right thumbstick.
+* `Options`: Raised overlapped rectangle button (⮻) located above the left thumbstick.
+* `Steam`: Flat button of the same name (STEAM), located below the left trackpad.
+* `QuickAccess`: Flat button with three interpuncts (···), located below the right trackpad.
+
+Use::
+Binding buttons buttons is simple.
+* Button bindings to `KEY_` and `BTN_` events work directly.
+* Buttons bound to `ABS_` events emit the axis limit in the given direction.
+* `A`/`B`/`X`/`Y` have respective input codes for `Gamepad` devices: `BTN_SOUTH`, `BTN_EAST`, `BTN_WEST` and `BTN_NORTH`.
+* `{L|R}{1|2}` have respective input codes for `Gamepad` devices: `BTN_TL` `BTN_TL2` `BTN_TR` and `BTN_TR2`.
+* `{L|R}3` have respective input codes for `Gamepad` devices: `BTN_THUMBL` and `BTN_THUMBR`
+* `Menu` has a respective (based on location and common use) input code for `Gamepad` devices: `BTN_START`.
+* `Options` has a respective (based on location and common use) input code for `Gamepad` devices: `BTN_SELECT`.
+* `Steam` is probably closest to a PS or HOME button on a `Gamepad` device; possibly use `BTN_MODE`.
+
+
+
+'''
+=== Thumbsticks
+The thumbsticks on the Steam Deck are associated with six different inputs in OpenSD.  As you would expect, there is an *X*/*Y* axis pair for each stick, but there are also *touch* and *pressure* (well, sorta) sensors located on the top of each one.  The directional axes are broken into halves such that each direction can emit different events if desired.
+
+Axis values from thumbsticks are normalized internally so they can be rescaled to the defined *ABS* event ranges.  The hardware returns signed 16bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.
+
+If <<prof_section_features_stickfiltering>> is enabled the full axis is internally normalized as a unit vector and a *radial deadzone* may be applied.
+
+Naming convention::
+* `{L|R}Stick{Up|Down|Left|Right|Touch|Force}`
+
+Descriptions::
+* `LStickUp`: Represents the top half of the *Y axis* of the left thumbstick.
+* `LStickDown`: Represents the bottom half of the *Y axis* of the left thumbstick.
+* `LStickLeft`: Represents the left half of the *X axis* of the left thumbstick.
+* `LStickRight`: Represents the right half of the *X axis* of the left thumbstick.
+* `LStickTouch`: This is a binary *button* that return *true* when the top of the left thumbstick is touched.
+* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the left thumbstick.  It is very sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+* `RStickUp`: Represents the top half of the *Y axis* of the right thumbstick.
+* `RStickDown`: Represents the bottom half of the *Y axis* of the right thumbstick.
+* `RStickLeft`: Represents the left half of the *X axis* of the right thumbstick.
+* `RStickRight`: Represents the right half of the *X axis* of the right thumbstick.
+* `RStickTouch`: This is a binary *button* that return *true* when the top of the right thumbstick is touched.
+* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the right thumbstick.  It is very sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+
+Use::
+Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions, which is demonstrated in the *[Bindings]* section of the <<prof_example_profile>>.  You're also able to treat each axis half like a button if you bind it to a key or button event code, in which case it will trigger the binding when the stick leaves the *center* / *deadzone*.  You can use the deadzone in this case to determine how far the stick must be pushed from center before the binding is triggered.  
+* `LStickLeft` & `LStickRight` are typically bound to the `ABS_X` event code on `Gamepad` devices.
+* `LStickUp` & `LStickDown` are typically bound to the `ABS_Y` event code on `Gamepad` devices.
+* `RStickLeft` & `RStickRight` are typically bound to the `ABS_RX` event code on `Gamepad` devices.
+* `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
+* Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
+* Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?
 
 
 
