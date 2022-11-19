@@ -658,7 +658,7 @@ As briefly described in the <<prof_section_bindings>>, the gamepad has multiple 
 
 The intent is for each input name to be as _simple and intuitive as possible_, but that's always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a *binding* ; )
 
-
+[#input_type_dpad]
 === Directional Pad
 The directional pad is just a set of four buttons which are diametrically exclusive -- you can press *up* and *left* simultaneously but you cannot press *left* and *right* simultaneously.
 
@@ -676,7 +676,10 @@ While you can bind them to nearly anything, these buttons are usually bound to p
 * Button bindings to `KEY_` and `BTN_` events work directly as you might expect.
 * Buttons bound to `ABS_` events emit the axis limit in the given direction.
 
+
+
 '''
+[#input_type_buttons]
 === Buttons
 These are pretty straightforward. As you probably expect, buttons have two states.  They're *true* when pressed and *false* when released.  The Steam Deck borrows common names for most buttons, but also adds a few of it's own.  It's debatable how to organize or classify these, so I'll just sorta go by the legacy naming standards.
 
@@ -717,6 +720,7 @@ Binding buttons buttons is simple.
 
 
 '''
+[#input_type_thumb]
 === Thumbsticks
 The thumbsticks on the Steam Deck are associated with six different inputs in OpenSD.  As you would expect, there is an *X*/*Y* axis pair for each stick, but there are also *touch* and *pressure* (well, sorta) sensors located on the top of each one.  The directional axes are broken into halves such that each direction can emit different events if desired.
 
@@ -749,6 +753,30 @@ Directional inputs are treated like axis halves.  You typically want to map `Up`
 * `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
 * Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
 * Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?
+
+
+'''
+[#input_type_trigg]
+=== Triggers
+Triggers are pressure sensors that are also treated a bit like a thumbstick's half-axis, with the difference being there's no complement half.  Triggers have a resting position of of the define axis minimum limit and move toward the maximum limit.  _Typically_ the minimum limit is zero, so the axis does not return non-zero values when released / resting, but you can do any weird thing you want.
+
+Axis values from thumbsticks are normalized internall so they can be rescaled to the defined *AB* event ranges.  Internally, the HID reports return trigger values as unsigned 16-bit integers.
+
+Triggers also have a binary *button* component: `L2` and `R2`.  Information about these buttons can be found in the <<input_type_buttons>> section.
+
+Linear deadzones can be applied to triggers if desired in the <<prof_section_deadzones>>.
+
+Naming convention::
+* {L|R}Trigg
+
+Descriptions::
+* `LTrigg`: Represents a pressure sensor value for the left trigger on the top-rear of the device.
+* `RTrigg`: Represents a pressure sensor value for the right trigger on the top-rear of the device.
+
+Use::
+These inputs are absolute axes and can be mapped to *ABS* event codes as well as *KEY* / *BTN* event codes.  One possible reason to use the axis itself as a *button*-type binding would be to use `L2` / `R2` buttons on partial-pull, and use a deadzone to emit another button at, say, 90% of the pull.
+* `LTrigg` is typically bound to `ABS_Z`.
+* `RTrigg` is typically bound to `ABS_RZ`.
 
 
 
