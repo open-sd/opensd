@@ -732,18 +732,18 @@ Naming convention::
 * `{L|R}Stick{Up|Down|Left|Right|Touch|Force}`
 
 Descriptions::
-* `LStickUp`: Represents the top half of the *Y axis* of the left thumbstick.
-* `LStickDown`: Represents the bottom half of the *Y axis* of the left thumbstick.
-* `LStickLeft`: Represents the left half of the *X axis* of the left thumbstick.
-* `LStickRight`: Represents the right half of the *X axis* of the left thumbstick.
-* `LStickTouch`: This is a binary *button* that return *true* when the top of the left thumbstick is touched.
-* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the left thumbstick.  It is very sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
-* `RStickUp`: Represents the top half of the *Y axis* of the right thumbstick.
-* `RStickDown`: Represents the bottom half of the *Y axis* of the right thumbstick.
-* `RStickLeft`: Represents the left half of the *X axis* of the right thumbstick.
-* `RStickRight`: Represents the right half of the *X axis* of the right thumbstick.
-* `RStickTouch`: This is a binary *button* that return *true* when the top of the right thumbstick is touched.
-* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the right thumbstick.  It is very sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+* `LStickUp`: Represents the top half of the *Y-axis* of the *left* thumbstick.
+* `LStickDown`: Represents the bottom half of the *Y-axis* of the *left* thumbstick.
+* `LStickLeft`: Represents the left half of the *X-axis* of the *left* thumbstick.
+* `LStickRight`: Represents the right half of the *X-axis* of the *left* thumbstick.
+* `LStickTouch`: This is a binary *button* that return *true* when the top of the *left* thumbstick is touched.
+* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+* `RStickUp`: Represents the top half of the *Y axis* of the *right* thumbstick.
+* `RStickDown`: Represents the bottom half of the *Y axis* of the *right* thumbstick.
+* `RStickLeft`: Represents the left half of the *X axis* of the *right* thumbstick.
+* `RStickRight`: Represents the right half of the *X axis* of the *right* thumbstick.
+* `RStickTouch`: This is a binary *button* that return *true* when the top of the *right* thumbstick is touched.
+* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
 
 Use::
 Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions, which is demonstrated in the *[Bindings]* section of the <<prof_example_profile>>.  You're also able to treat each axis half like a button if you bind it to a key or button event code, in which case it will trigger the binding when the stick leaves the *center* / *deadzone*.  You can use the deadzone in this case to determine how far the stick must be pushed from center before the binding is triggered.  
@@ -753,6 +753,7 @@ Directional inputs are treated like axis halves.  You typically want to map `Up`
 * `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
 * Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
 * Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?
+
 
 
 '''
@@ -770,13 +771,156 @@ Naming convention::
 * {L|R}Trigg
 
 Descriptions::
-* `LTrigg`: Represents a pressure sensor value for the left trigger on the top-rear of the device.
-* `RTrigg`: Represents a pressure sensor value for the right trigger on the top-rear of the device.
+* `LTrigg`: Represents a pressure sensor value for the *left* trigger on the top-rear of the device.
+* `RTrigg`: Represents a pressure sensor value for the *right* trigger on the top-rear of the device.
 
 Use::
 These inputs are absolute axes and can be mapped to *ABS* event codes as well as *KEY* / *BTN* event codes.  One possible reason to use the axis itself as a *button*-type binding would be to use `L2` / `R2` buttons on partial-pull, and use a deadzone to emit another button at, say, 90% of the pull.
 * `LTrigg` is typically bound to `ABS_Z`.
 * `RTrigg` is typically bound to `ABS_RZ`.
+
+
+[#input_type_trackpad]
+=== Trackpads
+At the core, trackpads are *absolute axis* devices have with an *X* / *Y* pair, as well as a pressure sensor *Z-axis* and a slightly tactile *button*.  A number of inputs can be extrapolated from the data those basic types provide.  That includes *touch* sensors, *press / button* sensors, *pressure / force* sensors, *absolute coordinates*, *relative movement* tracking as well as the ability to map out regions of the pad and treat them as individual buttons.  OpenSD trackpads have the most input bindings out of all the components.
+
+As with the <<input_type_thumb>>, directional axes are broken into halves such that each direction can emit different events if desired.  These halves can be mapped on to a whole *ABS* event code, or use separately.
+
+Trackpads support radial deadzones for the absolute axis values, and can be configured in the <<prof_section_deadzones>>.  *Relative* trackpad input, such as `LPadRelX` or `LPadRelY`, are not affected by deadzones.
+
+Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.
+
+OpenSD provides multiple "button maps", any of which can be used non-exclusively with eachother.  These "button maps" break the full area of the trackpad into logical sections which, when *pressed* (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <<input_type_dpad>>, *arrow keys*, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
+
+Naming convention::
+* `{L|R}Pad{Up|Down|Left|Right|Touch|Press|Force|RelX|RelY}`
+* `{L|R}PadPressQuad{Up|Down|Left|Right}`
+* `{L|R}PadPressOrth{Up|Down|Left|Right}`
+* `{L|R}PadPressGrid2x2_{1|2|3|4}`
+* `{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}`
+
+Descriptions::
+* `LPadUp`: Represents the top half of the *Y-axis* of the *left* trackpad.
+* `LPadDown`: Represents the bottom half of the *Y-axis* of the *left* trackpad.
+* `LPadLeft`: Represents the left half of the *X-axis* of the *left* trackpad.
+* `LPadRight`: Represents the right half of the *X-axis* of the *left* trackpad.
+* `LPadTouch`: This is a button sensor which detects if the *left* pad is being touched.  Quite sensitive.
+* `LPadPress`: This is also a button which detects if the *left* pad is being pressed down like a button.  Actuation has a slight tactile bump.
+* `LPadForce`: This is a pressure sensors which returns a normalized value of how much force is being used to press down on the *left* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
+* `LPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *left* trackpad.  This represents the same kind of input data that mice use.
+* `LPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *left* trackpad.  This represnets the same kind of input data that mice use.
+* `RPadUp`: Represents the top half of the *Y-axis* of the *right* trackpad.
+* `RPadDown`: Represents the bottom half of the *Y-axis* of the *right* trackpad.
+* `RPadLeft`: Represents the left half of the *X-axis* of the *right* trackpad.
+* `RPadRight`: Represents the right half of the *X-axis* of the *right* trackpad.
+* `RPadTouch`: This is a button sensor which detects if the *right* pad is being touched.  Quite sensitive.
+* `RPadPress`: This is also a button which detects if the *right* pad is being pressed down like a button.  Actuation has a slight tactile bump.
+* `RPadForce`: This is a pressure sensors which returns a normalized value of how much force is being used to press down on the *right* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
+* `RPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *right* trackpad.  This represents the same kind of input data that mice use.
+* `RPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *right* trackpad.  This represnets the same kind of input data that mice use.
+
+Quadrant Button Map::
+The *quadrant map* (Quad) provides a way to treat each touchpad as being composed of four *non-overlapping* triagular quadrants, as depicted in the *figure 1* below.  Each *button* is inherently exclusive to the others in this map since the *X* / *Y* coordinate can only fall inside of one of these regions at a time.  This means that this map will not detect any overlapping presses, like *a* and *b* when you press in the upper left region.
+
+Fig. 1
+----
+┌─────────────┐
+│ \         / │
+│  \   a   /  │
+│   \     /   │
+│    \   /    │
+│     \ /     │
+│ b    X    c │
+│     / \     │
+│    /   \    │
+│   /     \   │
+│  /   d   \  │
+│ /         \ │
+└─────────────┘ 
+----
+
+* `LPadPressQuadUp`: The logical *button* on the *left* trackpad corresponding to *fig. 1*, region *"a"*.
+* `LPadPressQuadDown`: The logical *button* on the *left* trackpad corresponding to *fig. 1*, region *"d"*.
+* `LPadPressQuadLeft`: The logical *button* on the *left* trackpad corresponding to *fig. 1*, region *"b"*.
+* `LPadPressQuadRight`: The logical *button* on the *left* trackpad corresponding to *fig. 1*, region *"c"*.
+* `RPadPressQuadUp`: The logical *button* on the *right* trackpad corresponding to *fig. 1*, region *"a"*.
+* `RPadPressQuadDown`: The logical *button* on the *right* trackpad corresponding to *fig. 1*, region *"d"*.
+* `RPadPressQuadLeft`: The logical *button* on the *right* trackpad corresponding to *fig. 1*, region *"b"*.
+* `RPadPressQuadRight`: The logical *button* on the *right* trackpad corresponding to *fig. 1*, region *"c"*.
+
+'''
+Orthogonal Button Map::
+The *orthogonal map* works similarly to a <<input_type_dpad>>.  As you can see below in figure 2, it demonstrates how the *"a"*, *"b"*, *"c"* and *"d"* regions represent orthogonal directions which are not strictly exclusive as they are with the *quadrant map*.  If a diagonal corner is pressed, it triggers both orthogonally adjacent buttons.  For example, pressing the upper-middle of the pad only triggers *"a"*, but pressing the upper-left of the pad will trigger both *"a"* and *"b"*.
+
+Fig. 2
+----
+┌─────┬─────┬─────┐
+│     │     │     │
+│  ab │  a  │  ac │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  b  │     │  c  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  db │  d  │  dc │
+│     │     │     │
+└─────┴─────┴─────┘
+----
+* `LPadPressOrthUp`: The logical *button* on the *left* trackpad corresponding to *fig. 2* regions containing *"a"*.
+* `LPadPressOrthDown`: The logical *button* on the *left* trackpad corresponding to *fig. 2* regions containing *d"*.
+* `LPadPressOrthLeft`: The logical *button* on the *left* trackpad corresponding to *fig. 2* regions containing *"b"*.
+* `LPadPressOrthRight`: The logical *button* on the *left* trackpad corresponding to *fig. 2* regions containing *"c"*.
+* `RPadPressOrthUp`: The logical *button* on the *right* trackpad corresponding to *fig. 2* regions containing *"a"*.
+* `RPadPressOrthDown`: The logical *button* on the *right* trackpad corresponding to *fig. 2* regions containing *d"*.
+* `RPadPressOrthLeft`: The logical *button* on the *right* trackpad corresponding to *fig. 2* regions containing *"b"*.
+* `RPadPressOrthRight`: The logical *button* on the *right* trackpad corresponding to *fig. 2* regions containing *"c"*.
+
+'''
+2x2 Grid Button Map::
+This button map divides the pad into regions along the center axes, resulting in four square *buttons* in each corner, as demonstrated in figure 3.
+
+Fig. 3
+----
+┌────────┬────────┐
+│        │        │
+│        │        │
+│   a    │    c   │
+│        │        │
+│        │        │
+├────────┼────────┤
+│        │        │
+│        │        │
+│   c    │    d   │
+│        │        │
+│        │        │
+└────────┴────────┘
+----
+
+'''
+3x3 Grid Button Map::
+lskjlfkd
+
+'''
+
+Fig. 4
+----
+  ┌─────┬─────┬─────┐
+  │     │     │     │
+  │  a  │  c  │  d  │
+  │     │     │     │
+  ├─────┼─────┼─────┤
+  │     │     │     │
+  │  e  │  f  │  g  │
+  │     │     │     │
+  ├─────┼─────┼─────┤
+  │     │     │     │
+  │  h  │  i  │  j  │
+  │     │     │     │
+  └─────┴─────┴─────┘
+----
+
 
 
 
@@ -886,7 +1030,6 @@ LPadUp              = None
 LPadDown            = None
 LPadLeft            = None
 LPadRight           = None
-LPadTouch           = None
 LPadRelX            = None
 LPadRelY            = None
 LPadTouch           = None
@@ -918,7 +1061,6 @@ RPadUp              = None
 RPadDown            = None
 RPadLeft            = None
 RPadRight           = None
-RPadTouch           = None
 RPadRelX            = Mouse     REL_X
 RPadRelY            = Mouse     REL_Y
 RPadTouch           = None
