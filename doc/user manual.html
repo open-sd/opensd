@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.18">
+<title>OpenSD User Manual</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+</head>
+<body id="using_opensd" class="article toc2 toc-left">
+<div id="header" style="max-width: 100%;">
+<h1>OpenSD User Manual</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#running_opensd">Running OpenSD</a>
+<ul class="sectlevel2">
+<li><a href="#run_from_terminal">From a terminal</a></li>
+<li><a href="#run_as_service">As a User-Level Service</a></li>
+</ul>
+</li>
+<li><a href="#config_files">Configuration Files</a>
+<ul class="sectlevel2">
+<li><a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a>
+<ul class="sectlevel3">
+<li><a href="#daemoncfg_file_section_daemon">[Daemon] Section</a>
+<ul class="sectlevel4">
+<li><a href="#daemoncfg_file_section_daemon_profile">Profile</a></li>
+<li><a href="#daemoncfg_file_section_daemon_allowclients">AllowClients</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#profile_files">Profile Configuration Files (*.profile)</a>
+<ul class="sectlevel3">
+<li><a href="#prof_section_profile">[Profile] Section</a>
+<ul class="sectlevel4">
+<li><a href="#prof_section_profile_name">Name</a></li>
+<li><a href="#prof_section_profile_description">Description</a></li>
+</ul>
+</li>
+<li><a href="#prof_section_features">[Features] Section</a>
+<ul class="sectlevel4">
+<li><a href="#prof_section_features_ff">ForceFeedback</a></li>
+<li><a href="#prof_section_features_motiondevice">MotionDevice</a></li>
+<li><a href="#prof_section_features_mousedevice">MouseDevice</a></li>
+<li><a href="#prof_section_features_lizardmode">LizardMode</a></li>
+<li><a href="#prof_section_features_stickfiltering">StickFiltering</a></li>
+<li><a href="#prof_section_features_trackpadfiltering">TrackpadFiltering</a></li>
+</ul>
+</li>
+<li><a href="#prof_section_deadzones">[Deadzones] Section</a></li>
+<li><a href="#prof_section_gamepadaxes">[GamepadAxes] Section</a></li>
+<li><a href="#prof_section_motionaxes">[MotionAxes] Section</a></li>
+<li><a href="#prof_section_bindings">[Bindings] Section</a>
+<ul class="sectlevel4">
+<li><a href="#prof_section_bindings_gamepad">Gamepad Bindings</a></li>
+<li><a href="#prof_section_bindings_motion">Motion Bindings</a></li>
+<li><a href="#prof_section_bindings_mouse">Mouse Bindings</a></li>
+<li><a href="#prof_section_bindings_command">Command Bindings</a></li>
+<li><a href="#prof_section_bindings_profile">Profile Bindings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#input_types">Input Types</a>
+<ul class="sectlevel3">
+<li><a href="#input_type_dpad">Directional Pad</a></li>
+<li><a href="#input_type_buttons">Buttons</a></li>
+<li><a href="#input_type_thumb">Thumbsticks</a></li>
+<li><a href="#input_type_trigg">Triggers</a></li>
+<li><a href="#input_type_trackpad">Trackpads</a>
+<ul class="sectlevel4">
+<li><a href="#input_type_trackpad_quad">Quadrant Button Map</a></li>
+<li><a href="#input_type_trackpad_orth">Orthogonal Button Map</a></li>
+<li><a href="#input_type_trackpad_grid4">2x2 Grid Button Map</a></li>
+<li><a href="#input_type_trackpad_grid9">3x3 Grid Button Map</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#daemoncfg_file_example">Example config.ini</a></li>
+<li><a href="#prof_example_profile">Example Profile</a></li>
+</ul>
+</li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</div>
+</div>
+<div id="content" style="max-width: 100%;">
+<div id="preamble">
+<div class="sectionbody">
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running_opensd">Running OpenSD</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenSD is intended to be run as a user-level service, but it can be run from a terminal like most other Linux programs.  This can be useful for troubleshooting or debugging purposes since every message is logged to stdout.</p>
+</div>
+<div class="paragraph">
+<p>OpenSD requires access to the <strong>uinput</strong> and <strong>hidraw</strong> subsystems.  To enable this access, OpenSD provides a <strong>udev rule</strong> which will be installed when installing OpenSD.  In this rule, access is allowed to both subsystem for members of the <strong>opensd</strong> group, which is also created on install.  Any user that intends to run OpenSD must be a member of this group, or otherwise have R/W access to these device nodes.  After installing for the first time it will be necessary to log out in order for the user&#8217;s group changes to take effect.</p>
+</div>
+<div class="paragraph">
+<p>For more information see the <a href="#troubleshooting">Troubleshooting</a> section.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Do NOT run the OpenSD daemon as root, either directly or as a system service.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="sect2">
+<h3 id="run_from_terminal">From a terminal</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ opensdd</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Will start an instance of the daemon and log all output to the terminal.  The default log level is <code>WARN</code>.</p>
+</div>
+<div class="paragraph">
+<p>Or to see debug messages run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ opensdd -l debug</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A full list of command line options can be shown using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ opensdd --help</code></pre>
+</div>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="run_as_service">As a User-Level Service</h3>
+<div class="paragraph">
+<p>For <strong>systemd</strong> users, a service file is provided which can be run as a user-level service that will automatically start on log-in.</p>
+</div>
+<div class="paragraph">
+<p>To run the OpenSD daemon as a service on user log-in:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ systemctl --user enable opensd
+$ systemctl --user start opensd</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="config_files">Configuration Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenSD uses two types of configuration files.  The first type being the <a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a>, and the second type are gamepad <a href="#profile_files">Profile Configuration Files (*.profile)</a> which are loaded by the daemon.</p>
+</div>
+<div class="paragraph">
+<p>All files use an <a href="https://en.wikipedia.org/wiki/INI_file"><em>ini-style</em></a> format and are easily created or modified with any text editor.</p>
+</div>
+<div class="paragraph">
+<p>Since OpenSD is a <em>userspace</em> daemon, configuration files are stored in <code>$XDG_CONFIG_HOME/opensd/</code> which, on most systems, will be <code>~/.config/opensd/</code>.  Gamepad profiles are stored in the <code>profile</code> subdirectory, (example: <code>~/.config/opensd/profiles/</code>).  <strong>If the OpenSD user config directory does not exist, a new one will be created and populated with the default configuration files when the daemon is run.</strong></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+OpenSD follows the XDG specification, so environments which set / change <code>$XDG_HOME</code> or <code>$XDG_CONFIG_HOME</code> should behave correctly.  For the purposes of this documentation we&#8217;ll refer to the <strong>default</strong> XDG paths for user configuration files (example: <code>~/.config/opensd/</code>).
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Basic format rules</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Parsing is line-based and space delimited.</p>
+</li>
+<li>
+<p>The files are broken into braced enclosed <strong>sections</strong> and <strong>keys</strong>.</p>
+</li>
+<li>
+<p>Names of sections and keys are not <strong>case-sensitive</strong>, but <em>values</em> can be, such as file names.</p>
+</li>
+<li>
+<p>Sections are enclosed in square brackets  (example: <code>[SectionName]</code>)</p>
+</li>
+<li>
+<p>Keys must be contained within a section.</p>
+</li>
+<li>
+<p>Key assignment <strong>must</strong> be separated by whitespace.  (example: <code>key = value1 value2 value3</code>)</p>
+</li>
+<li>
+<p>Comments are preceeded by a <code>#</code> or <code>;</code> at the beginning of the line.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+<div class="sect2">
+<h3 id="daemoncfg_file">Daemon Configuration file (config.ini)</h3>
+<div class="paragraph">
+<p>This single file contains a small group of options that pertain to the daemon itself.  The default configuration file for the daemon can be found at <code>~/.config/opensd/config.ini</code>.  An unmodified copy of this file will be installed to <code>/usr/local/share/opensd/config/config.ini</code> or <code>/usr/share/opensd/config/config.ini</code>.</p>
+</div>
+<div class="paragraph">
+<p>An <a href="#daemoncfg_file_example">Example config.ini</a> can be found in this documentation if you want to see what a complete file might look like.</p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+<div class="sect3">
+<h4 id="daemoncfg_file_section_daemon">[Daemon] Section</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This section is required.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="daemoncfg_file_section_daemon_profile">Profile</h5>
+<div class="paragraph">
+<p>This tells the daemon which profile to load when it starts up.  Profiles are <strong>only</strong> loaded from the <code>~./config/opensd/profiles/</code> directory, so only specify the filename here.  OpenSD also has other methods for loading profiles once the daemon is running, this setting is only for the default profile you wish to use.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">Profile = &lt;filename&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Daemon]
+Profile = default.profile</code></pre>
+</div>
+</div>
+<hr>
+</div>
+<div class="sect4">
+<h5 id="daemoncfg_file_section_daemon_allowclients">AllowClients</h5>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This feature is not yet fully implemented.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This setting enables or disables the use of the CLI and GUI utilities which connect to the daemon.  If set to false, the daemon will not listen for clients.  This can be useful if you want to "lock down" a configuration so it cannot be changed while it is running.  The default is <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">AllowClients = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Daemon]
+AllowClients = true</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="profile_files">Profile Configuration Files (*.profile)</h3>
+<div class="paragraph">
+<p>These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the <a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a> to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.</p>
+</div>
+<div class="paragraph">
+<p>Gamepad profiles can be found in <code>~/.config/opensd/profiles/</code>.  The file extension is <code>*.profile</code>.</p>
+</div>
+<div class="paragraph">
+<p>An <a href="#prof_example_profile">Example Profile</a> can be found in this documentation if you want to see what a complete file might look like.</p>
+</div>
+<div class="paragraph">
+<p>A default profile (cleverly named <code>default.profile</code>) is provided which includes documentation in the comments on how to configure it.  It is not recommended to modify this file, instead you should make a copy of it, renaming it to <code>whatever_you_want.profile</code> and edit that file instead.  If the default profile is deleted, it will be recreated when the daemon is run, so if you need a clean or <em>updated</em> copy of the <code>default.profile</code>, simply delete it and restart the OpenSD daemon.</p>
+</div>
+<div class="paragraph">
+<p>An unmodified copy of this file will be installed to <code>/usr/local/share/opensd/profiles/default.profile</code> or <code>/usr/share/opensd/profiles/default.profile</code>.</p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="prof_section_profile">[Profile] Section</h4>
+<div class="sect4">
+<h5 id="prof_section_profile_name">Name</h5>
+<div class="paragraph">
+<p>The profile name as it will appear in the GUI and through the CLI query.  Should be unique for each profile to avoid confusion.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">Name = &lt;Your chosen profile name&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
+Name = My favourite gamepad profile</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_profile_description">Description</h5>
+<div class="paragraph">
+<p>A breif description of the profile for use in the GUI and CLI query.  Does not affect anything else, just intended as a hint for users.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">Description = &lt;Description of the profile&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
+Description = Just a profile I use for most applications.</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="prof_section_features">[Features] Section</h4>
+<div class="sect4">
+<h5 id="prof_section_features_ff">ForceFeedback</h5>
+<div class="paragraph">
+<p>Enable or disables haptic / force-feedback events for the gamepad device.  It&#8217;s worth mentioning that only the <code>Gamepad</code> device can receive force-feedback events; the <code>Motion</code> or <code>Mouse</code> devices will not receive these events.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">ForceFeedback = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+ForceFeedback = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified, this value defaults to <code>false</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This feature is not yet fully implemented
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_features_motiondevice">MotionDevice</h5>
+<div class="paragraph">
+<p>If this is set to <code>true</code>, an additional input device will be created which will report motion control data.  Motion axes need to have thier ranges and bindings defined.  If this is disabled, any <code>Motion</code> device bindings will be ignored.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">MotionDevice = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+MotionDevice = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified, this value defaults to <code>false</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+While it&#8217;s possible to combine gamepad and motion input into a single input device, Linux <strong>kernel</strong> and <strong>uinput</strong> specifications state that motion control devices should be separate from other gamepad / joystick input.  Not separating these can also make it difficult to configure controls in most applications.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+<div class="sect4">
+<h5 id="prof_section_features_mousedevice">MouseDevice</h5>
+<div class="paragraph">
+<p>If this is set to <code>true</code>, an additional input device will be created which will be used to send mouse / trackpad events.  Mouse events still need to have thier bindings defined.  If this is disabled, any <code>Mouse</code> device bindings will be ignored.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">MouseDevice = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+MouseDevice = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified, this value defaults to <code>true</code>.</p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_features_lizardmode">LizardMode</h5>
+<div class="paragraph">
+<p>The Steam Controller and the Steam Deck both have a kind of fallback "BIOS" mode which emulates some keyboard and mouse input using the gamepad.  Valve refers to this as "Lizard Mode".  This mode cannot be redefined.  It sends events IN ADDITION to the gamepad events created by the OpenSD driver, so it should <strong>always</strong> be disabled. If you would like mouse or keyboard emulation, they should be configured with <strong>bindings</strong>.  When OpenSD exits, Lizard Mode is re-enabled.</p>
+</div>
+<div class="paragraph">
+<p>If this is set to <code>false</code> "Lizard Mode" will be disabled (<strong>recommended</strong>).</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">LizardMode = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+LizardMode = false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified, this value defaults to <code>false</code>.</p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_features_stickfiltering">StickFiltering</h5>
+<div class="paragraph">
+<p>The thumbsticks on the Steam Deck have a circular range but return square-ish data, which makes it feel odd and complicated to apply radial deadzones to. Because of this, OpenSD vectorizes the stick position and returns "cleaner", round stick ranges, as well as being able to create clean deadzone rescaling.  If you disable this setting, axis ranges are still internally normalized and rescaled to the the uinput device, but no vectorization will be applied and any <strong>deadzones will be ignored</strong>.</p>
+</div>
+<div class="paragraph">
+<p>If set to <code>true</code> thumbsticks will be filtered (<strong>recommended</strong>).</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">StickFiltering  = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+StickFiltering  = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified this value defaults to <code>true</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This must be enabled for thumbstick deadzones to work.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_features_trackpadfiltering">TrackpadFiltering</h5>
+<div class="paragraph">
+<p>Similar to StickFiltering, but matches the square shape of the trackpad.  Filtering is only applied to absolute values.  This setting must be enabled to apply deadzones to the trackpad absolute axes.  Relative values (<code>*PadRelX</code> and <code>*PadRelY</code>) are unaffected, therefore deadzones do not affect mouse movement with the pads.</p>
+</div>
+<div class="paragraph">
+<p>If set to <code>true</code> trackpads will be filtered (<strong>recommended</strong>).</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">TrackpadFiltering  = &lt;true | false&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Features]
+TrackpadFiltering  = true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If unspecified, this value defaults to <code>true</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This must be enabled for trackpad deadzones to work.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect3">
+<h4 id="prof_section_deadzones">[Deadzones] Section</h4>
+<div class="paragraph">
+<p>These values are <strong>double precision floating point</strong> and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If <a href="#prof_section_features_stickfiltering">StickFiltering</a> is disabled, <code>LStick</code> and <code>RStick</code> deadzones will be ignored.  If <a href="#prof_section_features_trackpadfiltering">TrackpadFiltering</a> is disabled, <code>LPad</code> and <code>RPad</code> deadzones will be ignored.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">axis      = &lt;value&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>axis</code>:  Any of the supported gamepad axes, which are: * <code>LStick</code>, <code>RStick</code>, <code>LPad</code>, <code>RPad</code>, <code>LTrigg</code> and <code>RTrigg</code>.</p>
+</li>
+<li>
+<p><code>value</code>: A double-precision floating point value between <strong>0</strong> and <strong>0.9</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Deadzones]
+LStick      = 0.1
+RStick      = 0.1
+LPad        = 0
+RPad        = 0
+LTrigg      = 0
+RTrigg      = 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Any undefined axis deadzone will default to <code>0</code> (disabled).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Because the Steam Deck thumbsticks tend not to return to center completely (at least on current revisions), a small deadzone of around 0.10 (10%) is generally recommended.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="prof_section_gamepadaxes">[GamepadAxes] Section</h4>
+<div class="paragraph">
+<p>Gamepad absolute axes must have a defined range or they will not be created.  Any <code>Gamepad</code> <code>ABS_*</code> events which are configured in the <a href="#prof_section_bindings_gamepad">Gamepad Bindings</a> section <strong>must be defined here first, or they will be ignored</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Internally, the axis values are normalized and rescaled between the actual hardware and the value seen by applications, so no clipping or "dead extremes" will occur.  There is no "right" or "wrong" value here that you need to know, but it may be useful to precisely emulate other hardware so it can be detected as such by certain applications which try to guess what kind of device you have.</p>
+</div>
+<div class="paragraph">
+<p>The Steam Deck hardware uses signed 16-bit integers (<strong>-32767</strong> to <strong>32767</strong>) for its thumbstick, trackpad, trigger and motion axes, so there&#8217;s no reason to use a larger or smaller range for those inputs, unless you are trying to emulate a specific device.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Joystick#Hat_switch"><strong>Hat-type</strong></a> axes (<code>ABS_HAT*</code>) should typically use a range of <code>-1</code> to <code>1</code> because of thier historical purpose, but this is not strictly enforced.</p>
+</div>
+<div class="paragraph">
+<p>Triggers should typically have <strong>minumum value</strong> of <code>0</code> so that they rest at zero when released.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;abs_event&gt;     = &lt;min&gt;     &lt;max&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>abs_event</code>:  Any absolute axis event code you wish to bind.  Absolute event codes begin with <code>ABS_</code>.  A full list of input event codes can be found at <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
+</li>
+<li>
+<p><code>min</code>:  An integer representing the <strong>minimum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+</li>
+<li>
+<p><code>max</code>:  An integer representing the <strong>maximum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[GamepadAxes]
+ABS_HAT0X       = -1        1
+ABS_HAT0Y       = -1        1
+ABS_X           = -32767    32767
+ABS_Y           = -32767    32767
+ABS_RX          = -32767    32767
+ABS_RY          = -32767    32767
+ABS_Z           = 0         32767
+ABS_RZ          = 0         32767</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect3">
+<h4 id="prof_section_motionaxes">[MotionAxes] Section</h4>
+<div class="paragraph">
+<p>Motion control absolute axes, as with the gamepad device, must have a defined range or they will not be created.  Any <code>Motion</code> <code>ABS_*</code> events which are configured in the <a href="#prof_section_bindings_motion">Motion Bindings</a> <strong>must be defined here first, or they will be ignored</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Internally, the axis values are normalized and rescaled between the actual hardware and the value seen by applications, so no clipping or "dead extremes" will occur.  There is no "right" or "wrong" value here that you need to know, but it may be useful to precisely emulate other hardware so it can be detected as such by certain applications which try to guess what kind of device you have.</p>
+</div>
+<div class="paragraph">
+<p>The Steam Deck hardware uses signed 16-bit integers (<strong>-32767</strong> to <strong>32767</strong>) for its thumbstick, trackpad, trigger and motion axes, so there&#8217;s no reason to use a larger or smaller range for those inputs, unless you are trying to emulate a specific device.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;abs_event&gt;     = &lt;min&gt;     &lt;max&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>abs_event</code>:  Any absolute axis event code you wish to bind.  Absolute event codes begin with <code>ABS_</code>.  A full list of input event codes can be found at <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
+</li>
+<li>
+<p><code>min</code>:  An integer representing the <strong>minimum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+</li>
+<li>
+<p><code>max</code>:  An integer representing the <strong>maximum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[MotionAxes]
+ABS_X           = -32767    32767
+ABS_Y           = -32767    32767
+ABS_Z           = -32767    32767
+ABS_RX          = -32767    32767
+ABS_RY          = -32767    32767
+ABS_RZ          = -32767    32767</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Motion controls are not yet fully implemented.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect3">
+<h4 id="prof_section_bindings">[Bindings] Section</h4>
+<div class="paragraph">
+<p>This should be a list of all the physical gamepad buttons/sticks/pads/motion inputs you want to bind to a virtual input event or command.  Anything not specified here will be considered "unbound" and not emit any event.</p>
+</div>
+<div class="paragraph">
+<p>There are currently four basic binding types: <strong>device bindings</strong>, <code>Command</code> bindings, <code>Profile</code> bindings and <code>None</code>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Device bindings</dt>
+<dd>
+<p>Represent input events which are generated by pressing buttons, keys, moving the mouse, thumbsticks, motion control, etc.  Event bindings are tied to specific input devices, which include <code>Gamepad</code>, <code>Motion</code> and <code>Mouse</code>.  Applications read events from these different device types in different ways so they should generally be separated.</p>
+</dd>
+<dt class="hdlist1"><code>Command</code> bindings</dt>
+<dd>
+<p>Executes a given command inside a shell environment.</p>
+</dd>
+<dt class="hdlist1"><code>Profile</code> bindings</dt>
+<dd>
+<p>Used to switch to a different profile when triggered.</p>
+</dd>
+<dt class="hdlist1"><code>None</code></dt>
+<dd>
+<p>This is used to indicate that a particular input has no binding. (default)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Input binding names which this document will refer to as <code>input</code> or &lt;input&gt;, are represent physical buttons, triggers, axes, etc. on the physical gamepad portion of the Steam Deck.  They can be broken down into a several categories for simplicity:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Directional Pad</dt>
+<dd>
+<p><code>DPad{Up|Down|Left|Right}</code></p>
+</dd>
+<dt class="hdlist1">Buttons</dt>
+<dd>
+<p><code>A</code> <code>B</code> <code>X</code> <code>Y</code> <code>L1</code> <code>L2</code> <code>L3</code> <code>L4</code> <code>L5</code> <code>R1</code> <code>R2</code> <code>R3</code> <code>R4</code> <code>R5</code> <code>Menu</code> <code>Options</code> <code>Steam</code> <code>QuickAccess</code></p>
+</dd>
+<dt class="hdlist1">Triggers</dt>
+<dd>
+<p><code>{L|R}Trigg</code></p>
+</dd>
+<dt class="hdlist1">Thumbsticks</dt>
+<dd>
+<p><code>{L|R}Stick{Up|Down|Left|Right|Touch|Force}</code></p>
+</dd>
+<dt class="hdlist1">Trackpads</dt>
+<dd>
+<p><code>{L|R}Pad{Up|Down|Left|Right|RelX|RelY|Touch|Press|Force}</code></p>
+</dd>
+<dt class="hdlist1">Accelerometers</dt>
+<dd>
+<p><code>Accel{X|Y}{Plus|Minus}</code></p>
+</dd>
+<dt class="hdlist1">Attitude / gyros</dt>
+<dd>
+<p><code>{Roll|Pitch|Yaw}{Plus|Minus}</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Input names prefixed with <code>L</code> or <code>R</code> indicate left and right controls (example: <code>LStickLeft</code> vs <code>RStickLeft</code>)</p>
+</div>
+<div class="paragraph">
+<p><em>Additionally</em>, trackpads are mapped out into several <strong>button</strong> layouts simultaneously.  This means that when pressed, specific areas of the trackpad behave like individual buttons. There are several "maps" which can be used non-exclusively.  These are</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Quadrant button maps</dt>
+<dd>
+<p><code>{L|R}PadPressQuad{Up|Down|Left|Right}</code></p>
+</dd>
+<dt class="hdlist1">Orthogonal button maps</dt>
+<dd>
+<p><code>{L|R}PadPressOrth{Up|Down|Left|Right}</code></p>
+</dd>
+<dt class="hdlist1">2x2 grid maps</dt>
+<dd>
+<p><code>{L|R}PadPressGrid2x2_{1|2|3|4}</code></p>
+</dd>
+<dt class="hdlist1">3x3 grid maps</dt>
+<dd>
+<p><code>{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}</code></p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A full list of available input codes can be seen in the <a href="#prof_example_profile">Example Profile</a> section, as well as in <code>default.profile</code> file.</p>
+</div>
+<div class="paragraph">
+<p><strong>A detailed explanation of each of these inputs can be found in the <a href="#input_types">Input Types</a> section.</strong></p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+<div class="sect4">
+<h5 id="prof_section_bindings_gamepad">Gamepad Bindings</h5>
+<div class="paragraph">
+<p>The <code>Gamepad</code> device binding is used to generate input events for a joystick / gamepad-type device.  This generally means buttons (<code>BTN_*</code>) and absolute axis (<code>ABS_*</code>) events.  <code>KEY_*</code> events are allowed, but many programs will not read <code>KEY_*</code> events from a joystick device, instead try binding <strong>key</strong> events to the <code>Mouse</code> device.</p>
+</div>
+<div class="paragraph">
+<p>The syntax for bindings differs slightly depending on the event type. Absolute axis (<code>EV_ABS</code>) events are prefixed with <code>ABS_</code> and key / button events (<code>EV_KEY</code>) are prefixed with <code>KEY_</code> and <code>BTN_</code> respectively.  OpenSD supports most event codes.  For a full list of event codes, see <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
+</div>
+<div class="paragraph">
+<p>When bound to a <strong>button-type</strong> input (example: the <code>A</code> button), the bind is triggered when the button is pressed.  When bound to an <strong>axis-type</strong> input (example: <code>LStickUp</code>), the event is emitted when the axis is in a non-zero position and leaves the deadzone (if any).</p>
+</div>
+<div class="paragraph">
+<p><strong>For KEY / BTN events:</strong></p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Gamepad &lt;event_code&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.</p>
+</li>
+<li>
+<p><code>event_code</code>: Any EV_KEY type event.  These events are prefixed with <code>BTN_</code> or <code>KEY_</code>.  (example: <code>BTN_START</code> or <code>KEY_ESCAPE</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+Menu = Gamepad BTN_START</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#160;</p>
+</div>
+<div class="paragraph">
+<p><strong>For ABS events:</strong></p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Gamepad &lt;event_code&gt; &lt;direction&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.</p>
+</li>
+<li>
+<p><code>event_code</code>: Any <code>EV_ABS</code> type event.  These events are prefixed with <code>ABS_</code>.  (example: <code>ABS_X</code>)</p>
+</li>
+<li>
+<p><code>direction</code>: Indicates the direction that the axis is moved in.  Values may be <code>+</code> or <code>-</code>.  For centered axes, like thubsticks, <code>-</code> represents moving the axis <strong>up</strong> or <strong>left</strong>, and <code>+</code> represents moving the axis <strong>down</strong> or <strong>right</strong>.  For ramped axes, like triggers and pressure sensors, <code>+</code> represents applying pressure.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When binding a <strong>button-type</strong> input like a DPad direction or, say, the <code>B</code> button to an <strong>ABS</strong> event, the button will push the axis to its <strong>maximum</strong> extent in the given direction.  When binding an analog axis, like a thumbstick, to an <strong>ABS</strong> value, the range of motion is mapped to the axis value in the given direction.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+# Button mapped to an axis
+DPadUp          = Gamepad   ABS_HAT0Y   -
+
+# Analogue stick mapped to an axis
+RStickUp        = Gamepad   ABS_Y       -
+RStickDown      = Gamepad   ABS_Y       +
+
+# Analogue trigger mapped to an axis
+LTrigg          = Gamepad   ABS_Z       +</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A full list of gamepad input names can be seen in the <a href="#prof_example_profile">Example Profile</a> section.</p>
+</div>
+<div class="paragraph">
+<p><strong>A detailed explanation of inputs can be found in the <a href="#input_types">Input Types</a> section of this document.</strong></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<strong>ABS</strong> events must have a defined range in the <a href="#prof_section_gamepadaxes">[GamepadAxes] Section</a>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_bindings_motion">Motion Bindings</h5>
+<div class="paragraph">
+<p>The <code>Motion</code> device binding is used to generate input events for a motion control-type device.  While OpenSD does not strictly enforce this, the Linux kernel and uinput specify that motion control events should be emitted by separate devices.  Not doing so can create a lot of "noise", especially when configuring controls within another application.  As per this spec, the <code>Motion</code> device only supports <code>EV_ABS</code> type events.  These events are prefixed with <code>ABS_</code>  (example: <code>ABS_Z</code>).  For a full list of event codes, see <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
+</div>
+<div class="paragraph">
+<p>The syntax and behaviour for binding <code>Motion</code> device events is the same as binding <strong>ABS</strong> events with the <code>Gamepad</code> device in the previous section.</p>
+</div>
+<div class="paragraph">
+<p>Also, the <code>Motion</code> device is a completely separate context and namespace from the <code>Gamepad</code> and <code>Mouse</code> devices, much in the same way that two players with identical controllers will have the same buttons, but very different meanings to the game.  For example, pressing <code>A</code> on controller #1 does not affect player #2.  Its up the the end-user&#8217;s software to decide the the context and meaning of the individual events.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Motion &lt;event_code&gt; &lt;direction&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.</p>
+</li>
+<li>
+<p><code>event_code</code>: Any <code>EV_ABS</code> type event.  These events are prefixed with <code>ABS_</code>.  (example: <code>ABS_X</code>)</p>
+</li>
+<li>
+<p><code>direction</code>: Indicates the direction that the axis is moved in.  Values may be <code>+</code> or <code>-</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+# Bind roll attitude to Motion device
+RollPlus        = Motion    ABS_X       +
+RollMinus       = Motion    ABS_X       -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A full list of motion contol input names can be seen in the <a href="#prof_example_profile">Example Profile</a> section.</p>
+</div>
+<div class="paragraph">
+<p><strong>A detailed explanation of motion input be found in the <a href="#input_types">Input Types</a> section of this document.</strong></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<strong>ABS</strong> events must have a defined range in the <a href="#prof_section_motionaxes">[MotionAxes] Section</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This feature is not yet fully implemented.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_bindings_mouse">Mouse Bindings</h5>
+<div class="paragraph">
+<p>The <code>Mouse</code> device binding is used to generate input events which will be interpreted as events coming from a pointer-type device such as a physical mouse.  This binding type supports <strong>button</strong> / <strong>key</strong> and <strong>relative axis</strong> events.  The <code>Mouse</code> device can also function a bit like a keyboard, so it&#8217;s advised to bind any <strong>key</strong> events to this device.</p>
+</div>
+<div class="paragraph">
+<p>The syntax for bindings differs slightly depending on the event type. <strong>Relative axis</strong> (<code>EV_REL</code>) events are prefixed with <code>REL_</code> and <strong>key</strong> / <strong>button</strong> events (<code>EV_KEY</code>) are prefixed with <code>KEY_</code> and <code>BTN_</code> respectively.  OpenSD supports most event codes.  For a full list of event codes, see <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
+</div>
+<div class="paragraph">
+<p><strong>For KEY / BTN events:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Mouse &lt;event_code&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.</p>
+</li>
+<li>
+<p><code>event_code</code>: Any EV_KEY type event.  These events are prefixed with <code>BTN_</code> or <code>KEY_</code>.  (example: <code>BTN_LEFT</code> or <code>KEY_ESCAPE</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+RPadPress       = Mouse BTN_LEFT
+QuickAccess     = Mouse BTN_RIGHT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>For REL events:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+RPadRelX        = Mouse REL_X
+RPadRelY        = Mouse REL_Y</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.</p>
+</li>
+<li>
+<p><code>event_code</code>: Any <code>EV_REL</code> type event.  These events are prefixed with <code>REL_</code>.  (example: <code>REL_X</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Please see the <a href="#input_type_trackpad">Trackpads</a> section of this document for a better explanation of how <code>{L|R}PadRel{X|Y}</code> relative inputs work.</strong></p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_bindings_command">Command Bindings</h5>
+<div class="paragraph">
+<p>The <code>Command</code> binding allows you to execute external programs or scripts by forking them off as a child process.  These processes run concurrently, do not return any usable exit code, and will not interrupt the driver.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Command &lt;wait_for_exit&gt; &lt;repeat_delay_ms&gt; &lt;command_to_execute&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.  Best suited to button-types.</p>
+</li>
+<li>
+<p><code>wait_for_exit</code>: a <code>true</code> or <code>false</code> value which specifies if the command should complete before the binding can be triggered again.</p>
+</li>
+<li>
+<p><code>repeat_delay_ms</code>: The amount of time <strong>in milliseconds</strong> that must elapse before the binding can be triggered again.  The timer starts when the binding is successfully triggered.</p>
+</li>
+<li>
+<p><code>command_to_execute</code>: The name of the command / script you want to run, same as you would from a terminal.  The command executes normally inside a shell, so variable expansion should work.  Arguments may be specfied by placing them after the command as usual.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+QuickAccess     = Command   true    0   rofi -show run</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect4">
+<h5 id="prof_section_bindings_profile">Profile Bindings</h5>
+<div class="paragraph">
+<p>The <code>Profile</code> binding type allows you to switch to a different profile using just the gamepad input.  Profiles are loaded from the user profile directory.  There is a <strong>2 second</strong> delay after profile switching before the profile can be changed again, to prevent undesirable rapid cycling.  If a profile fails to load, the process will be aborted and the profile currently in use will remain so.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">input = Profile &lt;profile_name&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>input</code>: Any one of the input binding names.  Best suited to button-types.</p>
+</li>
+<li>
+<p><code>profile_name</code>: Filename of the profile ini you want to load.  Path is fixed to the user profile directory, so <strong>only</strong> specify the filename itself.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+L5      = Profile   left_hand_mouse.profile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#160;<br>
+&#160;</p>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="input_types">Input Types</h3>
+<div class="paragraph">
+<p>As briefly described in the <a href="#prof_section_bindings">[Bindings] Section</a>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of <strong>X</strong> / <strong>Y</strong> axes (example: <code>LStickUp</code>, <code>LStickLeft</code>), which, as a primitive type are absolute, but the thumbsticks <em>also</em> have a <strong>touch sensor</strong> at the top which can be read as a binary <strong>button</strong> primitive (<code>LStickTouch</code>) as well as a pressure level (<code>LStickForce</code>) which is read as a single <strong>absolute axis</strong> like a <strong>trigger</strong> would be.</p>
+</div>
+<div class="paragraph">
+<p>The intent is for each input name to be as <em>simple and intuitive as possible</em>, but that&#8217;s always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a <strong>binding</strong> ; )</p>
+</div>
+<div class="sect3">
+<h4 id="input_type_dpad">Directional Pad</h4>
+<div class="paragraph">
+<p>The directional pad is just a set of four buttons which are diametrically exclusive&#8201;&#8212;&#8201;you can press <strong>up</strong> and <strong>left</strong> simultaneously but you cannot press <strong>left</strong> and <strong>right</strong> simultaneously.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Naming Convention</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DPad{Up|Down|Left|Right}</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Descriptions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DPadUp</code>: The top button on the directional pad.</p>
+</li>
+<li>
+<p><code>DPadDown</code>: The botton button on the directional pad.</p>
+</li>
+<li>
+<p><code>DPadLeft</code>: The left button on the directional pad.</p>
+</li>
+<li>
+<p><code>DPadRight</code>: The right button on the directional pad.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Use</dt>
+<dd>
+<p>While you can bind them to nearly anything, these buttons are usually bound to pair of <a href="https://en.wikipedia.org/wiki/Joystick#Hat_switch"><strong>Hat</strong></a> axes, which are <em>typically</em> axes with a range of <strong>-1</strong> to <strong>1</strong> and <strong>0</strong> when resting / released.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Button bindings to <code>KEY_</code> and <code>BTN_</code> events work directly as you might expect.</p>
+</li>
+<li>
+<p>Buttons bound to <code>ABS_</code> events emit the axis limit in the given direction.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A common configuration as seen in the <a href="#prof_example_profile">Example Profile</a> might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Bindings]
+DpadUp              = Gamepad   ABS_HAT0Y   -
+DpadDown            = Gamepad   ABS_HAT0Y   +
+DpadLeft            = Gamepad   ABS_HAT0X   -
+DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
+</div>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="input_type_buttons">Buttons</h4>
+<div class="paragraph">
+<p>These are pretty straightforward. As you probably expect, buttons have two states.  They&#8217;re <strong>true</strong> when pressed and <strong>false</strong> when released.  The Steam Deck borrows common names for most buttons, but also adds a few of it&#8217;s own.  It&#8217;s debatable how to organize or classify these, so I&#8217;ll just sorta go by the legacy naming standards.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Naming conventions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>A</code> <code>B</code> <code>X</code> <code>Y</code> <code>{L|R}{1|2|3|4|5}</code> <code>Menu</code> <code>Options</code> <code>Steam</code> <code>QuickAccess</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Descriptions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>A</code>: Same as it appears on the front of the Steam Deck.</p>
+</li>
+<li>
+<p><code>B</code>: Same as it appears on the front of the Steam Deck.</p>
+</li>
+<li>
+<p><code>X</code>: Same as it appears on the front of the Steam Deck.</p>
+</li>
+<li>
+<p><code>Y</code>: Same as it appears on the front of the Steam Deck.</p>
+</li>
+<li>
+<p><code>L1</code>: The top <strong>left</strong> bumper / shoulder button.</p>
+</li>
+<li>
+<p><code>R1</code>: The top <strong>right</strong> bumper / shoulder button.</p>
+</li>
+<li>
+<p><code>L2</code>: Button nested inside the pressure sensor of the <strong>left</strong> trigger.</p>
+</li>
+<li>
+<p><code>R2</code>: Button nested inside the pressure sensor of the <strong>right</strong> trigger.</p>
+</li>
+<li>
+<p><code>L3</code>: Button nested at the bottom of the <strong>left</strong> stick.  Activated by pressing down until it clicks.</p>
+</li>
+<li>
+<p><code>R3</code>: Button nested at the bottom of the <strong>right</strong> stick.  Activated by pressing down until it clicks.</p>
+</li>
+<li>
+<p><code>L4</code>: Upper paddle button located on the <strong>back-left</strong> side of the Steam Deck.</p>
+</li>
+<li>
+<p><code>R4</code>: Upper paddle button located on the <strong>back-right</strong> side of the Steam Deck.</p>
+</li>
+<li>
+<p><code>L5</code>: Lower paddle button located on the <strong>back-left</strong> side of the Steam Deck.</p>
+</li>
+<li>
+<p><code>R5</code>: Lower paddle button located on the <strong>back-right</strong> side of the Steam Deck.</p>
+</li>
+<li>
+<p><code>Menu</code>: Raised <a href="https://en.wikipedia.org/wiki/Hamburger_button">hamburger button</a> (☰) located above the *right *thumbstick.</p>
+</li>
+<li>
+<p><code>Options</code>: Raised overlapped rectangle button (⮻) located above the <strong>left</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>Steam</code>: Flat button of the same name (STEAM), located below the <strong>left</strong> trackpad.</p>
+</li>
+<li>
+<p><code>QuickAccess</code>: Flat button with three interpuncts (···), located below the <strong>right</strong> trackpad.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Use</dt>
+<dd>
+<p>Binding buttons is simple.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Button bindings to <code>KEY_</code> and <code>BTN_</code> events work directly.</p>
+</li>
+<li>
+<p>Buttons bound to <code>ABS_</code> events emit the axis limit in the given direction.  For example, if you create a binding like <code>A = ABS_X +</code>, then when you press the <code>A</code> button, it will emit an <code>ABS_X</code> event for whatever the <strong>maximum</strong> axis limit for <code>ABS_X</code> is, whereas <code>A = ABS_X -</code> will emit the <strong>minimum</strong> axis limit.</p>
+</li>
+<li>
+<p><code>A</code>/<code>B</code>/<code>X</code>/<code>Y</code> have respective input codes for <code>Gamepad</code> devices: <code>BTN_SOUTH</code>, <code>BTN_EAST</code>, <code>BTN_WEST</code> and <code>BTN_NORTH</code>.</p>
+</li>
+<li>
+<p><code>{L|R}{1|2}</code> have respective input codes for <code>Gamepad</code> devices: <code>BTN_TL</code> <code>BTN_TL2</code> <code>BTN_TR</code> and <code>BTN_TR2</code>.</p>
+</li>
+<li>
+<p><code>{L|R}3</code> have respective input codes for <code>Gamepad</code> devices: <code>BTN_THUMBL</code> and <code>BTN_THUMBR</code></p>
+</li>
+<li>
+<p><code>Menu</code> has a respective (based on location and common use) input code for <code>Gamepad</code> devices: <code>BTN_START</code>.</p>
+</li>
+<li>
+<p><code>Options</code> has a respective (based on location and common use) input code for <code>Gamepad</code> devices: <code>BTN_SELECT</code>.</p>
+</li>
+<li>
+<p><code>Steam</code> is probably closest to a PS or HOME button on a <code>Gamepad</code> device; possibly use <code>BTN_MODE</code>.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="input_type_thumb">Thumbsticks</h4>
+<div class="paragraph">
+<p>The thumbsticks on the Steam Deck are associated with six different inputs in OpenSD.  As you would expect, there is an <strong>X</strong>/<strong>Y</strong> axis pair for each stick, but there are also <strong>touch</strong> and <strong>pressure</strong> (well, sorta) sensors located on the top of each one.  The directional axes are broken into halves such that each direction can emit different events if desired.</p>
+</div>
+<div class="paragraph">
+<p>Axis values from thumbsticks are normalized internally so they can be rescaled to the defined <strong>ABS</strong> event ranges.  The hardware returns signed 16-bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.</p>
+</div>
+<div class="paragraph">
+<p>If <a href="#prof_section_features_stickfiltering">StickFiltering</a> is enabled the full axis is internally normalized as a unit vector and a <strong>radial deadzone</strong> may be applied.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Naming convention</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{L|R}Stick{Up|Down|Left|Right|Touch|Force}</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Descriptions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LStickUp</code>: Represents the top half of the <strong>Y-axis</strong> of the <strong>left</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>LStickDown</code>: Represents the bottom half of the <strong>Y-axis</strong> of the <strong>left</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>LStickLeft</code>: Represents the left half of the <strong>X-axis</strong> of the <strong>left</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>LStickRight</code>: Represents the right half of the <strong>X-axis</strong> of the <strong>left</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>LStickTouch</code>: This is a binary <strong>button</strong> that return <strong>true</strong> when the top of the <strong>left</strong> thumbstick is touched.</p>
+</li>
+<li>
+<p><code>LStickForce</code>: This is a weird kind of proximity/pressure sensor at the top of the <strong>left</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
+</li>
+<li>
+<p><code>RStickUp</code>: Represents the top half of the <strong>Y axis</strong> of the <strong>right</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>RStickDown</code>: Represents the bottom half of the <strong>Y axis</strong> of the <strong>right</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>RStickLeft</code>: Represents the left half of the <strong>X axis</strong> of the <strong>right</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>RStickRight</code>: Represents the right half of the <strong>X axis</strong> of the <strong>right</strong> thumbstick.</p>
+</li>
+<li>
+<p><code>RStickTouch</code>: This is a binary <strong>button</strong> that return <strong>true</strong> when the top of the <strong>right</strong> thumbstick is touched.</p>
+</li>
+<li>
+<p><code>RStickForce</code>: This is a weird kind of proximity/pressure sensor at the top of the <strong>right</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Use</dt>
+<dd>
+<p>Directional inputs are treated like axis halves.  You typically want to map <code>Up</code> and <code>Down</code> onto the same <strong>ABS</strong> event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the <strong>[Bindings]</strong> section of the <a href="#prof_example_profile">Example Profile</a>:</p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini"># Left Stick
+LStickUp            = Gamepad   ABS_Y       -
+LStickDown          = Gamepad   ABS_Y       +
+LStickLeft          = Gamepad   ABS_X       -
+LStickRight         = Gamepad   ABS_X       +
+# Right Stick
+RStickUp            = Gamepad   ABS_RY      -
+RStickDown          = Gamepad   ABS_RY      +
+RStickLeft          = Gamepad   ABS_RX      -
+RStickRight         = Gamepad   ABS_RX      +</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;re also able to treat each axis half like a <strong>button</strong> if you bind it to a <strong>key</strong> or <strong>button</strong> event code, in which case it will trigger the binding when the stick leaves the <strong>center</strong> / <strong>deadzone</strong>.  You can use the deadzone in this case to determine how far the stick must be pushed from center before the binding is triggered.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LStickLeft</code> &amp; <code>LStickRight</code> are typically bound to the <code>ABS_X</code> event code on <code>Gamepad</code> devices.</p>
+</li>
+<li>
+<p><code>LStickUp</code> &amp; <code>LStickDown</code> are typically bound to the <code>ABS_Y</code> event code on <code>Gamepad</code> devices.</p>
+</li>
+<li>
+<p><code>RStickLeft</code> &amp; <code>RStickRight</code> are typically bound to the <code>ABS_RX</code> event code on <code>Gamepad</code> devices.</p>
+</li>
+<li>
+<p><code>RStickUp</code> &amp; <code>RStickDown</code> are typically bound to the <code>ABS_RY</code> event code on <code>Gamepad</code> devices.</p>
+</li>
+<li>
+<p>Use <code>LStickTouch</code> / <code>RStickTouch</code> to detect if a players hands are on the controls.</p>
+</li>
+<li>
+<p>Use <code>LStickForce</code> / <code>RStickForce</code> only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of <strong>0</strong> to <strong>100</strong> is recommened.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="input_type_trigg">Triggers</h4>
+<div class="paragraph">
+<p>Triggers are pressure sensors that are also treated a bit like a thumbstick&#8217;s half-axis, with the difference being there&#8217;s no complement half.  Triggers have a resting position of the defined axis <strong>minimum</strong> limit and move toward the <strong>maximum</strong> limit when actuated.  <em>Typically</em> the minimum limit is zero, so the axis does not return non-zero values when released / resting, but you can do any weird thing you want.</p>
+</div>
+<div class="paragraph">
+<p>Axis values from triggers are normalized internally so they can be rescaled to the defined <strong>ABS</strong> event ranges.  Internally, the HID reports return trigger values as unsigned 16-bit integers.</p>
+</div>
+<div class="paragraph">
+<p>Triggers also have a binary <strong>button</strong> component: <code>L2</code> and <code>R2</code>.  Information about these buttons can be found in the <a href="#input_type_buttons">Buttons</a> section.</p>
+</div>
+<div class="paragraph">
+<p>Linear deadzones can be applied to triggers, if desired in the <a href="#prof_section_deadzones">[Deadzones] Section</a>.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Naming convention</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{L|R}Trigg</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Descriptions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LTrigg</code>: Represents a pressure sensor value for the <strong>left</strong> trigger on the top-rear of the device.</p>
+</li>
+<li>
+<p><code>RTrigg</code>: Represents a pressure sensor value for the <strong>right</strong> trigger on the top-rear of the device.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Use</dt>
+<dd>
+<p>These inputs are absolute axes and can be mapped to <strong>ABS</strong> event codes as well as <strong>KEY</strong> / <strong>BTN</strong> event codes.  One possible reason to use the axis itself as a <strong>button</strong>-type binding would be to use <code>L2</code> / <code>R2</code> buttons on partial actuation, and use a deadzone to emit another event code on full actuation.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LTrigg</code> is typically bound to <code>ABS_Z</code>.</p>
+</li>
+<li>
+<p><code>RTrigg</code> is typically bound to <code>ABS_RZ</code>.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="input_type_trackpad">Trackpads</h4>
+<div class="paragraph">
+<p>At the core, trackpads are <strong>absolute axis</strong> devices have with an <strong>X</strong> / <strong>Y</strong> pair, as well as a pressure sensor <strong>Z-axis</strong> and a slightly tactile <strong>button</strong>.  A number of inputs can be extrapolated from the data those basic types provide.  That includes <strong>touch</strong> sensors, <strong>press / button</strong> sensors, <strong>pressure / force</strong> sensors, <strong>absolute coordinates</strong>, <strong>relative movement</strong> tracking as well as the ability to <strong>map</strong> out regions of the pad and treat them as individual <strong>buttons</strong>.  OpenSD trackpads have the most input bindings out of all the components.</p>
+</div>
+<div class="paragraph">
+<p>As with the <a href="#input_type_thumb">Thumbsticks</a>, directional axes are broken into halves such that each direction can emit different events if desired.  These halves can be mapped on to a whole <strong>ABS</strong> event code, or use separately.</p>
+</div>
+<div class="paragraph">
+<p>Trackpads support radial deadzones for <strong>absolute axis</strong> inputs, and can be configured in the <a href="#prof_section_deadzones">[Deadzones] Section</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Relative</strong> trackpad input, such as <code>LPadRelX</code> or <code>LPadRelY</code>, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the <strong>difference</strong> in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between <strong>-5</strong> and <strong>+5</strong>.  Binding <code><strong>RelX</code> and <code>*RelY</code> inputs to anything other than <code>REL_</strong></code> event codes on the <code>Mouse</code> device is probably not useful.</p>
+</div>
+<div class="paragraph">
+<p>Touchpads are non-multitouch devices so they only relay a single <strong>X</strong> / <strong>Y</strong> coordinate pair.</p>
+</div>
+<div class="paragraph">
+<p>OpenSD provides multiple <strong>"button maps"</strong>, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when <strong>pressed</strong> (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <a href="#input_type_dpad">Directional Pad</a>, <strong>arrow keys</strong>, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Naming convention</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>{L|R}Pad{Up|Down|Left|Right|Touch|Press|Force|RelX|RelY}</code></p>
+</li>
+<li>
+<p><code>{L|R}PadPressQuad{Up|Down|Left|Right}</code></p>
+</li>
+<li>
+<p><code>{L|R}PadPressOrth{Up|Down|Left|Right}</code></p>
+</li>
+<li>
+<p><code>{L|R}PadPressGrid2x2_{1|2|3|4}</code></p>
+</li>
+<li>
+<p><code>{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Descriptions</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LPadUp</code>: Represents the top half of the <strong>Y-axis</strong> of the <strong>left</strong> trackpad.</p>
+</li>
+<li>
+<p><code>LPadDown</code>: Represents the bottom half of the <strong>Y-axis</strong> of the <strong>left</strong> trackpad.</p>
+</li>
+<li>
+<p><code>LPadLeft</code>: Represents the left half of the <strong>X-axis</strong> of the <strong>left</strong> trackpad.</p>
+</li>
+<li>
+<p><code>LPadRight</code>: Represents the right half of the <strong>X-axis</strong> of the <strong>left</strong> trackpad.</p>
+</li>
+<li>
+<p><code>LPadTouch</code>: This is a button sensor which detects if the <strong>left</strong> pad is being touched.  Quite sensitive.</p>
+</li>
+<li>
+<p><code>LPadPress</code>: This is also a button which detects if the <strong>left</strong> pad is being pressed down like a button.  Actuation has a slight tactile bump.</p>
+</li>
+<li>
+<p><code>LPadForce</code>: This is a pressure sensor which returns a normalized value of how much force is being used to press down on the <strong>left</strong> trackpad.  This is an <strong>absolute axis</strong> value and behaves the same as <a href="#input_type_trigg">Triggers</a>.</p>
+</li>
+<li>
+<p><code>LPadRelX</code>: This is a derived <strong>relative axis</strong> value that measures the amount of relative <strong>X-axis</strong> movement between update frames of the <strong>left</strong> trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of <strong>-5</strong> to <strong>+5</strong>.</p>
+</li>
+<li>
+<p><code>LPadRelY</code>: This is a derived <strong>relative axis</strong> value that measures the amount of relative <strong>Y-axis</strong> movement between update frames of the <strong>left</strong> trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of <strong>-5</strong> to <strong>+5</strong>.</p>
+</li>
+<li>
+<p><code>RPadUp</code>: Represents the top half of the <strong>Y-axis</strong> of the <strong>right</strong> trackpad.</p>
+</li>
+<li>
+<p><code>RPadDown</code>: Represents the bottom half of the <strong>Y-axis</strong> of the <strong>right</strong> trackpad.</p>
+</li>
+<li>
+<p><code>RPadLeft</code>: Represents the left half of the <strong>X-axis</strong> of the <strong>right</strong> trackpad.</p>
+</li>
+<li>
+<p><code>RPadRight</code>: Represents the right half of the <strong>X-axis</strong> of the <strong>right</strong> trackpad.</p>
+</li>
+<li>
+<p><code>RPadTouch</code>: This is a button sensor which detects if the <strong>right</strong> pad is being touched.  Quite sensitive.</p>
+</li>
+<li>
+<p><code>RPadPress</code>: This is also a button which detects if the <strong>right</strong> pad is being pressed down like a button.  Actuation has a slight tactile bump.</p>
+</li>
+<li>
+<p><code>RPadForce</code>: This is a pressure sensor which returns a normalized value of how much force is being used to press down on the <strong>right</strong> trackpad.  This is an <strong>absolute axis</strong> value and behaves the same as <a href="#input_type_trigg">Triggers</a>.</p>
+</li>
+<li>
+<p><code>RPadRelX</code>: This is a derived <strong>relative axis</strong> value that measures the amount of relative <strong>X-axis</strong> movement between update frames of the <strong>right</strong> trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of <strong>-5</strong> to <strong>+5</strong>.</p>
+</li>
+<li>
+<p><code>RPadRelY</code>: This is a derived <strong>relative axis</strong> value that measures the amount of relative <strong>Y-axis</strong> movement between update frames of the <strong>right</strong> trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of <strong>-5</strong> to <strong>+5</strong>.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="sect4">
+<h5 id="input_type_trackpad_quad">Quadrant Button Map</h5>
+<div class="paragraph">
+<p>The <strong>quadrant map</strong> (<code>PadPressQuad*</code>) provides a way to treat each touchpad as being composed of four <strong>non-overlapping</strong> triagular quadrants, as depicted in the <strong>figure 1</strong> below.  Each <strong>button</strong> is inherently exclusive to the others in this map since the <strong>X</strong> / <strong>Y</strong> coordinate can only fall inside of one of these regions at a time.  This means that this map will not detect any overlapping presses, like <strong>a</strong> and <strong>b</strong> when you press in the upper-left region.</p>
+</div>
+<div class="paragraph">
+<p>Fig. 1</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌─────────────┐
+│ \         / │
+│  \   a   /  │
+│   \     /   │
+│    \   /    │
+│     \ /     │
+│ b    X    c │
+│     / \     │
+│    /   \    │
+│   /     \   │
+│  /   d   \  │
+│ /         \ │
+└─────────────┘</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LPadPressQuadUp</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressQuadDown</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"d"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressQuadLeft</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressQuadRight</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressQuadUp</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressQuadDown</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"d"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressQuadLeft</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressQuadRight</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 1</strong>, region <strong>"c"</strong>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect4">
+<h5 id="input_type_trackpad_orth">Orthogonal Button Map</h5>
+<div class="paragraph">
+<p>The <strong>orthogonal map</strong> (<code>PadPressOrth*</code>) works similarly to a <a href="#input_type_dpad">Directional Pad</a>.  As you can see below in figure 2, it demonstrates how the <strong>"a"</strong>, <strong>"b"</strong>, <strong>"c"</strong> and <strong>"d"</strong> regions represent orthogonal directions which are not strictly exclusive as they are with the <a href="#input_type_trackpad_quad">Quadrant Button Map</a>.  If a diagonal corner is pressed, it triggers both orthogonally adjacent buttons.  For example, pressing the upper-middle of the pad only triggers <strong>"a"</strong>, but pressing the upper-left of the pad will trigger both <strong>"a"</strong> and <strong>"b"</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Fig. 2</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌─────┬─────┬─────┐
+│     │     │     │
+│  ab │  a  │  ac │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  b  │     │  c  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  db │  d  │  dc │
+│     │     │     │
+└─────┴─────┴─────┘</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LPadPressOrthUp</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressOrthDown</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>d"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressOrthLeft</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressOrthRight</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressOrthUp</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressOrthDown</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>d"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressOrthLeft</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressOrthRight</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 2</strong> regions containing <strong>"c"</strong>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect4">
+<h5 id="input_type_trackpad_grid4">2x2 Grid Button Map</h5>
+<div class="paragraph">
+<p>This button map divides the pad into regions along the center axes, resulting in four square <strong>buttons</strong> in each corner, as depicted in figure 3.  Buttons are naturally exclusive, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.</p>
+</div>
+<div class="paragraph">
+<p>Fig. 3</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌────────┬────────┐
+│        │        │
+│        │        │
+│   a    │    c   │
+│        │        │
+│        │        │
+├────────┼────────┤
+│        │        │
+│        │        │
+│   c    │    d   │
+│        │        │
+│        │        │
+└────────┴────────┘</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LPadPressGrid2x2_1</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid2x2_2</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid2x2_3</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid2x2_4</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"d"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid2x2_1</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid2x2_2</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid2x2_3</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid2x2_4</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 3</strong>, region <strong>"d"</strong>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+<div class="sect4">
+<h5 id="input_type_trackpad_grid9">3x3 Grid Button Map</h5>
+<div class="paragraph">
+<p>This button map divides the pad into thirds along both axes, resulting in a 3x3 grid of nine square <strong>buttons</strong>, as depicted in figure 4.  These buttons are naturally exclusive to one another, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The resulting size of each button will be fairly small, so it may require a little practice and small thumbs to manipulate them precisely.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Fig. 4</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>┌─────┬─────┬─────┐
+│     │     │     │
+│  a  │  b  │  c  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  d  │  e  │  f  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  g  │  h  │  i  │
+│     │     │     │
+└─────┴─────┴─────┘</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>LPadPressGrid3x3_1</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_2</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_3</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_4</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"d"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_5</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"e"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_6</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"f"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_7</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"g"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_8</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"h"</strong>.</p>
+</li>
+<li>
+<p><code>LPadPressGrid3x3_9</code>: The logical <strong>button</strong> on the <strong>left</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"i"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_1</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"a"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_2</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"b"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_3</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"c"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_4</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"d"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_5</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"e"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_6</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"f"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_7</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"g"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_8</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"h"</strong>.</p>
+</li>
+<li>
+<p><code>RPadPressGrid3x3_9</code>: The logical <strong>button</strong> on the <strong>right</strong> trackpad corresponding to <strong>fig. 4</strong>, region <strong>"i"</strong>.</p>
+</li>
+</ul>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="daemoncfg_file_example">Example config.ini</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Daemon]
+# The gamepad profile to be loaded on startup
+Profile = default.profile
+
+# Allow client connections from CLI and GUI configuration tools
+AllowClients = true</code></pre>
+</div>
+</div>
+<hr>
+<div style="page-break-after: always;"></div>
+</div>
+<div class="sect2">
+<h3 id="prof_example_profile">Example Profile</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
+Name            = Example Profile
+Description     = Just an example profile to show basic use
+
+[Features]
+ForceFeedback      = true
+MotionDevice       = true
+MouseDevice        = true
+LizardMode         = false
+StickFiltering     = true
+TrackpadFiltering  = true
+
+[Deadzones]
+LStick    = 0.1
+RStick    = 0.1
+LPad      = 0
+RPad      = 0
+LTrigg    = 0
+RTrigg    = 0
+
+[GamepadAxes]
+ABS_HAT0X    = -1        1
+ABS_HAT0Y    = -1        1
+ABS_X        = -32767    32767
+ABS_Y        = -32767    32767
+ABS_RX       = -32767    32767
+ABS_RY       = -32767    32767
+ABS_Z        = 0         32767
+ABS_RZ       = 0         32767
+
+[MotionAxes]
+ABS_X        = -32767    32767
+ABS_Y        = -32767    32767
+ABS_Z        = -32767    32767
+ABS_RX       = -32767    32767
+ABS_RY       = -32767    32767
+ABS_RZ       = -32767    32767
+
+[Bindings]
+DpadUp              = Gamepad   ABS_HAT0Y   -
+DpadDown            = Gamepad   ABS_HAT0Y   +
+DpadLeft            = Gamepad   ABS_HAT0X   -
+DpadRight           = Gamepad   ABS_HAT0X   +
+# Buttons
+A                   = Gamepad   BTN_SOUTH
+B                   = Gamepad   BTN_EAST
+X                   = Gamepad   BTN_WEST
+Y                   = Gamepad   BTN_NORTH
+L1                  = Gamepad   BTN_TL
+R1                  = Gamepad   BTN_TR
+L2                  = Gamepad   BTN_TL2
+R2                  = Gamepad   BTN_TR2
+L3                  = Gamepad   BTN_THUMBL
+R3                  = Gamepad   BTN_THUMBR
+L4                  = None
+R4                  = None
+L5                  = None
+R5                  = None
+Menu                = Gamepad   BTN_START
+Options             = Gamepad   BTN_SELECT
+Steam               = Gamepad   BTN_MODE
+QuickAccess         = Command   true        0   rofi -show drun
+# Triggers
+LTrigg              = Gamepad   ABS_Z       +
+RTrigg              = Gamepad   ABS_RZ      +
+# Left Stick
+LStickUp            = Gamepad   ABS_Y       -
+LStickDown          = Gamepad   ABS_Y       +
+LStickLeft          = Gamepad   ABS_X       -
+LStickRight         = Gamepad   ABS_X       +
+LStickTouch         = None
+LStickForce         = None
+# Right Stick
+RStickUp            = Gamepad   ABS_RY      -
+RStickDown          = Gamepad   ABS_RY      +
+RStickLeft          = Gamepad   ABS_RX      -
+RStickRight         = Gamepad   ABS_RX      +
+RStickTouch         = None
+RStickForce         = None
+# Left Trackpad
+LPadUp              = None
+LPadDown            = None
+LPadLeft            = None
+LPadRight           = None
+LPadRelX            = None
+LPadRelY            = None
+LPadTouch           = None
+LPadPress           = Mouse     BTN_LEFT
+LPadForce           = None
+LPadPressQuadUp     = None
+LPadPressQuadDown   = None
+LPadPressQuadLeft   = None
+LPadPressQuadRight  = None
+LPadPressOrthUp     = None
+LPadPressOrthDown   = None
+LPadPressOrthLeft   = None
+LPadPressOrthRight  = None
+LPadPressGrid2x2_1  = None
+LPadPressGrid2x2_2  = None
+LPadPressGrid2x2_3  = None
+LPadPressGrid2x2_4  = None
+LPadPressGrid3x3_1  = None
+LPadPressGrid3x3_2  = None
+LPadPressGrid3x3_3  = None
+LPadPressGrid3x3_4  = None
+LPadPressGrid3x3_5  = None
+LPadPressGrid3x3_6  = None
+LPadPressGrid3x3_7  = None
+LPadPressGrid3x3_8  = None
+LPadPressGrid3x3_9  = None
+# Right Trackpad
+RPadUp              = None
+RPadDown            = None
+RPadLeft            = None
+RPadRight           = None
+RPadRelX            = Mouse     REL_X
+RPadRelY            = Mouse     REL_Y
+RPadTouch           = None
+RPadPress           = Mouse     BTN_RIGHT
+RPadForce           = None
+RPadPressQuadUp     = None
+RPadPressQuadDown   = None
+RPadPressQuadLeft   = None
+RPadPressQuadRight  = None
+RPadPressOrthUp     = None
+RPadPressOrthDown   = None
+RPadPressOrthLeft   = None
+RPadPressOrthRight  = None
+RPadPressGrid2x2_1  = None
+RPadPressGrid2x2_2  = None
+RPadPressGrid2x2_3  = None
+RPadPressGrid2x2_4  = None
+RPadPressGrid3x3_1  = None
+RPadPressGrid3x3_2  = None
+RPadPressGrid3x3_3  = None
+RPadPressGrid3x3_4  = None
+RPadPressGrid3x3_5  = None
+RPadPressGrid3x3_6  = None
+RPadPressGrid3x3_7  = None
+RPadPressGrid3x3_8  = None
+RPadPressGrid3x3_9  = None
+# Accelerometers
+AccelXPlus          = Motion    ABS_RX      +
+AccelXMinus         = Motion    ABS_RX      -
+AccelYPlus          = Motion    ABS_RY      +
+AccelYMinus         = Motion    ABS_RY      -
+AccelZPlus          = Motion    ABS_RZ      +
+AccelZMinus         = Motion    ABS_RZ      -
+# Gyro / Attitude
+RollPlus            = Motion    ABS_X       +
+RollMinus           = Motion    ABS_X       -
+PitchPlus           = Motion    ABS_Y       +
+PitchMinus          = Motion    ABS_Y       -
+YawPlus             = Motion    ABS_Z       +
+YawMinus            = Motion    ABS_Z       -</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO:</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer" style="max-width: 100%;">
+<div id="footer-text">
+Last updated 2022-11-19 20:37:30 -0800
+</div>
+</div>
+</body>
+</html>

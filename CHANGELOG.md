@@ -1,10 +1,19 @@
 # OpenSD changelog
 
+## [v0.43]  2022/11/19
+### Added
+  - Added asciidoc user manual
+  - Added html user manual (from asciidoc)
+  - Added asciidoc manpage
+  - Added manpage for opensdd (from asciidoc)
+  - Added documentation and manpage installation to CMakeLists.txt
+  - Documentation is now installed to ${CMAKE_INSTALL_PREFIX}/share/doc/opensd/
+
 
 ## [v0.42]  2022/11/01
 ### Added
   - Added a CHANGELOG to the project
-  
+
 ### Changed
   - Changed file extension for profile files from `.ini` to `.profile` in order to be less confusing.
   - Missing default / standard profiles are copied to user profile directory on startup (old and modified files are not overwritten)

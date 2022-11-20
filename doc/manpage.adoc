@@ -1,0 +1,40 @@
+= opensdd(1)
+seek
+:doctype: manpage
+:manmanual: opensdd
+:mansource: opensdd
+:man-linkstyle: pass:[blue R < >]
+
+== Name
+opensdd - A highly-configurable open-source userspace driver daemon for Valve's Steam Deck.
+
+== SYNOPSIS
+opensdd [options]
+
+== DESCRIPTION
+OpenSD is a highly-configurable userspace driver for the Steam Deck written in modern C++.  It aims to be lighweight, very fast and provide a way to fully utilize the hardware without running any closed-source, proprietary or anti-privacy software like Steam.
+
+At the time of writing, there is no way to utilize the gamepad portion (buttons, thumbsticks, gyros, etc.) of the Steam Deck without also having to run Steam, since Steam implements an unpublished, undocumented, closed-source userspace driver to make it all work.  This means signing into an online service to access basic hardware functionality on a device that you own.
+
+This goal of this software is to provide a better, fully open-source implementation; ultimately unlocking the hardware to be used freely and unencumbered any by proprietary requirements.
+
+== OPTIONS
+*-h    --help*:: Display help screen.
+*-v    --version*:: Output version number and exit.
+*-l    --log-level <log level>*:: Set minumum logging level. Valid options are: *verbose*, *debug*, *info*, *warn*, *error*.  (Default: *warn*)
+
+== FILES
+$XDG_CONFIG_HOME/opensd/config.ini:: User configuration for the OpenSD daemon.
+$XDG_CONFIG_HOME/opensd/profiles/*.profile:: User-configurable gamepad profiles.
+
+== PROJECT HOME
+https://gitlab.com/open-sd/opensd
+
+== WIKI
+https://gitlab.com/open-sd/opensd/-/wikis/home
+
+== AUTHOR
+seek (https://gitlab.com/seek-dev)
+
+== CONFIGURATION
+include::user manual.adoc[leveloffset=2]
