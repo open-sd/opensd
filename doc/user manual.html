@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 </head>
 <body id="using_opensd" class="article toc2 toc-left">
-<div id="header">
+<div id="header" style="max-width: 100%;">
 <h1>OpenSD User Manual</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -512,11 +512,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#prof_example_profile">Example Profile</a></li>
 </ul>
 </li>
-<li><a href="#_troubleshooting">Troubleshooting</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </div>
 </div>
-<div id="content">
+<div id="content" style="max-width: 100%;">
 <div id="preamble">
 <div class="sectionbody">
 <hr>
@@ -533,7 +533,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>OpenSD requires access to the <strong>uinput</strong> and <strong>hidraw</strong> subsystems.  To enable this access, OpenSD provides a <strong>udev rule</strong> which will be installed when installing OpenSD.  In this rule, access is allowed to both subsystem for members of the <strong>opensd</strong> group, which is also created on install.  Any user that intends to run OpenSD must be a member of this group, or otherwise have R/W access to these device nodes.  After installing for the first time it will be necessary to log out in order for the user&#8217;s group changes to take effect.</p>
 </div>
 <div class="paragraph">
-<p>For more information see the <a href="#troubleshooting">[troubleshooting]</a> section.</p>
+<p>For more information see the <a href="#troubleshooting">Troubleshooting</a> section.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2545,7 +2545,7 @@ YawMinus            = Motion    ABS_Z       -</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_troubleshooting">Troubleshooting</h2>
+<h2 id="troubleshooting">Troubleshooting</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>TODO:</p>
@@ -2553,9 +2553,9 @@ YawMinus            = Motion    ABS_Z       -</code></pre>
 </div>
 </div>
 </div>
-<div id="footer">
+<div id="footer" style="max-width: 100%;">
 <div id="footer-text">
-Last updated 2022-11-19 19:25:12 -0800
+Last updated 2022-11-19 20:37:30 -0800
 </div>
 </div>
 </body>

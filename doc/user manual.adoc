@@ -1,5 +1,6 @@
 [#using_opensd]
 = OpenSD User Manual
+:max-width: 100%
 :toc: left
 :toclevels: 5
 
@@ -1194,7 +1195,7 @@ YawPlus             = Motion    ABS_Z       +
 YawMinus            = Motion    ABS_Z       -
 ----
 
-
+[#troubleshooting]
 == Troubleshooting
 
 TODO:

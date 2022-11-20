@@ -88,7 +88,7 @@ OpenSD is intended to be run as a user\-level service, but it can be run from a 
 .sp
 OpenSD requires access to the \fBuinput\fP and \fBhidraw\fP subsystems.  To enable this access, OpenSD provides a \fBudev rule\fP which will be installed when installing OpenSD.  In this rule, access is allowed to both subsystem for members of the \fBopensd\fP group, which is also created on install.  Any user that intends to run OpenSD must be a member of this group, or otherwise have R/W access to these device nodes.  After installing for the first time it will be necessary to log out in order for the user\(cqs group changes to take effect.
 .sp
-For more information see the [troubleshooting] section.
+For more information see the Troubleshooting section.
 .if n .sp
 .RS 4
 .it 1 an-trap
