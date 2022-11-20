@@ -11,8 +11,13 @@
 == Running OpenSD
 OpenSD is intended to be run as a user-level service, but it can be run from a terminal like most other Linux programs.  This can be useful for troubleshooting or debugging purposes since every message is logged to stdout.
 
+OpenSD requires access to the *uinput* and *hidraw* subsystems.  To enable this access, OpenSD provides a *udev rule* which will be installed when installing OpenSD.  In this rule, access is allowed to both subsystem for members of the *opensd* group, which is also created on install.  Any user that intends to run OpenSD must be a member of this group, or otherwise have R/W access to these device nodes.  After installing for the first time it will be necessary to log out in order for the user's group changes to take effect.
+
+For more information see the <<troubleshooting>> section.
+
 WARNING: Do NOT run the OpenSD daemon as root, either directly or as a system service.
 
+'''
 [#run_from_terminal]
 === From a terminal
 [source,shell]
@@ -27,9 +32,16 @@ Or to see debug messages run:
 $ opensdd -l debug
 ----
 
+A full list of command line options can be shown using:
+[source,shell]
+----
+$ opensdd --help
+----
+
+'''
 [#run_as_service]
 === As a User-Level Service
-For systemd users, a service file is provided which can be run as a user-level service that will automatically start on log-in.
+For *systemd* users, a service file is provided which can be run as a user-level service that will automatically start on log-in.
 
 To run the OpenSD daemon as a service on user log-in:
 [source,shell]
@@ -44,44 +56,44 @@ $ systemctl --user start opensd
 <<<
 [#config_files]
 = Configuration Files
-OpenSD uses two types of configuration files.  The first type being a single configuration file for the OpenSD daemon itself (config.ini), and the second type are gamepad driver profiles (*.profile) which can be loaded by the daemon.
+OpenSD uses two types of configuration files.  The first type being the <<daemoncfg_file>>, and the second type are gamepad <<profile_files>> which are loaded by the daemon.
 
 All files use an https://en.wikipedia.org/wiki/INI_file[_ini-style_] format and are easily created or modified with any text editor.
 
-Since OpenSD is a _userspace_ daemon, configuration files are stored in `$XDG_CONFIG_HOME/opensd/` which, on most systems, will be `~/.config/opensd/`.  Gamepad profiles are stored in the `profile` subdirectory, i.e. `~/.config/opensd/profiles/`.  
+Since OpenSD is a _userspace_ daemon, configuration files are stored in `$XDG_CONFIG_HOME/opensd/` which, on most systems, will be `~/.config/opensd/`.  Gamepad profiles are stored in the `profile` subdirectory, (example: `~/.config/opensd/profiles/`).  *If the OpenSD user config directory does not exist, a new one will be created and populated with the default configuration files when the daemon is run.*
 
-NOTE: OpenSD follows the XDG specification, so environemnts which set/chang `$XDG_HOME` or `$XDG_CONFIG_HOME` should behave correctly.  For the purposes of documentation I'll refer to the default XDG paths.
-
+NOTE: OpenSD follows the XDG specification, so environments which set / change `$XDG_HOME` or `$XDG_CONFIG_HOME` should behave correctly.  For the purposes of this documentation we'll refer to the *default* XDG paths for user configuration files (example: `~/.config/opensd/`).
 
 Basic format rules::
-
 * Parsing is line-based and space delimited.
 * The files are broken into braced enclosed *sections* and *keys*.
-* Section and keys are case-insensitive, but values can be, such as file names.
-* Sections are enclosed in square brackets  (i.e. `[SectionName]`)
+* Names of sections and keys are not *case-sensitive*, but _values_ can be, such as file names.
+* Sections are enclosed in square brackets  (example: `[SectionName]`)
 * Keys must be contained within a section.
-* Keys assignment must be separated by spaces.  (i.e. `key = value1 value2 value3`)
-* Comments are preceeded by a `#` or `;`
+* Key assignment *must* be separated by whitespace.  (example: `key = value1 value2 value3`)
+* Comments are preceeded by a `#` or `;` at the beginning of the line.
 
 
 
 '''
 <<<
-[#config_file_format]
+[#daemoncfg_file]
 == Daemon Configuration file (config.ini)
-This file contains a small group of options that pertain to the daemon itself.  The default configuration file for the daemon can be found at `~/.config/opensd/config.ini`.  
+This single file contains a small group of options that pertain to the daemon itself.  The default configuration file for the daemon can be found at `~/.config/opensd/config.ini`.  An unmodified copy of this file will be installed to `/usr/local/share/opensd/config/config.ini` or `/usr/share/opensd/config/config.ini`.
 
-An <<config_file_example>> can be found in this documentation if you want to see what a complete file might look like.
+An <<daemoncfg_file_example>> can be found in this documentation if you want to see what a complete file might look like.
 
 
 
 '''
-[#config_file_section_daemon]
+<<<
+[#daemoncfg_file_section_daemon]
 ==== [Daemon] Section
 NOTE: This section is required.
-[#config_file_section_daemon_profile]
+
+[#daemoncfg_file_section_daemon_profile]
 ===== Profile
-This tells the daemon which profile to load when it starts up.  Profiles are *only* loaded from the the `~./config/opensd/profiles/` directory, so just specify the filename here.  OpenSD also has other methods for loading profiles once the daemon is running, this setting is only for the default you wish to use.
+This tells the daemon which profile to load when it starts up.  Profiles are *only* loaded from the `~./config/opensd/profiles/` directory, so only specify the filename here.  OpenSD also has other methods for loading profiles once the daemon is running, this setting is only for the default profile you wish to use.
 
 Format:
 [source,ini]
@@ -90,16 +102,16 @@ Profile = <filename>
 ----
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Daemon]
-Profile = default.ini
+Profile = default.profile
 ----
 
 
 
 '''
-[#config_file_section_daemon_allowclients]
+[#daemoncfg_file_section_daemon_allowclients]
 ===== AllowClients
 NOTE: This feature is not yet fully implemented.
 
@@ -112,6 +124,7 @@ AllowClients = <true | false>
 ----
 
 Example:
+[source,ini]
 ----
 [Daemon]
 AllowClients = true
@@ -121,15 +134,19 @@ AllowClients = true
 
 '''
 <<<
-[#profile_file_format]
+[#profile_files]
 == Profile Configuration Files (*.profile)
-These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the `config.ini` to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.
+These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the <<daemoncfg_file>> to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.
 
 Gamepad profiles can be found in `~/.config/opensd/profiles/`.  The file extension is `*.profile`.
 
 An <<prof_example_profile>> can be found in this documentation if you want to see what a complete file might look like.
 
-A default profile (cleverly named `default.profile`) is provided which includes documentation in the comments on how to configure it.  It is not recommended to modify this file, instead you should make a copy of it, renaming it to `whatever_you_want.profile` and edit that file instead.  If you need a clean or updated copy of the `default.profile`, simply delete it and restart the OpenSD daemon and a new one will be created in its place.
+A default profile (cleverly named `default.profile`) is provided which includes documentation in the comments on how to configure it.  It is not recommended to modify this file, instead you should make a copy of it, renaming it to `whatever_you_want.profile` and edit that file instead.  If the default profile is deleted, it will be recreated when the daemon is run, so if you need a clean or _updated_ copy of the `default.profile`, simply delete it and restart the OpenSD daemon.
+
+An unmodified copy of this file will be installed to `/usr/local/share/opensd/profiles/default.profile` or `/usr/share/opensd/profiles/default.profile`.
+
+
 
 '''
 [#prof_section_profile]
@@ -181,16 +198,16 @@ Description = Just a profile I use for most applications.
 
 [#prof_section_features_ff]
 ==== ForceFeedback
-Enable or disables haptic / force-feedback events for the gamepad device.  It's worth mentioning that only the `Gamepad` device can receive force-feedback events; the `Motion` or `Mouse` devices will not receive these messages if they are enabled.
+Enable or disables haptic / force-feedback events for the gamepad device.  It's worth mentioning that only the `Gamepad` device can receive force-feedback events; the `Motion` or `Mouse` devices will not receive these events.
 
 Format:
-[souce,ini]
+[source,ini]
 ----
 ForceFeedback = <true | false>
 ----
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Features]
 ForceFeedback = true
@@ -206,16 +223,16 @@ NOTE:  This feature is not yet fully implemented
 <<<
 [#prof_section_features_motiondevice]
 ==== MotionDevice
-If this is set to `true`, an additional input device will be created which will report motion control data.  Motion axes still need to have thier ranges and bindings defined.  If this is disabled, any `Motion` bindings will be ignored.
+If this is set to `true`, an additional input device will be created which will report motion control data.  Motion axes need to have thier ranges and bindings defined.  If this is disabled, any `Motion` device bindings will be ignored.
 
 Format:
-[souce,ini]
+[source,ini]
 ----
 MotionDevice = <true | false>
 ----
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Features]
 MotionDevice = true
@@ -223,22 +240,22 @@ MotionDevice = true
 
 If unspecified, this value defaults to `false`.
 
-NOTE: While it's possible to combine gamepad and motion input into a single input device, kernel and uinput specifications state that motion control devices should be separate from other gamepad / joystick input.  This can also make it difficult to configure controls in most applications.
+NOTE: While it's possible to combine gamepad and motion input into a single input device, Linux *kernel* and *uinput* specifications state that motion control devices should be separate from other gamepad / joystick input.  Not separating these can also make it difficult to configure controls in most applications.
 
 
 '''
 [#prof_section_features_mousedevice]
 ==== MouseDevice
-If this is set to `true`, an additional input device will be created which will be used to send mouse / trackpad events.  Mouse events still need to have thier bindings defined.  If this is disabled, any `Mouse` bindings will be ignored.
+If this is set to `true`, an additional input device will be created which will be used to send mouse / trackpad events.  Mouse events still need to have thier bindings defined.  If this is disabled, any `Mouse` device bindings will be ignored.
 
 Format:
-[souce,ini]
+[source,ini]
 ----
 MouseDevice = <true | false>
 ----
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Features]
 MouseDevice = true
@@ -252,18 +269,18 @@ If unspecified, this value defaults to `true`.
 <<<
 [#prof_section_features_lizardmode]
 ==== LizardMode
-The Steam Controller and the Steam Deck both have a kind of fallback BIOS mode which emulates some keyboard and mouse events.  Valve refers to this as 'Lizard Mode'.  This mode cannot be redefined.  It sends events IN ADDITION to the gamepad events created by the OpenSD driver, so it should always be disabled. When OpenSD exits, Lizard Mode is re-enabled.
+The Steam Controller and the Steam Deck both have a kind of fallback "BIOS" mode which emulates some keyboard and mouse input using the gamepad.  Valve refers to this as "Lizard Mode".  This mode cannot be redefined.  It sends events IN ADDITION to the gamepad events created by the OpenSD driver, so it should *always* be disabled. If you would like mouse or keyboard emulation, they should be configured with *bindings*.  When OpenSD exits, Lizard Mode is re-enabled.
 
 If this is set to `false` "Lizard Mode" will be disabled (*recommended*).
 
 Format:
-[souce,ini]
+[source,ini]
 ----
 LizardMode = <true | false>
 ----
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Features]
 LizardMode = false
@@ -304,7 +321,7 @@ NOTE:  This must be enabled for thumbstick deadzones to work.
 <<<
 [#prof_section_features_trackpadfiltering]
 ==== TrackpadFiltering
-Similar to StickFiltering, but matches the square shape of the trackpad.  Filtering is only applied to absolute values.  This setting must be enabled to apply deadzones to the trackpad absolute axes.  Relative values (rel_x and rel_y) are unaffected, therefore deadzones do not affect mouse movement with the pads.
+Similar to StickFiltering, but matches the square shape of the trackpad.  Filtering is only applied to absolute values.  This setting must be enabled to apply deadzones to the trackpad absolute axes.  Relative values (`*PadRelX` and `*PadRelY`) are unaffected, therefore deadzones do not affect mouse movement with the pads.
 
 If set to `true` trackpads will be filtered (*recommended*).
 
@@ -321,7 +338,7 @@ Example:
 TrackpadFiltering  = true
 ----
 
-If unspecified this value defaults to `true`.
+If unspecified, this value defaults to `true`.
 
 NOTE:  This must be enabled for trackpad deadzones to work.
 
@@ -330,7 +347,7 @@ NOTE:  This must be enabled for trackpad deadzones to work.
 '''
 [#prof_section_deadzones]
 === [Deadzones] Section
-These values are floating point and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If `StickFiltering` is disabled, `LStick` and `RStick` deadzones will be ignored.  If `TrackpadFiltering` is disabled, `LPad` and `RPad` deadzones will be ignored.  
+These values are *double precision floating point* and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If <<prof_section_features_stickfiltering>> is disabled, `LStick` and `RStick` deadzones will be ignored.  If <<prof_section_features_trackpadfiltering>> is disabled, `LPad` and `RPad` deadzones will be ignored.  
 
 Format:
 [source,ini]
@@ -341,7 +358,7 @@ axis      = <value>
 * `value`: A double-precision floating point value between *0* and *0.9*.
 
 Example:
-[souce,ini]
+[source,ini]
 ----
 [Deadzones]
 LStick      = 0.1
@@ -354,22 +371,22 @@ RTrigg      = 0
 
 Any undefined axis deadzone will default to `0` (disabled).
 
-NOTE: Because the Steam Deck thumbsticks tend not to return to center correctly (at least on current revisions), a small deadzone of around 0.10 (10%) is generally recommended.
+NOTE: Because the Steam Deck thumbsticks tend not to return to center completely (at least on current revisions), a small deadzone of around 0.10 (10%) is generally recommended.
 
 
 
 '''
 [#prof_section_gamepadaxes]
 === [GamepadAxes] Section
-Gamepad absolute axes must have a defined range or they will not be created.  Any `Gamepad` `ABS_` events which are configured in the <<prof_section_bindings_gamepad>> section *must be defined here first, or they will be ignored*.
+Gamepad absolute axes must have a defined range or they will not be created.  Any `Gamepad` `ABS_*` events which are configured in the <<prof_section_bindings_gamepad>> section *must be defined here first, or they will be ignored*.
 
 Internally, the axis values are normalized and rescaled between the actual hardware and the value seen by applications, so no clipping or "dead extremes" will occur.  There is no "right" or "wrong" value here that you need to know, but it may be useful to precisely emulate other hardware so it can be detected as such by certain applications which try to guess what kind of device you have.
 
-The Steam Deck hardware uses signed 16-bit precision integers (*-32767* to *32767*) for its thumbstick, trackpad, trigger and motion axes, so there's no reason to use a larger or smaller range for those inputs unless you are trying to emulate a specific device.
+The Steam Deck hardware uses signed 16-bit integers (*-32767* to *32767*) for its thumbstick, trackpad, trigger and motion axes, so there's no reason to use a larger or smaller range for those inputs, unless you are trying to emulate a specific device.
 
-*Hat*-type (`ABS_HAT*`) axes should typically use a range of `-1` to `1` because of thier historical purpose, but this is not strictly enforced.
+https://en.wikipedia.org/wiki/Joystick#Hat_switch[*Hat-type*] axes (`ABS_HAT*`) should typically use a range of `-1` to `1` because of thier historical purpose, but this is not strictly enforced.
 
-Triggers should typically have minumum value of `0` so that the axis rests neutrally.
+Triggers should typically have *minumum value* of `0` so that they rest at zero when released.
 
 Format:
 [source,ini]
@@ -377,8 +394,8 @@ Format:
 <abs_event>     = <min>     <max>
 ----
 * `abs_event`:  Any absolute axis event code you wish to bind.  Absolute event codes begin with `ABS_`.  A full list of input event codes can be found at https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
-* `min`:  An integer representing the *minimum* range of the axis.  This is a 32bit signed integer.
-* `max`:  An integer representing the *maximum* range of the axis.  This is a 32bit signed integer.
+* `min`:  An integer representing the *minimum* range of the axis.  This is a signed 32-bit integer.
+* `max`:  An integer representing the *maximum* range of the axis.  This is a signed 32-bit integer.
 
 Example:
 [source,ini]
@@ -400,9 +417,11 @@ ABS_RZ          = 0         32767
 <<<
 [#prof_section_motionaxes]
 === [MotionAxes] Section
-Motion control absolute axes must have a defined range or they will not be created.  Any `Motion` `ABS_` events which are configured in the <<prof_section_bindings_motion>> *must be defined here first, or they will be ignored*.
+Motion control absolute axes, as with the gamepad device, must have a defined range or they will not be created.  Any `Motion` `ABS_*` events which are configured in the <<prof_section_bindings_motion>> *must be defined here first, or they will be ignored*.
 
-The Steam Deck hardware uses signed 16-bit precision integers (*-32767* to *32767*) for its thumbstick, trackpad, trigger and motion axes, so there's no reason to use a larger or smaller range for those inputs unless you are trying to emulate a specific device.
+Internally, the axis values are normalized and rescaled between the actual hardware and the value seen by applications, so no clipping or "dead extremes" will occur.  There is no "right" or "wrong" value here that you need to know, but it may be useful to precisely emulate other hardware so it can be detected as such by certain applications which try to guess what kind of device you have.
+
+The Steam Deck hardware uses signed 16-bit integers (*-32767* to *32767*) for its thumbstick, trackpad, trigger and motion axes, so there's no reason to use a larger or smaller range for those inputs, unless you are trying to emulate a specific device.
 
 Format:
 [source,ini]
@@ -410,8 +429,8 @@ Format:
 <abs_event>     = <min>     <max>
 ----
 * `abs_event`:  Any absolute axis event code you wish to bind.  Absolute event codes begin with `ABS_`.  A full list of input event codes can be found at https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
-* `min`:  An integer representing the *minimum* range of the axis.  This is a 32bit signed integer.
-* `max`:  An integer representing the *maximum* range of the axis.  This is a 32bit signed integer.
+* `min`:  An integer representing the *minimum* range of the axis.  This is a signed 32-bit integer.
+* `max`:  An integer representing the *maximum* range of the axis.  This is a signed 32-bit integer.
 
 Example:
 [source,ini]
@@ -433,15 +452,21 @@ NOTE: Motion controls are not yet fully implemented.
 <<<
 [#prof_section_bindings]
 === [Bindings] Section
-This should be a list of all the physical gamepad buttons/sticks/pads/motion inputs you want to bind to a virtual input event or command.  Anything not specified here will be considered "unbound" and not register any event.
+This should be a list of all the physical gamepad buttons/sticks/pads/motion inputs you want to bind to a virtual input event or command.  Anything not specified here will be considered "unbound" and not emit any event.
 
 There are currently four basic binding types: *device bindings*, `Command` bindings, `Profile` bindings and `None`.
 
-*Device bindings*:: represent input events which are generated by pressing buttons, keys, moving the mouse, thumbsticks, motion control, etc.  Event bindings are tied to specific input devices, which include `Gamepad`, `Motion` and `Mouse`.  Applications read events from these different device types in different ways so they should generally be separated.
+Device bindings::
+Represent input events which are generated by pressing buttons, keys, moving the mouse, thumbsticks, motion control, etc.  Event bindings are tied to specific input devices, which include `Gamepad`, `Motion` and `Mouse`.  Applications read events from these different device types in different ways so they should generally be separated.
 
-`Command` bindings:: Executes a given command inside a shell environment.
-`Profile` bindings:: Used to switch to a different profile when triggered.
-`None`:: This is used to indicate that a particular input has no binding. (default)
+`Command` bindings::
+Executes a given command inside a shell environment.
+
+`Profile` bindings:: 
+Used to switch to a different profile when triggered.
+
+`None`::
+This is used to indicate that a particular input has no binding. (default)
 
 Input binding names which this document will refer to as `input` or <input>, are represent physical buttons, triggers, axes, etc. on the physical gamepad portion of the Steam Deck.  They can be broken down into a several categories for simplicity:
 
@@ -455,15 +480,16 @@ Attitude / gyros:: `{Roll|Pitch|Yaw}{Plus|Minus}`
 
 Input names prefixed with `L` or `R` indicate left and right controls (example: `LStickLeft` vs `RStickLeft`)
 
-Additionally, trackpads are mapped out into several button layouts simultaneously.  This means that when pressed, specific areas of the trackpad behave like individual buttons. There are several layouts which can be used non-exclusively.
+_Additionally_, trackpads are mapped out into several *button* layouts simultaneously.  This means that when pressed, specific areas of the trackpad behave like individual buttons. There are several "maps" which can be used non-exclusively.  These are
 
-Trackpad button maps:: 
-  * Quadrant button maps: `{L|R}PadPressQuad{Up|Down|Left|Right}`
-  * Orthogonal button maps: `{L|R}PadPressOrth{Up|Down|Left|Right}`
-  * 2x2 grid maps: `{L|R}PadPressGrid2x2_{1|2|3|4}`
-  * 3x3 grid maps: `{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}`
+Quadrant button maps:: `{L|R}PadPressQuad{Up|Down|Left|Right}`
+Orthogonal button maps:: `{L|R}PadPressOrth{Up|Down|Left|Right}`
+2x2 grid maps:: `{L|R}PadPressGrid2x2_{1|2|3|4}`
+3x3 grid maps:: `{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}`
 
-A full list of available input codes can be seen in the <<prof_example_profile>> section, as well as in `default.profile` file.  A detailed explanation of each of these inputs can be found in the <<placeholder>> section.
+A full list of available input codes can be seen in the <<prof_example_profile>> section, as well as in `default.profile` file. 
+
+*A detailed explanation of each of these inputs can be found in the <<input_types>> section.*
 
 
 
@@ -471,13 +497,14 @@ A full list of available input codes can be seen in the <<prof_example_profile>>
 <<<
 [#prof_section_bindings_gamepad]
 ==== Gamepad Bindings
-The `Gamepad` device binding is used to generate input events for a joystick / gamepad-type device.  This generally means buttons (`BTN_*`) and absolute axis (`ABS_*`) events.  `KEY_*` events are allowed, but many programs will not read `KEY_*` events from a joystick device.
+The `Gamepad` device binding is used to generate input events for a joystick / gamepad-type device.  This generally means buttons (`BTN_*`) and absolute axis (`ABS_*`) events.  `KEY_*` events are allowed, but many programs will not read `KEY_*` events from a joystick device, instead try binding *key* events to the `Mouse` device.
 
-The syntax for bindings differs slightly depending on the event type. Absolute axis (`EV_ABS`) events are prefixed with `ABS_` and key / button events (`EV_KEY`) are prefixed with `KEY_` and `BTN_` respectively.  OpenSD supports most input events.  For a full list of input event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
+The syntax for bindings differs slightly depending on the event type. Absolute axis (`EV_ABS`) events are prefixed with `ABS_` and key / button events (`EV_KEY`) are prefixed with `KEY_` and `BTN_` respectively.  OpenSD supports most event codes.  For a full list of event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
 
-When bound to a button-type input (i.e. the `A` button), the bind is triggered when the button is pressed.  When bound to a axis-type input (i.e. `LStickUp`), the event is emitted when the axis is non-zero and leaves the deadzone (if any).
+When bound to a *button-type* input (example: the `A` button), the bind is triggered when the button is pressed.  When bound to an *axis-type* input (example: `LStickUp`), the event is emitted when the axis is in a non-zero position and leaves the deadzone (if any).
 
 *For KEY / BTN events:*
+
 Format:
 [source,ini]
 ----
@@ -493,7 +520,10 @@ Example:
 Menu = Gamepad BTN_START
 ----
 
+{nbsp}
+
 *For ABS events:*
+
 Format:
 [source,ini]
 ----
@@ -501,9 +531,9 @@ input = Gamepad <event_code> <direction>
 ----
 * `input`: Any one of the input binding names.
 * `event_code`: Any `EV_ABS` type event.  These events are prefixed with `ABS_`.  (example: `ABS_X`)
-* `direction`: Indicates the direction that the axis is moved in.  Values may be `+` or `-`.  For centered axes, like thubsticks, `-` represents moving the axis up or left, and `+` represents moving the axis down or right.  For ramped axes, like triggers and pressure sensors, `+` represents applying pressure.
+* `direction`: Indicates the direction that the axis is moved in.  Values may be `+` or `-`.  For centered axes, like thubsticks, `-` represents moving the axis *up* or *left*, and `+` represents moving the axis *down* or *right*.  For ramped axes, like triggers and pressure sensors, `+` represents applying pressure.
 
-When binding a button-type input like a DPad direction or, say, the `B` button to an *ABS* event, the button will push the axis to its maximum extent in the given direction.  When binding an analog axis, like a thumbstick, to an *ABS* value, the full range of motion in the direction is mapped to the axis value in the given direction.
+When binding a *button-type* input like a DPad direction or, say, the `B` button to an *ABS* event, the button will push the axis to its *maximum* extent in the given direction.  When binding an analog axis, like a thumbstick, to an *ABS* value, the range of motion is mapped to the axis value in the given direction.
 
 Examples:
 [source,ini]
@@ -520,7 +550,9 @@ RStickDown      = Gamepad   ABS_Y       +
 LTrigg          = Gamepad   ABS_Z       +
 ----
 
-A full list of gamepad input names can be seen in the <<Example Profile>> section.  A detailed explanation of each can be found in the <<placeholder>> section.
+A full list of gamepad input names can be seen in the <<Example Profile>> section.  
+
+*A detailed explanation of inputs can be found in the <<input_types>> section of this document.*
 
 NOTE: *ABS* events must have a defined range in the <<prof_section_gamepadaxes>>
 
@@ -530,9 +562,9 @@ NOTE: *ABS* events must have a defined range in the <<prof_section_gamepadaxes>>
 <<<
 [#prof_section_bindings_motion]
 ==== Motion Bindings
-The `Motion` device binding is used to generate input events for a motion control-type device.  While OpenSD does not strictly enforce this, the Linux kernel and uinput specify that motion control events should be emitted by a separate device.  Not doing so can create a lot of "noise", especially when configuring controls within another application.  As per this spec, the `Motion` device only supports `EV_ABS` type events.  These events are prefixed with `ABS_`  (example: `ABS_Z`).  For a full list of input event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
+The `Motion` device binding is used to generate input events for a motion control-type device.  While OpenSD does not strictly enforce this, the Linux kernel and uinput specify that motion control events should be emitted by separate devices.  Not doing so can create a lot of "noise", especially when configuring controls within another application.  As per this spec, the `Motion` device only supports `EV_ABS` type events.  These events are prefixed with `ABS_`  (example: `ABS_Z`).  For a full list of event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
 
-The syntax and behaviour for binding `Motion` device events is the same as bind ABS events with the `Gamepad` device in the previous section.  
+The syntax and behaviour for binding `Motion` device events is the same as binding *ABS* events with the `Gamepad` device in the previous section.  
 
 Also, the `Motion` device is a completely separate context and namespace from the `Gamepad` and `Mouse` devices, much in the same way that two players with identical controllers will have the same buttons, but very different meanings to the game.  For example, pressing `A` on controller #1 does not affect player #2.  Its up the the end-user's software to decide the the context and meaning of the individual events.
 
@@ -543,9 +575,7 @@ input = Motion <event_code> <direction>
 ----
 * `input`: Any one of the input binding names.
 * `event_code`: Any `EV_ABS` type event.  These events are prefixed with `ABS_`.  (example: `ABS_X`)
-* `direction`: Indicates the direction that the axis is moved in.  Values may be `+` or `-`.  For centered axes, like thubsticks, `-` represents moving the axis up or left, and `+` represents moving the axis down or right.  For ramped axes, like triggers and pressure sensors, `+` represents applying pressure.
-
-When binding a button-type input like a DPad direction or, say, the `B` button to an *ABS* event, the button will push the axis to its maximum extent in the given direction.  When binding an analog axis, like a thumbstick, to an *ABS* value, the full range of motion in the direction is mapped to the axis value in the given direction.
+* `direction`: Indicates the direction that the axis is moved in.  Values may be `+` or `-`.
 
 Examples:
 [source,ini]
@@ -556,7 +586,9 @@ RollPlus        = Motion    ABS_X       +
 RollMinus       = Motion    ABS_X       -
 ----
 
-A full list of motion contol input names can be seen in the <<prof_example_profile>> section.  A detailed explanation of each can be found in the <<placeholder>> section.
+A full list of motion contol input names can be seen in the <<prof_example_profile>> section.  
+
+*A detailed explanation of motion input be found in the <<input_types>> section of this document.*
 
 NOTE: *ABS* events must have a defined range in the <<prof_section_motionaxes>>
 
@@ -568,9 +600,9 @@ NOTE: This feature is not yet fully implemented.
 <<<
 [#prof_section_bindings_mouse]
 ==== Mouse Bindings
-The `Mouse` device binding is used to generate input events which will be interpreted as events coming from a pointer-type device such as a physical mouse.  This binding type supports button / key and relative axis events.
+The `Mouse` device binding is used to generate input events which will be interpreted as events coming from a pointer-type device such as a physical mouse.  This binding type supports *button* / *key* and *relative axis* events.  The `Mouse` device can also function a bit like a keyboard, so it's advised to bind any *key* events to this device.
 
-The syntax for bindings differs slightly depending on the event type. Relative axis (`EV_REL`) events are prefixed with `REL_` and key / button events (`EV_KEY`) are prefixed with `KEY_` and `BTN_` respectively.  OpenSD supports most input events.  For a full list of input event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
+The syntax for bindings differs slightly depending on the event type. *Relative axis* (`EV_REL`) events are prefixed with `REL_` and *key* / *button* events (`EV_KEY`) are prefixed with `KEY_` and `BTN_` respectively.  OpenSD supports most event codes.  For a full list of event codes, see https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h[linux/input-event-codes.h] from the Linux kernel.
 
 *For KEY / BTN events:*
 [source,ini]
@@ -598,7 +630,7 @@ RPadRelY        = Mouse REL_Y
 * `input`: Any one of the input binding names.
 * `event_code`: Any `EV_REL` type event.  These events are prefixed with `REL_`.  (example: `REL_X`)
 
-Please see the <<placeholder>> section for a better explanation of how `{L|R}PadRel{X|Y}` relative inputs work.
+*Please see the <<input_type_trackpad>> section of this document for a better explanation of how `{L|R}PadRel{X|Y}` relative inputs work.*
 
 
 
@@ -616,7 +648,7 @@ input = Command <wait_for_exit> <repeat_delay_ms> <command_to_execute>
 * `input`: Any one of the input binding names.  Best suited to button-types.
 * `wait_for_exit`: a `true` or `false` value which specifies if the command should complete before the binding can be triggered again.
 * `repeat_delay_ms`: The amount of time *in milliseconds* that must elapse before the binding can be triggered again.  The timer starts when the binding is successfully triggered.
-* `command_to_execute`: The name of the command / script you want to run, same as you would from a terminal.  The command executes normally inside a shell, so variable expansion should work.
+* `command_to_execute`: The name of the command / script you want to run, same as you would from a terminal.  The command executes normally inside a shell, so variable expansion should work.  Arguments may be specfied by placing them after the command as usual.
 
 Example:
 [source,ini]
@@ -631,7 +663,7 @@ QuickAccess     = Command   true    0   rofi -show run
 <<<
 [#prof_section_bindings_profile]
 ==== Profile Bindings
-The `Profile` binding type allows you to switch to a different profile using just the gamepad input.  Profiles are loaded from the user profile directory.
+The `Profile` binding type allows you to switch to a different profile using just the gamepad input.  Profiles are loaded from the user profile directory.  There is a *2 second* delay after profile switching before the profile can be changed again, to prevent undesirable rapid cycling.  If a profile fails to load, the process will be aborted and the profile currently in use will remain so.
 
 Format:
 [source,ini]
@@ -639,7 +671,7 @@ Format:
 input = Profile <profile_name>
 ----
 * `input`: Any one of the input binding names.  Best suited to button-types.
-* `profile_name`: Filename of the profile ini you want to load.  Path is fixed to the user profile directory, so only specify the filename itself.
+* `profile_name`: Filename of the profile ini you want to load.  Path is fixed to the user profile directory, so *only* specify the filename itself.
 
 Example:
 [source,ini]
@@ -648,13 +680,14 @@ Example:
 L5      = Profile   left_hand_mouse.profile
 ----
 
-
+{nbsp} +
+{nbsp}
 
 '''
 <<<
 [#input_types]
 == Input Types
-As briefly described in the <<prof_section_bindings>>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of `X`/`Y` axes (`LStickUp`, `LStickLeft`, ...), which, as a primitive type are absolute, but the thumbsticks also have a *touch sensor* at the top which can be read as a binary *button* primitive (`LStickTouch`) as well as a pressure level (`LStickForce`) which is read as a single `absolute axis` like a *trigger* would be.
+As briefly described in the <<prof_section_bindings>>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of *X* / *Y* axes (example: `LStickUp`, `LStickLeft`), which, as a primitive type are absolute, but the thumbsticks _also_ have a *touch sensor* at the top which can be read as a binary *button* primitive (`LStickTouch`) as well as a pressure level (`LStickForce`) which is read as a single *absolute axis* like a *trigger* would be.
 
 The intent is for each input name to be as _simple and intuitive as possible_, but that's always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a *binding* ; )
 
@@ -672,9 +705,19 @@ Descriptions::
 * `DPadRight`: The right button on the directional pad.
 
 Use::
-While you can bind them to nearly anything, these buttons are usually bound to pair of https://en.wikipedia.org/wiki/Joystick#Hat_switch[*Hat*] axes, which are _typically_ axes with a range of *-1* to *1* and *0* when resting / released.  See the *[Bindings]* section of the <<prof_example_profile>> for a common configuration.
+While you can bind them to nearly anything, these buttons are usually bound to pair of https://en.wikipedia.org/wiki/Joystick#Hat_switch[*Hat*] axes, which are _typically_ axes with a range of *-1* to *1* and *0* when resting / released.  
 * Button bindings to `KEY_` and `BTN_` events work directly as you might expect.
 * Buttons bound to `ABS_` events emit the axis limit in the given direction.
+
+A common configuration as seen in the <<prof_example_profile>> might look like this:
+[source,ini]
+----
+[Bindings]
+DpadUp              = Gamepad   ABS_HAT0Y   -
+DpadDown            = Gamepad   ABS_HAT0Y   +
+DpadLeft            = Gamepad   ABS_HAT0X   -
+DpadRight           = Gamepad   ABS_HAT0X   +
+----
 
 
 
@@ -691,25 +734,25 @@ Descriptions::
 * `B`: Same as it appears on the front of the Steam Deck.
 * `X`: Same as it appears on the front of the Steam Deck.
 * `Y`: Same as it appears on the front of the Steam Deck.
-* `L1`: The top left bumper / shoulder button.
-* `R1`: The top right bumper / shoulder button.
-* `L2`: Button nested inside the pressure sensor of the left trigger.
-* `R2`: Button nested inside the pressure sensor of the Right trigger.
-* `L3`: Button nested at the bottom of the left stick.  Activated by pressing down until it clicks.
-* `R3`: Button nested at the bottom of the right stick.  Activated by pressing down until it clicks.
-* `L4`: Upper paddle button located on the back-left side of the Steam Deck.
-* `R4`: Upper paddle button located on the back-right side of the Steam Deck.
-* `L5`: Lower paddle button located on the back-left side of the Steam Deck.
-* `R5`: Lower paddle button located on the back-right side of the Steam Deck.
-* `Menu`: Raised https://en.wikipedia.org/wiki/Hamburger_button[hamburger button] (☰) located above the right thumbstick.
-* `Options`: Raised overlapped rectangle button (⮻) located above the left thumbstick.
-* `Steam`: Flat button of the same name (STEAM), located below the left trackpad.
-* `QuickAccess`: Flat button with three interpuncts (···), located below the right trackpad.
+* `L1`: The top *left* bumper / shoulder button.
+* `R1`: The top *right* bumper / shoulder button.
+* `L2`: Button nested inside the pressure sensor of the *left* trigger.
+* `R2`: Button nested inside the pressure sensor of the *right* trigger.
+* `L3`: Button nested at the bottom of the *left* stick.  Activated by pressing down until it clicks.
+* `R3`: Button nested at the bottom of the *right* stick.  Activated by pressing down until it clicks.
+* `L4`: Upper paddle button located on the *back-left* side of the Steam Deck.
+* `R4`: Upper paddle button located on the *back-right* side of the Steam Deck.
+* `L5`: Lower paddle button located on the *back-left* side of the Steam Deck.
+* `R5`: Lower paddle button located on the *back-right* side of the Steam Deck.
+* `Menu`: Raised https://en.wikipedia.org/wiki/Hamburger_button[hamburger button] (☰) located above the *right *thumbstick.
+* `Options`: Raised overlapped rectangle button (⮻) located above the *left* thumbstick.
+* `Steam`: Flat button of the same name (STEAM), located below the *left* trackpad.
+* `QuickAccess`: Flat button with three interpuncts (···), located below the *right* trackpad.
 
 Use::
-Binding buttons buttons is simple.
+Binding buttons is simple.
 * Button bindings to `KEY_` and `BTN_` events work directly.
-* Buttons bound to `ABS_` events emit the axis limit in the given direction.
+* Buttons bound to `ABS_` events emit the axis limit in the given direction.  For example, if you create a binding like `A = ABS_X +`, then when you press the `A` button, it will emit an `ABS_X` event for whatever the *maximum* axis limit for `ABS_X` is, whereas `A = ABS_X -` will emit the *minimum* axis limit.
 * `A`/`B`/`X`/`Y` have respective input codes for `Gamepad` devices: `BTN_SOUTH`, `BTN_EAST`, `BTN_WEST` and `BTN_NORTH`.
 * `{L|R}{1|2}` have respective input codes for `Gamepad` devices: `BTN_TL` `BTN_TL2` `BTN_TR` and `BTN_TR2`.
 * `{L|R}3` have respective input codes for `Gamepad` devices: `BTN_THUMBL` and `BTN_THUMBR`
@@ -724,7 +767,7 @@ Binding buttons buttons is simple.
 === Thumbsticks
 The thumbsticks on the Steam Deck are associated with six different inputs in OpenSD.  As you would expect, there is an *X*/*Y* axis pair for each stick, but there are also *touch* and *pressure* (well, sorta) sensors located on the top of each one.  The directional axes are broken into halves such that each direction can emit different events if desired.
 
-Axis values from thumbsticks are normalized internally so they can be rescaled to the defined *ABS* event ranges.  The hardware returns signed 16bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.
+Axis values from thumbsticks are normalized internally so they can be rescaled to the defined *ABS* event ranges.  The hardware returns signed 16-bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.
 
 If <<prof_section_features_stickfiltering>> is enabled the full axis is internally normalized as a unit vector and a *radial deadzone* may be applied.
 
@@ -737,60 +780,79 @@ Descriptions::
 * `LStickLeft`: Represents the left half of the *X-axis* of the *left* thumbstick.
 * `LStickRight`: Represents the right half of the *X-axis* of the *left* thumbstick.
 * `LStickTouch`: This is a binary *button* that return *true* when the top of the *left* thumbstick is touched.
-* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 * `RStickUp`: Represents the top half of the *Y axis* of the *right* thumbstick.
 * `RStickDown`: Represents the bottom half of the *Y axis* of the *right* thumbstick.
 * `RStickLeft`: Represents the left half of the *X axis* of the *right* thumbstick.
 * `RStickRight`: Represents the right half of the *X axis* of the *right* thumbstick.
 * `RStickTouch`: This is a binary *button* that return *true* when the top of the *right* thumbstick is touched.
-* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register of your hand is near, without actually touching it.  Value is returned as an normalized axis (*0* to *1.0*), just like a trigger.
+* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 
 Use::
-Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions, which is demonstrated in the *[Bindings]* section of the <<prof_example_profile>>.  You're also able to treat each axis half like a button if you bind it to a key or button event code, in which case it will trigger the binding when the stick leaves the *center* / *deadzone*.  You can use the deadzone in this case to determine how far the stick must be pushed from center before the binding is triggered.  
+Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the *[Bindings]* section of the <<prof_example_profile>>:
+[source,ini]
+----
+# Left Stick
+LStickUp            = Gamepad   ABS_Y       -
+LStickDown          = Gamepad   ABS_Y       +
+LStickLeft          = Gamepad   ABS_X       -
+LStickRight         = Gamepad   ABS_X       +
+# Right Stick
+RStickUp            = Gamepad   ABS_RY      -
+RStickDown          = Gamepad   ABS_RY      +
+RStickLeft          = Gamepad   ABS_RX      -
+RStickRight         = Gamepad   ABS_RX      +
+----
+You're also able to treat each axis half like a *button* if you bind it to a *key* or *button* event code, in which case it will trigger the binding when the stick leaves the *center* / *deadzone*.  You can use the deadzone in this case to determine how far the stick must be pushed from center before the binding is triggered.
+
 * `LStickLeft` & `LStickRight` are typically bound to the `ABS_X` event code on `Gamepad` devices.
 * `LStickUp` & `LStickDown` are typically bound to the `ABS_Y` event code on `Gamepad` devices.
 * `RStickLeft` & `RStickRight` are typically bound to the `ABS_RX` event code on `Gamepad` devices.
 * `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
 * Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
-* Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?
+* Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of *0* to *100* is recommened.
 
 
 
 '''
 [#input_type_trigg]
 === Triggers
-Triggers are pressure sensors that are also treated a bit like a thumbstick's half-axis, with the difference being there's no complement half.  Triggers have a resting position of of the define axis minimum limit and move toward the maximum limit.  _Typically_ the minimum limit is zero, so the axis does not return non-zero values when released / resting, but you can do any weird thing you want.
+Triggers are pressure sensors that are also treated a bit like a thumbstick's half-axis, with the difference being there's no complement half.  Triggers have a resting position of the defined axis *minimum* limit and move toward the *maximum* limit when actuated.  _Typically_ the minimum limit is zero, so the axis does not return non-zero values when released / resting, but you can do any weird thing you want.
 
-Axis values from thumbsticks are normalized internall so they can be rescaled to the defined *AB* event ranges.  Internally, the HID reports return trigger values as unsigned 16-bit integers.
+Axis values from triggers are normalized internally so they can be rescaled to the defined *ABS* event ranges.  Internally, the HID reports return trigger values as unsigned 16-bit integers.
 
 Triggers also have a binary *button* component: `L2` and `R2`.  Information about these buttons can be found in the <<input_type_buttons>> section.
 
-Linear deadzones can be applied to triggers if desired in the <<prof_section_deadzones>>.
+Linear deadzones can be applied to triggers, if desired in the <<prof_section_deadzones>>.
 
 Naming convention::
-* {L|R}Trigg
+* `{L|R}Trigg`
 
 Descriptions::
 * `LTrigg`: Represents a pressure sensor value for the *left* trigger on the top-rear of the device.
 * `RTrigg`: Represents a pressure sensor value for the *right* trigger on the top-rear of the device.
 
 Use::
-These inputs are absolute axes and can be mapped to *ABS* event codes as well as *KEY* / *BTN* event codes.  One possible reason to use the axis itself as a *button*-type binding would be to use `L2` / `R2` buttons on partial-pull, and use a deadzone to emit another button at, say, 90% of the pull.
+These inputs are absolute axes and can be mapped to *ABS* event codes as well as *KEY* / *BTN* event codes.  One possible reason to use the axis itself as a *button*-type binding would be to use `L2` / `R2` buttons on partial actuation, and use a deadzone to emit another event code on full actuation.
 * `LTrigg` is typically bound to `ABS_Z`.
 * `RTrigg` is typically bound to `ABS_RZ`.
 
 
+
+'''
 [#input_type_trackpad]
 === Trackpads
-At the core, trackpads are *absolute axis* devices have with an *X* / *Y* pair, as well as a pressure sensor *Z-axis* and a slightly tactile *button*.  A number of inputs can be extrapolated from the data those basic types provide.  That includes *touch* sensors, *press / button* sensors, *pressure / force* sensors, *absolute coordinates*, *relative movement* tracking as well as the ability to map out regions of the pad and treat them as individual buttons.  OpenSD trackpads have the most input bindings out of all the components.
+At the core, trackpads are *absolute axis* devices have with an *X* / *Y* pair, as well as a pressure sensor *Z-axis* and a slightly tactile *button*.  A number of inputs can be extrapolated from the data those basic types provide.  That includes *touch* sensors, *press / button* sensors, *pressure / force* sensors, *absolute coordinates*, *relative movement* tracking as well as the ability to *map* out regions of the pad and treat them as individual *buttons*.  OpenSD trackpads have the most input bindings out of all the components.
 
 As with the <<input_type_thumb>>, directional axes are broken into halves such that each direction can emit different events if desired.  These halves can be mapped on to a whole *ABS* event code, or use separately.
 
-Trackpads support radial deadzones for the absolute axis values, and can be configured in the <<prof_section_deadzones>>.  *Relative* trackpad input, such as `LPadRelX` or `LPadRelY`, are not affected by deadzones.
+Trackpads support radial deadzones for *absolute axis* inputs, and can be configured in the <<prof_section_deadzones>>.  
+
+*Relative* trackpad input, such as `LPadRelX` or `LPadRelY`, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the *difference* in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between *-5* and *+5*.  Binding `*RelX` and `*RelY` inputs to anything other than `REL_*` event codes on the `Mouse` device is probably not useful.
 
 Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.
 
-OpenSD provides multiple "button maps", any of which can be used non-exclusively with eachother.  These "button maps" break the full area of the trackpad into logical sections which, when *pressed* (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <<input_type_dpad>>, *arrow keys*, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
+OpenSD provides multiple *"button maps"*, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when *pressed* (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <<input_type_dpad>>, *arrow keys*, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
 
 Naming convention::
 * `{L|R}Pad{Up|Down|Left|Right|Touch|Press|Force|RelX|RelY}`
@@ -806,21 +868,22 @@ Descriptions::
 * `LPadRight`: Represents the right half of the *X-axis* of the *left* trackpad.
 * `LPadTouch`: This is a button sensor which detects if the *left* pad is being touched.  Quite sensitive.
 * `LPadPress`: This is also a button which detects if the *left* pad is being pressed down like a button.  Actuation has a slight tactile bump.
-* `LPadForce`: This is a pressure sensors which returns a normalized value of how much force is being used to press down on the *left* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
-* `LPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *left* trackpad.  This represents the same kind of input data that mice use.
-* `LPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *left* trackpad.  This represnets the same kind of input data that mice use.
+* `LPadForce`: This is a pressure sensor which returns a normalized value of how much force is being used to press down on the *left* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
+* `LPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *left* trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of *-5* to *+5*.
+* `LPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *left* trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of *-5* to *+5*.
 * `RPadUp`: Represents the top half of the *Y-axis* of the *right* trackpad.
 * `RPadDown`: Represents the bottom half of the *Y-axis* of the *right* trackpad.
 * `RPadLeft`: Represents the left half of the *X-axis* of the *right* trackpad.
 * `RPadRight`: Represents the right half of the *X-axis* of the *right* trackpad.
 * `RPadTouch`: This is a button sensor which detects if the *right* pad is being touched.  Quite sensitive.
 * `RPadPress`: This is also a button which detects if the *right* pad is being pressed down like a button.  Actuation has a slight tactile bump.
-* `RPadForce`: This is a pressure sensors which returns a normalized value of how much force is being used to press down on the *right* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
-* `RPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *right* trackpad.  This represents the same kind of input data that mice use.
-* `RPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *right* trackpad.  This represnets the same kind of input data that mice use.
+* `RPadForce`: This is a pressure sensor which returns a normalized value of how much force is being used to press down on the *right* trackpad.  This is an *absolute axis* value and behaves the same as <<input_type_trigg>>.
+* `RPadRelX`: This is a derived *relative axis* value that measures the amount of relative *X-axis* movement between update frames of the *right* trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of *-5* to *+5*.
+* `RPadRelY`: This is a derived *relative axis* value that measures the amount of relative *Y-axis* movement between update frames of the *right* trackpad.  This represents the same kind of input data that mice use.  This input is unaffected by deadzones.  Typical values returned fall inside the range of *-5* to *+5*.
 
-Quadrant Button Map::
-The *quadrant map* (Quad) provides a way to treat each touchpad as being composed of four *non-overlapping* triagular quadrants, as depicted in the *figure 1* below.  Each *button* is inherently exclusive to the others in this map since the *X* / *Y* coordinate can only fall inside of one of these regions at a time.  This means that this map will not detect any overlapping presses, like *a* and *b* when you press in the upper left region.
+[#input_type_trackpad_quad]
+==== Quadrant Button Map
+The *quadrant map* (`PadPressQuad*`) provides a way to treat each touchpad as being composed of four *non-overlapping* triagular quadrants, as depicted in the *figure 1* below.  Each *button* is inherently exclusive to the others in this map since the *X* / *Y* coordinate can only fall inside of one of these regions at a time.  This means that this map will not detect any overlapping presses, like *a* and *b* when you press in the upper-left region.
 
 Fig. 1
 ----
@@ -849,8 +912,9 @@ Fig. 1
 * `RPadPressQuadRight`: The logical *button* on the *right* trackpad corresponding to *fig. 1*, region *"c"*.
 
 '''
-Orthogonal Button Map::
-The *orthogonal map* works similarly to a <<input_type_dpad>>.  As you can see below in figure 2, it demonstrates how the *"a"*, *"b"*, *"c"* and *"d"* regions represent orthogonal directions which are not strictly exclusive as they are with the *quadrant map*.  If a diagonal corner is pressed, it triggers both orthogonally adjacent buttons.  For example, pressing the upper-middle of the pad only triggers *"a"*, but pressing the upper-left of the pad will trigger both *"a"* and *"b"*.
+[#input_type_trackpad_orth]
+==== Orthogonal Button Map
+The *orthogonal map* (`PadPressOrth*`) works similarly to a <<input_type_dpad>>.  As you can see below in figure 2, it demonstrates how the *"a"*, *"b"*, *"c"* and *"d"* regions represent orthogonal directions which are not strictly exclusive as they are with the <<input_type_trackpad_quad>>.  If a diagonal corner is pressed, it triggers both orthogonally adjacent buttons.  For example, pressing the upper-middle of the pad only triggers *"a"*, but pressing the upper-left of the pad will trigger both *"a"* and *"b"*.
 
 Fig. 2
 ----
@@ -878,8 +942,9 @@ Fig. 2
 * `RPadPressOrthRight`: The logical *button* on the *right* trackpad corresponding to *fig. 2* regions containing *"c"*.
 
 '''
-2x2 Grid Button Map::
-This button map divides the pad into regions along the center axes, resulting in four square *buttons* in each corner, as demonstrated in figure 3.
+[#input_type_trackpad_grid4]
+==== 2x2 Grid Button Map
+This button map divides the pad into regions along the center axes, resulting in four square *buttons* in each corner, as depicted in figure 3.  Buttons are naturally exclusive, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.
 
 Fig. 3
 ----
@@ -897,36 +962,62 @@ Fig. 3
 │        │        │
 └────────┴────────┘
 ----
+* `LPadPressGrid2x2_1`: The logical *button* on the *left* trackpad corresponding to *fig. 3*, region *"a"*.
+* `LPadPressGrid2x2_2`: The logical *button* on the *left* trackpad corresponding to *fig. 3*, region *"b"*.
+* `LPadPressGrid2x2_3`: The logical *button* on the *left* trackpad corresponding to *fig. 3*, region *"c"*.
+* `LPadPressGrid2x2_4`: The logical *button* on the *left* trackpad corresponding to *fig. 3*, region *"d"*.
+* `RPadPressGrid2x2_1`: The logical *button* on the *right* trackpad corresponding to *fig. 3*, region *"a"*.
+* `RPadPressGrid2x2_2`: The logical *button* on the *right* trackpad corresponding to *fig. 3*, region *"b"*.
+* `RPadPressGrid2x2_3`: The logical *button* on the *right* trackpad corresponding to *fig. 3*, region *"c"*.
+* `RPadPressGrid2x2_4`: The logical *button* on the *right* trackpad corresponding to *fig. 3*, region *"d"*.
 
 '''
-3x3 Grid Button Map::
-lskjlfkd
+[#input_type_trackpad_grid9]
+==== 3x3 Grid Button Map
+This button map divides the pad into thirds along both axes, resulting in a 3x3 grid of nine square *buttons*, as depicted in figure 4.  These buttons are naturally exclusive to one another, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.
 
-'''
+NOTE:  The resulting size of each button will be fairly small, so it may require a little practice and small thumbs to manipulate them precisely.
 
 Fig. 4
 ----
-  ┌─────┬─────┬─────┐
-  │     │     │     │
-  │  a  │  c  │  d  │
-  │     │     │     │
-  ├─────┼─────┼─────┤
-  │     │     │     │
-  │  e  │  f  │  g  │
-  │     │     │     │
-  ├─────┼─────┼─────┤
-  │     │     │     │
-  │  h  │  i  │  j  │
-  │     │     │     │
-  └─────┴─────┴─────┘
+┌─────┬─────┬─────┐
+│     │     │     │
+│  a  │  b  │  c  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  d  │  e  │  f  │
+│     │     │     │
+├─────┼─────┼─────┤
+│     │     │     │
+│  g  │  h  │  i  │
+│     │     │     │
+└─────┴─────┴─────┘
 ----
-
+* `LPadPressGrid3x3_1`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"a"*.
+* `LPadPressGrid3x3_2`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"b"*.
+* `LPadPressGrid3x3_3`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"c"*.
+* `LPadPressGrid3x3_4`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"d"*.
+* `LPadPressGrid3x3_5`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"e"*.
+* `LPadPressGrid3x3_6`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"f"*.
+* `LPadPressGrid3x3_7`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"g"*.
+* `LPadPressGrid3x3_8`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"h"*.
+* `LPadPressGrid3x3_9`: The logical *button* on the *left* trackpad corresponding to *fig. 4*, region *"i"*.
+* `RPadPressGrid3x3_1`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"a"*.
+* `RPadPressGrid3x3_2`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"b"*.
+* `RPadPressGrid3x3_3`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"c"*.
+* `RPadPressGrid3x3_4`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"d"*.
+* `RPadPressGrid3x3_5`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"e"*.
+* `RPadPressGrid3x3_6`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"f"*.
+* `RPadPressGrid3x3_7`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"g"*.
+* `RPadPressGrid3x3_8`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"h"*.
+* `RPadPressGrid3x3_9`: The logical *button* on the *right* trackpad corresponding to *fig. 4*, region *"i"*.
 
 
 
 '''
 <<<
-[#config_file_example]
+[#daemoncfg_file_example]
 == Example config.ini
 [source,ini]
 ----
@@ -1102,4 +1193,9 @@ PitchMinus          = Motion    ABS_Y       -
 YawPlus             = Motion    ABS_Z       +
 YawMinus            = Motion    ABS_Z       -
 ----
+
+
+== Troubleshooting
+
+TODO:
 
