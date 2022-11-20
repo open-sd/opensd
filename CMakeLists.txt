@@ -19,7 +19,7 @@
 ####################################################################################################
 cmake_minimum_required( VERSION 3.10 )
 
-project( OpenSD VERSION 0.42 )
+project( OpenSD VERSION 0.43 )
 
 # Compiler settings
 set( CMAKE_CXX_STANDARD 20 )
@@ -67,6 +67,15 @@ file( GLOB OPENSD_GUI_SRC
 set( OPENSD_CONFIG_FILE "${PROJECT_SOURCE_DIR}/data/config/config.ini" )
 file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.profile" )
 
+# OpenSD documentation files
+set( OPENSD_MANPAGE_FILE "${PROJECT_SOURCE_DIR}/doc/opensdd.1" )
+file( GLOB OPENSD_DOC_FILES 
+        "doc/user manual.adoc"
+        "doc/user manual.html"
+        "CHANGELOG.md" 
+        "LICENSE" 
+    )
+
 # Global project configuration
 set( INSTALL_DATA_DIR "share/opensd/" )
 set( INSTALL_DATA_CONFIG_DIR "${INSTALL_DATA_DIR}/config/" )
@@ -83,6 +92,8 @@ set( OPENSD_SYSD_SERVICE_FILE "${PROJECT_SOURCE_DIR}/systemd/opensd.service" )
 configure_file( "${PROJECT_SOURCE_DIR}/src/common/cmake_vars.hpp.in" "${PROJECT_BINARY_DIR}/gen/cmake_vars.hpp" )
 include_directories( "${PROJECT_BINARY_DIR}/gen/" )
 set( UDEV_RULE_DIR "/etc/udev/rules.d/" CACHE STRING "Install directory for udev rules" )
+set( DOCUMENTATION_DIR "share/doc/opensd/" )
+set( MANPAGE_DIR "man/man1/" )
 
 # Build options
 option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" TRUE )
@@ -91,6 +102,7 @@ option( BUILD_GUI "Build OpenSD GUI tool (opensd-gui)" FALSE )
 option( OPT_INSTALL_UDEV_RULE "Install udev rules" TRUE )
 option( OPT_INSTALL_GROUP "Add 'opensd' group and make current user a member" TRUE )
 option( OPT_INSTALL_SYSD_SERVICE "Install systemd user service" TRUE )
+option( OPT_INSTALL_DOCUMENTATION "Install user documentation" TRUE )
 
 # Build driver daemon binary
 if( BUILD_DAEMON )
@@ -129,6 +141,12 @@ install( FILES ${OPENSD_PROFILE_FILES} DESTINATION "${INSTALL_DATA_PROFILE_DIR}"
 if( OPT_INSTALL_SYSD_SERVICE )
     install( FILES "${OPENSD_SYSD_SERVICE_FILE}" DESTINATION "${SYSTEMD_USER_DIR}" )
 endif( OPT_INSTALL_SYSD_SERVICE )
+
+# Install user documentation if enabled
+if( OPT_INSTALL_DOCUMENTATION )
+    install( FILES "${OPENSD_MANPAGE_FILE}" DESTINATION "${MANPAGE_DIR}" )
+    install( FILES ${OPENSD_DOC_FILES} DESTINATION "${DOCUMENTATION_DIR}" )
+endif( OPT_INSTALL_DOCUMENTATION )
 
 # Install udev rule and reload udev if enabled
 if( OPT_INSTALL_UDEV_RULE )
