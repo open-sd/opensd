@@ -851,7 +851,7 @@ Trackpads support radial deadzones for *absolute axis* inputs, and can be config
 
 *Relative* trackpad input, such as `LPadRelX` or `LPadRelY`, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the *difference* in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between *-5* and *+5*.  Binding `*RelX` and `*RelY` inputs to anything other than `REL_*` event codes on the `Mouse` device is probably not useful.
 
-Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.
+Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.  I've read that, at a hardware level, they are supposedly multi-touch capable, but I don't have any information on reading that data yet.  If true, it will probably be supported in a future version.
 
 OpenSD provides multiple *"button maps"*, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when *pressed* (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <<input_type_dpad>>, *arrow keys*, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
 

@@ -2008,7 +2008,7 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 <p><strong>Relative</strong> trackpad input, such as <code>LPadRelX</code> or <code>LPadRelY</code>, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the <strong>difference</strong> in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between <strong>-5</strong> and <strong>+5</strong>.  Binding <code><strong>RelX</code> and <code>*RelY</code> inputs to anything other than <code>REL_</strong></code> event codes on the <code>Mouse</code> device is probably not useful.</p>
 </div>
 <div class="paragraph">
-<p>Touchpads are non-multitouch devices so they only relay a single <strong>X</strong> / <strong>Y</strong> coordinate pair.</p>
+<p>Touchpads are non-multitouch devices so they only relay a single <strong>X</strong> / <strong>Y</strong> coordinate pair.  I&#8217;ve read that, at a hardware level, they are supposedly multi-touch capable, but I don&#8217;t have any information on reading that data yet.  If true, it will probably be supported in a future version.</p>
 </div>
 <div class="paragraph">
 <p>OpenSD provides multiple <strong>"button maps"</strong>, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when <strong>pressed</strong> (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <a href="#input_type_dpad">Directional Pad</a>, <strong>arrow keys</strong>, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.</p>
@@ -2555,7 +2555,7 @@ YawMinus            = Motion    ABS_Z       -</code></pre>
 </div>
 <div id="footer" style="max-width: 100%;">
 <div id="footer-text">
-Last updated 2022-11-19 20:37:30 -0800
+Last updated 2022-11-21 10:46:01 -0800
 </div>
 </div>
 </body>

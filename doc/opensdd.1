@@ -2238,7 +2238,7 @@ Trackpads support radial deadzones for \fBabsolute axis\fP inputs, and can be co
 .sp
 \fBRelative\fP trackpad input, such as \f(CRLPadRelX\fP or \f(CRLPadRelY\fP, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the \fBdifference\fP in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between \fB\-5\fP and \fB+5\fP.  Binding \f(CR\fBRelX\fP and \f(CR*RelY\fP inputs to anything other than \f(CRREL_\fP\fP event codes on the \f(CRMouse\fP device is probably not useful.
 .sp
-Touchpads are non\-multitouch devices so they only relay a single \fBX\fP / \fBY\fP coordinate pair.
+Touchpads are non\-multitouch devices so they only relay a single \fBX\fP / \fBY\fP coordinate pair.  I\(cqve read that, at a hardware level, they are supposedly multi\-touch capable, but I don\(cqt have any information on reading that data yet.  If true, it will probably be supported in a future version.
 .sp
 OpenSD provides multiple \fB"button maps"\fP, any of which can be used non\-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when \fBpressed\fP (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a Directional Pad, \fBarrow keys\fP, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
 .sp
