@@ -208,7 +208,7 @@ int Hidraw::Read( std::vector<uint8_t>& rData )
 
     if (!IsOpen())
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
         return Err::NOT_OPEN;
     }
 
@@ -507,6 +507,7 @@ int Hidraw::SetFeatureReport( const std::vector<uint8_t>& rData )
 }
 
 
+
 int Hidraw::SetFeatureReport( uint8_t reportId, const std::vector<uint8_t>& rData )
 {
     std::vector<uint8_t>    vec_copy = rData;
@@ -515,8 +516,6 @@ int Hidraw::SetFeatureReport( uint8_t reportId, const std::vector<uint8_t>& rDat
     
     return SetFeatureReport( vec_copy );
 }
-
-
 
 
 

@@ -79,9 +79,8 @@ namespace Drivers::Gamepad
         void                        TransEvent( Binding& bind, double state, BindMode mode );
         void                        Translate();
         void                        Flush();
-        
-    protected:
         int                         Poll();
+        // Threaded handlers
         void                        ThreadedLizardHandler();
         
     public:

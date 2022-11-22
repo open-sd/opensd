@@ -56,6 +56,7 @@ namespace Uinput
         std::string             mDeviceName;
         int                     mFd;
         EventBuffer             mEvBuff;
+        bool                    mFFEnabled;
 
         int                     Open( std::string deviceName );
         void                    Close();
@@ -63,6 +64,7 @@ namespace Uinput
         int                     EnableKey( uint16_t code );
         int                     EnableAbs( uint16_t code, int32_t min, int32_t max );
         int                     EnableRel( uint16_t code );
+        int                     EnableFF();
         int                     Create( std::string deviceName, uint16_t vid, uint16_t pid, uint16_t ver );
         int                     Configure( const Uinput::DeviceConfig& rCfg );
         
@@ -71,6 +73,12 @@ namespace Uinput
         int                     UpdateAbs( uint16_t code, double value );
         int                     UpdateRel( uint16_t code, int32_t value );
         int                     Flush();
+        int                     Read( input_event& rEvent );
+        // Force-feedback methods
+        bool                    IsFFEnabled();
+        int                     GetFFEffect( int32_t id, uinput_ff_upload& rData );
+        int                     EraseFFEffect( int32_t id, uinput_ff_erase& rData );
+
 
         Device( const Uinput::DeviceConfig& rCfg );
         ~Device();

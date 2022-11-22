@@ -884,6 +884,71 @@ int Drivers::Gamepad::Driver::Poll()
     else
         gLog.Write( Log::VERB, FUNC_NAME, "Received zero-length report from gamepad device." );
     
+    // Handle forcefeedback events
+    if (mpGamepad->IsFFEnabled())
+    {
+        int             result;
+        input_event     ev;
+        
+        result = mpGamepad->Read( ev );
+        if (result == Err::OK)
+        {
+            switch (ev.type)
+            {
+                case EV_FF:
+                    switch (ev.code)
+                    {
+                        case FF_GAIN:
+                            gLog.Write( Log::VERB, ">>> FF GAIN: " + std::to_string(ev.value) );
+                        break;
+                        
+                        default:
+                            gLog.Write( Log::VERB, ">>> Unknown FF effect:  code=" + std::to_string(ev.code) + "   val=" + 
+                                        std::to_string(ev.value) );
+                        break;
+                    }
+                break;
+                
+                case EV_UINPUT:
+                    switch (ev.code)
+                    {
+                        case UI_FF_UPLOAD:
+                        {
+                            uinput_ff_upload    data;
+                            
+                            gLog.Write( Log::VERB, ">>> UI_FF_UPLOAD" );
+                            
+                            mpGamepad->GetFFEffect( ev.value, data );
+                        }
+                        break;
+                        
+                        case UI_FF_ERASE:
+                        {
+                            uinput_ff_erase     data;
+                            
+                            gLog.Write( Log::VERB, ">>> UI_FF_ERASE" );
+                            
+                            mpGamepad->EraseFFEffect( ev.value, data );
+                        }   
+                        break;
+                        
+                        default:
+                            gLog.Write( Log::VERB, ">>> Unhandled EV_UINPUT code." );
+                        break;
+                    }
+                break;
+                
+                // Unimplemented
+                case EV_LED:
+                break;
+                
+                default:
+                    gLog.Write( Log::VERB, ">>> Unhandled uinput type." );
+                break;
+            }
+        }
+    }
+    
     return Err::OK;
 }
 
@@ -1090,7 +1155,7 @@ Drivers::Gamepad::Driver::Driver()
     
     result = OpenHid();
     if (result != Err::OK)
-        throw result;
+        throw;
         
     SetLizardMode( false );
 }

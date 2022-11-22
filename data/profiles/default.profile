@@ -298,14 +298,14 @@ RPadPressGrid3x3_6  = None
 RPadPressGrid3x3_7  = None
 RPadPressGrid3x3_8  = None
 RPadPressGrid3x3_9  = None
-# Accelerometers (WiP)
+# Accelerometers
 AccelXPlus          = Motion    ABS_RX      +
 AccelXMinus         = Motion    ABS_RX      -
 AccelYPlus          = Motion    ABS_RY      +
 AccelYMinus         = Motion    ABS_RY      -
 AccelZPlus          = Motion    ABS_RZ      +
 AccelZMinus         = Motion    ABS_RZ      -
-# Gyro / Attitude (WiP)
+# Gyro / Attitude
 RollPlus            = Motion    ABS_X       +
 RollMinus           = Motion    ABS_X       -
 PitchPlus           = Motion    ABS_Y       +

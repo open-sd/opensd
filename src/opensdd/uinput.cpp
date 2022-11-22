@@ -79,7 +79,7 @@ void Uinput::Device::Close()
     {
         ioctl( mFd, UI_DEV_DESTROY);
         close( mFd );
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Closing uinput device." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Closing uinput device '" + mDeviceName + "'." );
     }
 
     mFd = 0;
@@ -280,6 +280,136 @@ int Uinput::Device::EnableRel( uint16_t code )
 
 
 
+int Uinput::Device::EnableFF()
+{
+    int             result;
+    
+    // Enable FF for device
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Enabling force feedback events for '" + mDeviceName + "'." );
+    result = ioctl( mFd, UI_SET_EVBIT, EV_FF );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::ERROR, "Failed to enable force feedback for '" + mDeviceName + "'." );
+        return Err::WRITE_FAILED;
+    }
+    
+    // Enable Event types
+    result = ioctl( mFd, UI_SET_FFBIT, FF_RUMBLE );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_RUMBLE effect for '" + mDeviceName + "'." );
+    }
+    
+    // TODO: Enable full FF support
+    /*
+    result = ioctl( mFd, UI_SET_FFBIT, FF_CONSTANT );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_CONSTANT effect for '" + mDeviceName + "'." );
+    }
+    
+    result = ioctl( mFd, UI_SET_FFBIT, FF_PERIODIC );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_PERIODIC effect for '" + mDeviceName + "'." );
+    }
+    else
+    {
+        result = ioctl( mFd, UI_SET_FFBIT, FF_SQUARE );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SQUARE effect for '" + mDeviceName + "'." );
+        }
+
+        result = ioctl( mFd, UI_SET_FFBIT, FF_TRIANGLE );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_TRIANGLE effect for '" + mDeviceName + "'." );
+        }
+
+        result = ioctl( mFd, UI_SET_FFBIT, FF_SINE );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SINE effect for '" + mDeviceName + "'." );
+        }
+        
+        result = ioctl( mFd, UI_SET_FFBIT, FF_SAW_UP );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SAW_UP effect for '" + mDeviceName + "'." );
+        }
+        
+        result = ioctl( mFd, UI_SET_FFBIT, FF_SAW_DOWN );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SAW_DOWN effect for '" + mDeviceName + "'." );
+        }
+
+        result = ioctl( mFd, UI_SET_FFBIT, FF_CUSTOM );
+        if (result < 0)
+        {
+            int e = errno;
+            gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+            gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_CUSTOM effect for '" + mDeviceName + "'." );
+        }
+    }
+    
+    result = ioctl( mFd, UI_SET_FFBIT, FF_RAMP );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_RAMP effect for '" + mDeviceName + "'." );
+    }
+
+    result = ioctl( mFd, UI_SET_FFBIT, FF_SPRING );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SPRING effect for '" + mDeviceName + "'." );
+    }
+
+    result = ioctl( mFd, UI_SET_FFBIT, FF_FRICTION );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_SPRING effect for '" + mDeviceName + "'." );
+    }
+
+    result = ioctl( mFd, UI_SET_FFBIT, FF_GAIN );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl error: " + Err::GetErrnoString(e) + " for '" + mDeviceName + "'." );
+        gLog.Write( Log::WARN, FUNC_NAME, "Failed to enable FF_GAIN effect for '" + mDeviceName + "'." );
+    }
+    */
+
+    return Err::OK;
+}
+
+
+
 int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, uint16_t ver )
 {
     int                         result;
@@ -288,13 +418,15 @@ int Uinput::Device::Create( std::string deviceName, uint16_t vid, uint16_t pid, 
     if (deviceName.empty())
         deviceName = "Unknown device";
 
-    gLog.Write( Log::DEBUG, "Creating uinput device" );
+    gLog.Write( Log::DEBUG, FUNC_NAME, "Creating uinput device '" + mDeviceName + "'." );
         
     strncpy( dev_info.name, deviceName.c_str(), deviceName.length() );
     dev_info.id.bustype     = BUS_VIRTUAL;
     dev_info.id.vendor      = vid;
     dev_info.id.product     = pid;
     dev_info.id.version     = ver;
+    if (mFFEnabled)
+        dev_info.ff_effects_max = 16;
     
     if (!IsOpen())
     {
@@ -429,6 +561,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
         return Err::NOT_OPEN;
     }
     
+    // Enable each key / button event
     if (rCfg.features.enable_keys)
     {
         for (auto&& i : rCfg.key_list)
@@ -438,6 +571,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
         }
     }
     
+    // Enable each absolute axis
     if (rCfg.features.enable_abs)
     {
         for (auto&& i : rCfg.abs_list)
@@ -447,6 +581,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
         }
     }
     
+    // Enable each relative axis
     if (rCfg.features.enable_rel)
     {
         for (auto&& i : rCfg.rel_list)
@@ -456,6 +591,14 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
         }
     }
     
+    // Enable force feedback
+    if (rCfg.features.enable_ff)
+    {
+        result = EnableFF();
+        if (result == Err::OK)
+            mFFEnabled = true;
+    }
+        
     result = Create( rCfg.deviceinfo.name, rCfg.deviceinfo.vid, rCfg.deviceinfo.pid, rCfg.deviceinfo.ver );
     if (result != Err::OK)
     {
@@ -563,19 +706,118 @@ int Uinput::Device::Flush()
 
 
 
+int Uinput::Device::Read( input_event& rEvent )
+{
+    int             result;
+    
+    rEvent = {};
+    
+    result = read( mFd, &rEvent, sizeof(rEvent) );
+    if (result < 0)
+    {
+        int e = errno;
+        if (e != EAGAIN)
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Error reading uinput device '" + mDeviceName + "': " + Err::GetErrnoString(e) );
+        return Err::READ_FAILED;
+    }
+    
+    if (result == sizeof(rEvent))
+        return Err::OK;
+    
+    return Err::READ_FAILED;
+}
+
+
+
+bool Uinput::Device::IsFFEnabled()
+{
+    return mFFEnabled;
+}
+
+
+
+int Uinput::Device::GetFFEffect( int32_t id, uinput_ff_upload& rData )
+{
+    uinput_ff_upload    ff_data = {};
+    int                 result;
+
+    ff_data.request_id = id;
+
+    // Signal start of transfer
+    result = ioctl( mFd, UI_BEGIN_FF_UPLOAD, &ff_data );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl UI_BEGIN_FF_UPLOAD failed: " + Err::GetErrnoString(e) );
+        return Err::WRITE_FAILED;
+    }
+    
+    // Return a copy of data as a reference parameter
+    rData = ff_data;
+    
+    // Signal end of transfer
+    ff_data.retval = 0;
+    result = ioctl( mFd, UI_END_FF_UPLOAD, &ff_data );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl UI_END_FF_UPLOAD failed: " + Err::GetErrnoString(e) );
+        return Err::WRITE_FAILED;
+    }
+    
+    return Err::OK;
+}
+
+
+
+int Uinput::Device::EraseFFEffect( int32_t id, uinput_ff_erase& rData )
+{
+    uinput_ff_erase     ff_data = {};
+    int                 result;
+    
+    ff_data.request_id = id;
+    
+    // Signal start of transfer
+    result = ioctl( mFd, UI_BEGIN_FF_ERASE, &ff_data );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl UI_BEGIN_FF_ERASE failed: " + Err::GetErrnoString(e) );
+        return Err::WRITE_FAILED;
+    }
+    
+    // Return a copy of data as a reference parameter
+    rData = ff_data;
+    
+    // Signal end of transfer
+    ff_data.retval = 0;
+    result = ioctl( mFd, UI_END_FF_ERASE, &ff_data );
+    if (result < 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "ioctl UI_END_FF_ERASE failed: " + Err::GetErrnoString(e) );
+        return Err::WRITE_FAILED;
+    }
+
+    return Err::OK;
+}
+
+
+
 Uinput::Device::Device( const Uinput::DeviceConfig& rCfg )
 {
     int     result;
     
     mFd = 0;
     mDeviceName = rCfg.deviceinfo.name;
+    mFFEnabled = false;
     
     result = Open( mDeviceName );
     if (result != Err::OK)
     {
         gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open uinput for r/w." );
         gLog.Write( Log::ERROR, "Failed to create uinput object for '" + mDeviceName + "'." );
-        throw result;
+        throw;
     }
     
     result = Configure( rCfg );
@@ -583,7 +825,7 @@ Uinput::Device::Device( const Uinput::DeviceConfig& rCfg )
     {
         gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to configure uinput device." );
         gLog.Write( Log::ERROR, "Failed to create uinput object for '" + mDeviceName + "'." );
-        throw result;
+        throw;
     }
 }
 
