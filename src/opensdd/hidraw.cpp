@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <sys/file.h>
 #include <linux/hidraw.h>
 #include <linux/input.h>
 #include <poll.h>
@@ -128,6 +129,8 @@ std::filesystem::path Hidraw::FindDevNode( uint16_t vid, uint16_t pid, uint16_t 
 
 int Hidraw::Open( std::filesystem::path hidrawPath )
 {
+    int             result;
+
     namespace fs = std::filesystem;
     
     if (!fs::exists( hidrawPath ))
@@ -157,10 +160,19 @@ int Hidraw::Open( std::filesystem::path hidrawPath )
     if (mFd < 0)
     {
         int e = errno;
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open device on '" + hidrawPath.string() + "' with error " + std::to_string(e) + ": " + Err::GetErrnoString(e) );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to open device on '" + hidrawPath.string() + "'.  Error: " + Err::GetErrnoString(e) );
         Close();
         return Err::CANNOT_OPEN;
     }
+    
+    // Try to lock file so other processes cannot open it
+    result = flock( mFd, LOCK_EX );
+    if (result != 0)
+    {
+        int e = errno;
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to obtain file lock on '" + hidrawPath.string() + "'.  Error: " + Err::GetErrnoString(e) );
+    }
+    
 
     gLog.Write( Log::VERB, FUNC_NAME, "Successfully opened hidraw device on '" + hidrawPath.string() + "'." );
     mPath = hidrawPath;
@@ -189,6 +201,7 @@ void Hidraw::Close()
     if (IsOpen())
     {
         gLog.Write( Log::VERB, FUNC_NAME, "Closing device '" + mPath.string() + "'." );
+        flock( mFd, LOCK_UN );
         close( mFd );
         mFd = -1;
     }
