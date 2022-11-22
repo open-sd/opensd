@@ -781,13 +781,13 @@ Descriptions::
 * `LStickLeft`: Represents the left half of the *X-axis* of the *left* thumbstick.
 * `LStickRight`: Represents the right half of the *X-axis* of the *left* thumbstick.
 * `LStickTouch`: This is a binary *button* that return *true* when the top of the *left* thumbstick is touched.
-* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
+* `LStickForce`: Capacitive touch sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 * `RStickUp`: Represents the top half of the *Y axis* of the *right* thumbstick.
 * `RStickDown`: Represents the bottom half of the *Y axis* of the *right* thumbstick.
 * `RStickLeft`: Represents the left half of the *X axis* of the *right* thumbstick.
 * `RStickRight`: Represents the right half of the *X axis* of the *right* thumbstick.
 * `RStickTouch`: This is a binary *button* that return *true* when the top of the *right* thumbstick is touched.
-* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
+* `RStickForce`: Capacitive touch sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 
 Use::
 Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the *[Bindings]* section of the <<prof_example_profile>>:
@@ -811,7 +811,7 @@ You're also able to treat each axis half like a *button* if you bind it to a *ke
 * `RStickLeft` & `RStickRight` are typically bound to the `ABS_RX` event code on `Gamepad` devices.
 * `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
 * Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
-* Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of *0* to *100* is recommened.
+* Use `LStickForce` / `RStickForce` if you want to write a tiny electric theremin simulator?  If this sensor is bound to an absolute axis, a range of *0* to *100* is recommened.
 
 
 
@@ -851,7 +851,7 @@ Trackpads support radial deadzones for *absolute axis* inputs, and can be config
 
 *Relative* trackpad input, such as `LPadRelX` or `LPadRelY`, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the *difference* in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between *-5* and *+5*.  Binding `*RelX` and `*RelY` inputs to anything other than `REL_*` event codes on the `Mouse` device is probably not useful.
 
-Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.
+Touchpads are non-multitouch devices so they only relay a single *X* / *Y* coordinate pair.  I've read that, at a hardware level, they are supposedly multi-touch capable, but I don't have any information on reading that data yet.  If true, it will probably be supported in a future version.
 
 OpenSD provides multiple *"button maps"*, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when *pressed* (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <<input_type_dpad>>, *arrow keys*, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
 

@@ -1866,7 +1866,7 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 <p><code>LStickTouch</code>: This is a binary <strong>button</strong> that return <strong>true</strong> when the top of the <strong>left</strong> thumbstick is touched.</p>
 </li>
 <li>
-<p><code>LStickForce</code>: This is a weird kind of proximity/pressure sensor at the top of the <strong>left</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
+<p><code>LStickForce</code>: Capacitive touch sensor at the top of the <strong>left</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
 </li>
 <li>
 <p><code>RStickUp</code>: Represents the top half of the <strong>Y axis</strong> of the <strong>right</strong> thumbstick.</p>
@@ -1884,7 +1884,7 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 <p><code>RStickTouch</code>: This is a binary <strong>button</strong> that return <strong>true</strong> when the top of the <strong>right</strong> thumbstick is touched.</p>
 </li>
 <li>
-<p><code>RStickForce</code>: This is a weird kind of proximity/pressure sensor at the top of the <strong>right</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
+<p><code>RStickForce</code>: Capacitive touch sensor at the top of the <strong>right</strong> thumbstick.  It is <em>very</em> sensitive and can register if your hand is <em>near</em>, without actually touching it.  At a hardware level, the sensitivity ranges from <strong>0</strong> to <strong>~112</strong>, which is an odd number.  This value is returned as an normalized axis (<strong>0</strong> to <strong>1.0</strong>), just like a trigger.</p>
 </li>
 </ul>
 </div>
@@ -1930,7 +1930,7 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 <p>Use <code>LStickTouch</code> / <code>RStickTouch</code> to detect if a players hands are on the controls.</p>
 </li>
 <li>
-<p>Use <code>LStickForce</code> / <code>RStickForce</code> only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of <strong>0</strong> to <strong>100</strong> is recommened.</p>
+<p>Use <code>LStickForce</code> / <code>RStickForce</code> if you want to write a tiny electric theremin simulator?  If this sensor is bound to an absolute axis, a range of <strong>0</strong> to <strong>100</strong> is recommened.</p>
 </li>
 </ul>
 </div>
@@ -2008,7 +2008,7 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 <p><strong>Relative</strong> trackpad input, such as <code>LPadRelX</code> or <code>LPadRelY</code>, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the <strong>difference</strong> in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between <strong>-5</strong> and <strong>+5</strong>.  Binding <code><strong>RelX</code> and <code>*RelY</code> inputs to anything other than <code>REL_</strong></code> event codes on the <code>Mouse</code> device is probably not useful.</p>
 </div>
 <div class="paragraph">
-<p>Touchpads are non-multitouch devices so they only relay a single <strong>X</strong> / <strong>Y</strong> coordinate pair.</p>
+<p>Touchpads are non-multitouch devices so they only relay a single <strong>X</strong> / <strong>Y</strong> coordinate pair.  I&#8217;ve read that, at a hardware level, they are supposedly multi-touch capable, but I don&#8217;t have any information on reading that data yet.  If true, it will probably be supported in a future version.</p>
 </div>
 <div class="paragraph">
 <p>OpenSD provides multiple <strong>"button maps"</strong>, any of which can be used non-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when <strong>pressed</strong> (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a <a href="#input_type_dpad">Directional Pad</a>, <strong>arrow keys</strong>, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.</p>
@@ -2555,7 +2555,7 @@ YawMinus            = Motion    ABS_Z       -</code></pre>
 </div>
 <div id="footer" style="max-width: 100%;">
 <div id="footer-text">
-Last updated 2022-11-19 20:37:30 -0800
+Last updated 2022-11-21 16:10:34 -0800
 </div>
 </div>
 </body>

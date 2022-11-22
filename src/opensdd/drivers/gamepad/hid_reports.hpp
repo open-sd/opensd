@@ -85,7 +85,7 @@ namespace Drivers::Gamepad
                 DEFAULT_MOUSE               = 0x8e,
                 FORCE_FEEDBACK              = 0x8f,
                 REQUEST_COMM_STATUS         = 0xb4,
-                STEAM_CMD_GET_SERIAL        = 0xae
+                GET_SERIAL                  = 0xae
             };
         }
     
@@ -217,10 +217,21 @@ namespace Drivers::Gamepad
             uint16_t        l_pad_force     : 16;   // 56       Touchpad pressure sensors
             uint16_t        r_pad_force     : 16;   // 58
             // byte 60-63
-            uint16_t        l_stick_force   : 16;   // 60       Thumbstick pressure sensors?  Responds to electrostatic fields.
+            uint16_t        l_stick_force   : 16;   // 60       Thumbstick capacitive sensors
             uint16_t        r_stick_force   : 16;   // 62
             // 64 Bytes total
         };
+        
+        struct __attribute__((__packed__)) PackedFeedbackReport
+        {
+            uint8_t         report_id       : 8;
+            uint8_t         report_size     : 8;
+            uint8_t         side            : 8;
+            uint16_t        amplitude       : 16;
+            uint16_t        period          : 16;
+            uint16_t        count           : 16;
+        };
+        
     } // namespace v1
 
 } // namespace Driver::Gamepad

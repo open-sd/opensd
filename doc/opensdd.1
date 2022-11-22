@@ -1986,7 +1986,7 @@ Descriptions
 .  sp -1
 .  IP \(bu 2.3
 .\}
-\f(CRLStickForce\fP: This is a weird kind of proximity/pressure sensor at the top of the \fBleft\fP thumbstick.  It is \fIvery\fP sensitive and can register if your hand is \fInear\fP, without actually touching it.  At a hardware level, the sensitivity ranges from \fB0\fP to \fB~112\fP, which is an odd number.  This value is returned as an normalized axis (\fB0\fP to \fB1.0\fP), just like a trigger.
+\f(CRLStickForce\fP: Capacitive touch sensor at the top of the \fBleft\fP thumbstick.  It is \fIvery\fP sensitive and can register if your hand is \fInear\fP, without actually touching it.  At a hardware level, the sensitivity ranges from \fB0\fP to \fB~112\fP, which is an odd number.  This value is returned as an normalized axis (\fB0\fP to \fB1.0\fP), just like a trigger.
 .RE
 .sp
 .RS 4
@@ -2052,7 +2052,7 @@ Descriptions
 .  sp -1
 .  IP \(bu 2.3
 .\}
-\f(CRRStickForce\fP: This is a weird kind of proximity/pressure sensor at the top of the \fBright\fP thumbstick.  It is \fIvery\fP sensitive and can register if your hand is \fInear\fP, without actually touching it.  At a hardware level, the sensitivity ranges from \fB0\fP to \fB~112\fP, which is an odd number.  This value is returned as an normalized axis (\fB0\fP to \fB1.0\fP), just like a trigger.
+\f(CRRStickForce\fP: Capacitive touch sensor at the top of the \fBright\fP thumbstick.  It is \fIvery\fP sensitive and can register if your hand is \fInear\fP, without actually touching it.  At a hardware level, the sensitivity ranges from \fB0\fP to \fB~112\fP, which is an odd number.  This value is returned as an normalized axis (\fB0\fP to \fB1.0\fP), just like a trigger.
 .RE
 .RE
 .sp
@@ -2143,7 +2143,7 @@ Use \f(CRLStickTouch\fP / \f(CRRStickTouch\fP to detect if a players hands are o
 .  sp -1
 .  IP \(bu 2.3
 .\}
-Use \f(CRLStickForce\fP / \f(CRRStickForce\fP only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of \fB0\fP to \fB100\fP is recommened.
+Use \f(CRLStickForce\fP / \f(CRRStickForce\fP if you want to write a tiny electric theremin simulator?  If this sensor is bound to an absolute axis, a range of \fB0\fP to \fB100\fP is recommened.
 .RE
 .sp
 .ce
@@ -2238,7 +2238,7 @@ Trackpads support radial deadzones for \fBabsolute axis\fP inputs, and can be co
 .sp
 \fBRelative\fP trackpad input, such as \f(CRLPadRelX\fP or \f(CRLPadRelY\fP, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the \fBdifference\fP in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between \fB\-5\fP and \fB+5\fP.  Binding \f(CR\fBRelX\fP and \f(CR*RelY\fP inputs to anything other than \f(CRREL_\fP\fP event codes on the \f(CRMouse\fP device is probably not useful.
 .sp
-Touchpads are non\-multitouch devices so they only relay a single \fBX\fP / \fBY\fP coordinate pair.
+Touchpads are non\-multitouch devices so they only relay a single \fBX\fP / \fBY\fP coordinate pair.  I\(cqve read that, at a hardware level, they are supposedly multi\-touch capable, but I don\(cqt have any information on reading that data yet.  If true, it will probably be supported in a future version.
 .sp
 OpenSD provides multiple \fB"button maps"\fP, any of which can be used non\-exclusively with each other.  These "button maps" break the full area of the trackpad into logical sections which, when \fBpressed\fP (as opposed to being merely touched) act as individual buttons.  If so desired, trackpads can be used to create "button clusters", which can be used to emulate a Directional Pad, \fBarrow keys\fP, run scripts, launch applications, etc.  For the sake of readability, button maps are described separately below the main input descriptions.
 .sp
