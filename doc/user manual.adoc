@@ -781,13 +781,13 @@ Descriptions::
 * `LStickLeft`: Represents the left half of the *X-axis* of the *left* thumbstick.
 * `LStickRight`: Represents the right half of the *X-axis* of the *left* thumbstick.
 * `LStickTouch`: This is a binary *button* that return *true* when the top of the *left* thumbstick is touched.
-* `LStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
+* `LStickForce`: Capacitive touch sensor at the top of the *left* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 * `RStickUp`: Represents the top half of the *Y axis* of the *right* thumbstick.
 * `RStickDown`: Represents the bottom half of the *Y axis* of the *right* thumbstick.
 * `RStickLeft`: Represents the left half of the *X axis* of the *right* thumbstick.
 * `RStickRight`: Represents the right half of the *X axis* of the *right* thumbstick.
 * `RStickTouch`: This is a binary *button* that return *true* when the top of the *right* thumbstick is touched.
-* `RStickForce`: This is a weird kind of proximity/pressure sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
+* `RStickForce`: Capacitive touch sensor at the top of the *right* thumbstick.  It is _very_ sensitive and can register if your hand is _near_, without actually touching it.  At a hardware level, the sensitivity ranges from *0* to *~112*, which is an odd number.  This value is returned as an normalized axis (*0* to *1.0*), just like a trigger.  
 
 Use::
 Directional inputs are treated like axis halves.  You typically want to map `Up` and `Down` onto the same *ABS* event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the *[Bindings]* section of the <<prof_example_profile>>:
@@ -811,7 +811,7 @@ You're also able to treat each axis half like a *button* if you bind it to a *ke
 * `RStickLeft` & `RStickRight` are typically bound to the `ABS_RX` event code on `Gamepad` devices.
 * `RStickUp` & `RStickDown` are typically bound to the `ABS_RY` event code on `Gamepad` devices.
 * Use `LStickTouch` / `RStickTouch` to detect if a players hands are on the controls.
-* Use `LStickForce` / `RStickForce` only if you want to write a tiny electric theremin simulator?  If this sensor is bound to an axis, a range of *0* to *100* is recommened.
+* Use `LStickForce` / `RStickForce` if you want to write a tiny electric theremin simulator?  If this sensor is bound to an absolute axis, a range of *0* to *100* is recommened.
 
 
 
