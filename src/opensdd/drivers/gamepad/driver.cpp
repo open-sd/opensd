@@ -115,7 +115,16 @@ int Drivers::Gamepad::Driver::OpenHid()
 
 
 
-int Drivers::Gamepad::Driver::SetHidRegister( uint8_t reg, uint16_t value )
+int Drivers::Gamepad::Driver::ReadRegister( uint8_t reg, uint16_t& rValue )
+{
+    // TODO
+    
+    return Err::OK;
+}
+
+
+
+int Drivers::Gamepad::Driver::WriteRegister( uint8_t reg, uint16_t value )
 {
     std::vector<uint8_t>    buff;
     uint8_t                 length = 3;  // Function writes fixed nuber of bytes
@@ -140,19 +149,84 @@ int Drivers::Gamepad::Driver::SetHidRegister( uint8_t reg, uint16_t value )
     buff.push_back( value & 0xff );
     buff.push_back( value >> 8 );
 
-    // Fix report size at 64 bytes
+    // Fix buffer size at 64 bytes
     buff.resize(64);
     
     result = mHid.Write( buff );
     if (result != Err::OK)
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write register to gamepad device. " );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to write register on gamepad device. " );
         return Err::WRITE_FAILED;
     }
     
     return Err::OK;
 }
-   
+
+
+int Drivers::Gamepad::Driver::HandleInputReport( const std::vector<uint8_t>& rReport )
+{
+    using namespace v1;
+
+    if (rReport.at(0) != ReportId::INPUT)
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report ID." );
+        return Err::INVALID_FORMAT;
+    }
+    
+    if (rReport.size() != 64)
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report size was recieved from gamepad device." );
+        return Err::WRONG_SIZE;
+    }
+
+    // Cast input report vector into packed report struct
+    PackedInputReport*      pir = (PackedInputReport*)rReport.data();
+    // Update internal gamepad state
+    UpdateState( pir );
+    // Translate gamepad state into mapped events
+    Translate();
+    // Write out event buffer to uinput
+    Flush();
+    
+    return Err::OK;
+}
+
+
+int Drivers::Gamepad::Driver::ClearRegister( uint8_t reg )
+{
+    std::vector<uint8_t>    buff;
+    uint8_t                 length = 2;  // Function writes fixed nuber of bytes
+    int                     result;
+    
+    if (!mHid.IsOpen())
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Device is not open." );
+        return Err::NOT_OPEN;
+    }
+    
+    using namespace v1;
+    
+    
+    // Set the first byte of the report to the write register command
+    buff.push_back( ReportId::CLEAR_REGISTER );
+    // Second byte is the number of bytes for registers and values
+    buff.push_back( length );
+    // Register is 8 bits
+    buff.push_back( reg );
+    
+    // Fix buffer size at 64 bytes
+    buff.resize(64);
+    
+    result = mHid.Write( buff );
+    if (result != Err::OK)
+    {
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to clear register on gamepad device. " );
+        return Err::WRITE_FAILED;
+    }
+    
+    return Err::OK;
+}
+
 
 
 void Drivers::Gamepad::Driver::DestroyUinputDevs()
@@ -824,11 +898,11 @@ int Drivers::Gamepad::Driver::Poll()
     static std::vector<uint8_t>     buff;
     int                             result;
     
+    using namespace v1;
+    
     // Prevent other public functions from being called while handling device input
     std::lock_guard<std::mutex>     lock( mPollMutex );
 
-    using namespace v1;
-    
     result = mHid.Read( buff );
     if (result != Err::OK)
     {
@@ -859,27 +933,17 @@ int Drivers::Gamepad::Driver::Poll()
     
     if (buff.size())
     {
-        if (buff.at(0) == ReportId::INPUT)
+        switch (buff.at(0))
         {
-            if (buff.size() != 64)
-            {
-                gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report size was recieved from gamepad device." );
-                return Err::WRONG_SIZE;
-            }
-
-            // Cast input report vector into packed report struct
-            PackedInputReport*      ir = (PackedInputReport*)buff.data();
-
-            // Update internal gamepad state
-            UpdateState( ir );
+            case ReportId::INPUT:
+                HandleInputReport( buff );
+            break;
             
-            // Translate gamepad state into mapped events
-            Translate();
-            
-            Flush();
+            default:
+                // Unhandled report types
+                gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled report type was recieved from gamepad device." );
+            break;
         }
-        else
-            gLog.Write( Log::VERB, FUNC_NAME, "An unhandled report type was received from gamepad device." );
     }
     else
         gLog.Write( Log::VERB, FUNC_NAME, "Received zero-length report from gamepad device." );
@@ -1050,11 +1114,11 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable keyboard emulation." );
 
-        result = SetHidRegister( Register::RPAD_MODE, 0x07 );       // Disable mouse emulation on right pad
+        result = WriteRegister( Register::RPAD_MODE, 0x07 );       // Disable mouse emulation on right pad
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable mouse emulation." );
 
-        result = SetHidRegister( Register::RPAD_MARGIN, 0x00 );     // Disable margins on the right pad
+        result = WriteRegister( Register::RPAD_MARGIN, 0x00 );     // Disable margins on the right pad
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable trackpad margins." );
 
@@ -1073,7 +1137,7 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable mouse emulation." );
 
-        result = SetHidRegister( Register::RPAD_MARGIN, 0x01 );     // Enable margins on the right pad
+        result = WriteRegister( Register::RPAD_MARGIN, 0x01 );     // Enable margins on the right pad
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable trackpad margins." );
 
