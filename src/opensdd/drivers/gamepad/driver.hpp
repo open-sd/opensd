@@ -24,7 +24,7 @@
 #include "../../hidraw.hpp"
 #include "../../uinput.hpp"
 #include "hid_reports.hpp"
-#include "hid_state.hpp"
+#include "device_state.hpp"
 #include "profile.hpp"
 
 
@@ -87,6 +87,7 @@ namespace Drivers::Gamepad
         void                        ThreadedLizardHandler();
         
     public:
+        // Configuration functions
         int                         SetProfile( const Drivers::Gamepad::Profile& rProf );
         int                         SetLizardMode( bool enabled );
         void                        SetDeadzone( AxisEnum axis, double dz );

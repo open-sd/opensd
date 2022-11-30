@@ -140,7 +140,7 @@ int Drivers::Gamepad::Driver::WriteRegister( uint8_t reg, uint16_t value )
     
     
     // Set the first byte of the report to the write register command
-    buff.push_back( ReportId::WRITE_REGISTER );
+    buff.push_back( ReportType::WRITE_REGISTER );
     // Second byte is the number of bytes for registers and values
     buff.push_back( length );
     // Register is 8 bits
@@ -163,11 +163,12 @@ int Drivers::Gamepad::Driver::WriteRegister( uint8_t reg, uint16_t value )
 }
 
 
+
 int Drivers::Gamepad::Driver::HandleInputReport( const std::vector<uint8_t>& rReport )
 {
     using namespace v1;
 
-    if (rReport.at(0) != ReportId::INPUT)
+    if (rReport.at(0) != ReportType::INPUT)
     {
         gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report ID." );
         return Err::INVALID_FORMAT;
@@ -192,6 +193,7 @@ int Drivers::Gamepad::Driver::HandleInputReport( const std::vector<uint8_t>& rRe
 }
 
 
+
 int Drivers::Gamepad::Driver::ClearRegister( uint8_t reg )
 {
     std::vector<uint8_t>    buff;
@@ -208,7 +210,7 @@ int Drivers::Gamepad::Driver::ClearRegister( uint8_t reg )
     
     
     // Set the first byte of the report to the write register command
-    buff.push_back( ReportId::CLEAR_REGISTER );
+    buff.push_back( ReportType::CLEAR_REGISTER );
     // Second byte is the number of bytes for registers and values
     buff.push_back( length );
     // Register is 8 bits
@@ -1109,7 +1111,6 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
     if (!enabled)
     {
         buff.at(0) = ReportId::CLEAR_MAPPINGS;                      // Disable keyboard emulation (for a few seconds)
-
         result = mHid.Write( buff );
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable keyboard emulation." );
