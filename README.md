@@ -51,53 +51,22 @@ The code itself has very few dependencies other than the kernel.
 - cmake 3.10+
 - systemd (optional, for user service file)
 
-Hardware support for the Steam Deck is pretty recent, so using the most recent kernel is recommended.  Presently the development system is running Arch Linux with kernel 5.19, but just about any other distro should work as well.
+Some of the hardware support for the Steam Deck is pretty recent, so using the most recent kernel is highly recommended.
 
 <br>
 
-## Building
-OpenSD uses cmake so building is nice and simple.
-```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-```
-
-To configure build/install options, run this from the build directory
-```
-$ ccmake ..
-```
+## Getting started
+Check out the Getting Started section in the [online documentation](https://open-sd.gitlab.io/opensd-docs) for steps on getting, building, installing.
 
 <br>
 
-## Installation
-Once you've successfully built OpenSD, just run
-```
-$ sudo make install
-```
+## Using and configuring OpenSD
+A beautiful online user's manual can also be found in the [online documentation](https://open-sd.gitlab.io/opensd-docs/opensd-docs/latest/users_manual/running.html)
 
-By default, this will
- - Install a systemd user service file.
- - Install a udev rule to give hardware access to the 'opensd' group
- - Reload udev rules
- - Create the 'opensd' group and make the current user a member of that group.
- 
-Note:  Group changes will not take effect until after logout.
-
-<br>
-
-## Usage
-See [Getting Started](https://gitlab.com/open-sd/opensd/-/wikis/Getting-Started) in the wiki.
-
-## Configuration
-See the [OpenSD User Manual](https://gitlab.com/open-sd/opensd/-/wikis/User-Manual) in the wiki for details on how to configure the driver.
-
-Offline documentation is also available in the *doc* directory.  If you've already installed OpenSD, documentation can be found in `/usr/local/share/doc/opensd/` as well as a `man` page:
+Offline documentation is also available in the *doc* directory of this repository.  If you've already installed OpenSD, documentation can be found in `/usr/local/share/doc/opensd/` as well as a `man` page:
 ```
 $ man opensdd
 ```
-<br>
 
 ## Roadmap
 Feature progress:
@@ -144,13 +113,19 @@ Feature progress:
 - [X]   Man files
 - [X]   Wiki
 
+<br>
+
+## Steam Deck hardware documentation
+I've published a group of [hardware notes](https://open-sd.gitlab.io/opensd-docs/opensd-docs/latest/hardware_notes/preface.html) over in the user documentation site which may be of interest to some of you.
 
 <br>
 
 ## Contributing
-There are a lot of open questions about how the HID reports work.  Most of the the work has come from reverse engineering input reports and function documenetation from the kernel Steam Controller driver.  Anyone who can fill in blanks in the code would be appreciated, just open an issue or submit a PR.
+There are still a lot of open questions about the Steam Deck HID reports, particularly feature reports.  Most of the the work has come from reverse engineering input reports and function documenetation from the kernel Steam Controller driver.  Anyone who can fill in blanks in the code would be appreciated, just open an issue or submit a PR.
 
-As always, feel free to buy me a coffee if you appreciate this software ;)
+The user documentation also has its own repo at https://gitlab.com/open-sd/opensd-docs if you'd like to help with that.  Please open an issue there for anything documentation related.
+
+As always, feel free to buy me a coffee if you appreciate my work ;)
 
 <br>
 
