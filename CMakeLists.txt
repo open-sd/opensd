@@ -64,14 +64,13 @@ file( GLOB OPENSD_GUI_SRC
     )
 
 # OpenSD data files
-set( OPENSD_CONFIG_FILE "${PROJECT_SOURCE_DIR}/data/config/config.ini" )
+file( GLOB OPENSD_CONFIG_FILE "data/config/config.ini" )
 file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.profile" )
 
 # OpenSD documentation files
-set( OPENSD_MANPAGE_FILE "${PROJECT_SOURCE_DIR}/doc/opensdd.1" )
+file( GLOB OPENSD_MANPAGE_FILE "doc/opensdd.1" )
 file( GLOB OPENSD_DOC_FILES 
-        "doc/user manual.adoc"
-        "doc/user manual.html"
+        "doc/users_manual.html"
         "CHANGELOG.md" 
         "LICENSE" 
     )

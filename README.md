@@ -3,7 +3,7 @@ An open-source Linux userspace driver for Valve's Steam Deck hardware.
 
 [![](https://img.shields.io/gitlab/license/open-sd/opensd?style=for-the-badge)](https://choosealicense.com/licenses/gpl-3.0/) [![](https://img.shields.io/badge/Written%20in-C%2B%2B-%23f34b7d?style=for-the-badge)]() [![](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge)](https://paypal.me/seekdev)
 
-[![](https://img.shields.io/badge/Version-0.43-blue?style=for-the-badge)]() [![](https://img.shields.io/gitlab/last-commit/open-sd/opensd?style=for-the-badge)]() [![](https://img.shields.io/gitlab/issues/open/open-sd/opensd?style=for-the-badge)](https://paypal.me/seekdev)
+[![](https://img.shields.io/badge/Version-0.44-blue?style=for-the-badge)]() [![](https://img.shields.io/gitlab/last-commit/open-sd/opensd?style=for-the-badge)]() [![](https://img.shields.io/gitlab/issues/open/open-sd/opensd?style=for-the-badge)](https://paypal.me/seekdev)
 
 <br>
 
@@ -62,7 +62,7 @@ Check out the Getting Started section in the [online documentation](https://open
 <br>
 
 ## Using and configuring OpenSD
-A beautiful online user's manual can also be found in the [online documentation](https://open-sd.gitlab.io/opensd-docs/opensd-docs/latest/users_manual/running.html)
+A beautiful online [user's manual](https://open-sd.gitlab.io/opensd-docs/opensd-docs/latest/users_manual/running.html) can also be found in the online documentation.
 
 Offline documentation is also available in the *doc* directory of this repository.  If you've already installed OpenSD, documentation can be found in `/usr/local/share/doc/opensd/` as well as a `man` page:
 ```

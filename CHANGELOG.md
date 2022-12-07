@@ -1,5 +1,21 @@
 # OpenSD changelog
 
+## [v0.44]  2022/12/06
+### Added 
+  - Created new online documentation at https://open-sd.gitlab.io/opensd-docs
+  
+### Changed
+  - Moved all documentation source to separate repo (https://gitlab.com/open-sd/opensd-docs)
+  - Changed the way offline documentation is built
+  - Changed the way manpages are built
+  - Updated offline documentation 
+  - Updated the manpage
+  - Updated README with new documentation links
+
+### Removed
+  - Removed asciidoc source from the main repo
+  - Removed hardware notes (doc/hw.html) from this project
+
 ## [v0.43]  2022/11/19
 ### Added
   - Added asciidoc user manual
