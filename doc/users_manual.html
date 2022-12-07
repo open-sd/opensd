@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
-<title>OpenSD User Manual</title>
+<title>OpenSD User&#8217;s Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,9 +436,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 </head>
-<body id="using_opensd" class="article toc2 toc-left">
+<body class="article toc2 toc-left">
 <div id="header" style="max-width: 100%;">
-<h1>OpenSD User Manual</h1>
+<h1>OpenSD User&#8217;s Manual</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -448,12 +448,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#run_as_service">As a User-Level Service</a></li>
 </ul>
 </li>
-<li><a href="#config_files">Configuration Files</a>
+<li><a href="#_configuration_files">Configuration Files</a></li>
+<li><a href="#_daemon_configuration_file_config_ini">Daemon Configuration File (config.ini)</a>
 <ul class="sectlevel2">
-<li><a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a>
-<ul class="sectlevel3">
 <li><a href="#daemoncfg_file_section_daemon">[Daemon] Section</a>
-<ul class="sectlevel4">
+<ul class="sectlevel3">
 <li><a href="#daemoncfg_file_section_daemon_profile">Profile</a></li>
 <li><a href="#daemoncfg_file_section_daemon_allowclients">AllowClients</a></li>
 </ul>
@@ -461,15 +460,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#profile_files">Profile Configuration Files (*.profile)</a>
-<ul class="sectlevel3">
+<ul class="sectlevel2">
 <li><a href="#prof_section_profile">[Profile] Section</a>
-<ul class="sectlevel4">
+<ul class="sectlevel3">
 <li><a href="#prof_section_profile_name">Name</a></li>
 <li><a href="#prof_section_profile_description">Description</a></li>
 </ul>
 </li>
 <li><a href="#prof_section_features">[Features] Section</a>
-<ul class="sectlevel4">
+<ul class="sectlevel3">
 <li><a href="#prof_section_features_ff">ForceFeedback</a></li>
 <li><a href="#prof_section_features_motiondevice">MotionDevice</a></li>
 <li><a href="#prof_section_features_mousedevice">MouseDevice</a></li>
@@ -482,7 +481,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#prof_section_gamepadaxes">[GamepadAxes] Section</a></li>
 <li><a href="#prof_section_motionaxes">[MotionAxes] Section</a></li>
 <li><a href="#prof_section_bindings">[Bindings] Section</a>
-<ul class="sectlevel4">
+<ul class="sectlevel3">
 <li><a href="#prof_section_bindings_gamepad">Gamepad Bindings</a></li>
 <li><a href="#prof_section_bindings_motion">Motion Bindings</a></li>
 <li><a href="#prof_section_bindings_mouse">Mouse Bindings</a></li>
@@ -492,14 +491,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#input_types">Input Types</a>
-<ul class="sectlevel3">
+<li><a href="#_input_types">Input Types</a>
+<ul class="sectlevel2">
 <li><a href="#input_type_dpad">Directional Pad</a></li>
 <li><a href="#input_type_buttons">Buttons</a></li>
 <li><a href="#input_type_thumb">Thumbsticks</a></li>
 <li><a href="#input_type_trigg">Triggers</a></li>
 <li><a href="#input_type_trackpad">Trackpads</a>
-<ul class="sectlevel4">
+<ul class="sectlevel3">
 <li><a href="#input_type_trackpad_quad">Quadrant Button Map</a></li>
 <li><a href="#input_type_trackpad_orth">Orthogonal Button Map</a></li>
 <li><a href="#input_type_trackpad_grid4">2x2 Grid Button Map</a></li>
@@ -508,21 +507,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#daemoncfg_file_example">Example config.ini</a></li>
-<li><a href="#prof_example_profile">Example Profile</a></li>
-</ul>
-</li>
-<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#_troubleshooting">Troubleshooting</a></li>
+<li><a href="#_example_config_ini">Example config.ini</a></li>
+<li><a href="#_example_profile">Example Profile</a></li>
 </ul>
 </div>
 </div>
 <div id="content" style="max-width: 100%;">
-<div id="preamble">
-<div class="sectionbody">
-<hr>
-<div style="page-break-after: always;"></div>
-</div>
-</div>
 <div class="sect1">
 <h2 id="running_opensd">Running OpenSD</h2>
 <div class="sectionbody">
@@ -533,7 +524,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>OpenSD requires access to the <strong>uinput</strong> and <strong>hidraw</strong> subsystems.  To enable this access, OpenSD provides a <strong>udev rule</strong> which will be installed when installing OpenSD.  In this rule, access is allowed to both subsystem for members of the <strong>opensd</strong> group, which is also created on install.  Any user that intends to run OpenSD must be a member of this group, or otherwise have R/W access to these device nodes.  After installing for the first time it will be necessary to log out in order for the user&#8217;s group changes to take effect.</p>
 </div>
 <div class="paragraph">
-<p>For more information see the <a href="#troubleshooting">Troubleshooting</a> section.</p>
+<p>For more information see the <a href="./troubleshooting.html">Troubleshooting</a> section.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -596,10 +587,10 @@ $ systemctl --user start opensd</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="config_files">Configuration Files</h2>
+<h2 id="_configuration_files">Configuration Files</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>OpenSD uses two types of configuration files.  The first type being the <a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a>, and the second type are gamepad <a href="#profile_files">Profile Configuration Files (*.profile)</a> which are loaded by the daemon.</p>
+<p>OpenSD uses two types of configuration files.  The first type being the <a href="./config_ini.html">Daemon Configuration</a>, and the second type are gamepad <a href="./profile_files.html">Profiles</a> which are loaded by the daemon.</p>
 </div>
 <div class="paragraph">
 <p>All files use an <a href="https://en.wikipedia.org/wiki/INI_file"><em>ini-style</em></a> format and are easily created or modified with any text editor.</p>
@@ -619,11 +610,8 @@ OpenSD follows the XDG specification, so environments which set / change <code>$
 </tr>
 </table>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Basic format rules</dt>
-<dd>
 <div class="ulist">
+<div class="title">Basic format rules:</div>
 <ul>
 <li>
 <p>Parsing is line-based and space delimited.</p>
@@ -648,23 +636,21 @@ OpenSD follows the XDG specification, so environments which set / change <code>$
 </li>
 </ul>
 </div>
-</dd>
-</dl>
-</div>
 <hr>
 <div style="page-break-after: always;"></div>
-<div class="sect2">
-<h3 id="daemoncfg_file">Daemon Configuration file (config.ini)</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_daemon_configuration_file_config_ini">Daemon Configuration File (config.ini)</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>This single file contains a small group of options that pertain to the daemon itself.  The default configuration file for the daemon can be found at <code>~/.config/opensd/config.ini</code>.  An unmodified copy of this file will be installed to <code>/usr/local/share/opensd/config/config.ini</code> or <code>/usr/share/opensd/config/config.ini</code>.</p>
 </div>
 <div class="paragraph">
-<p>An <a href="#daemoncfg_file_example">Example config.ini</a> can be found in this documentation if you want to see what a complete file might look like.</p>
+<p>An <a href="./example_config_ini.html">example config.ini</a> can be found in this documentation if you want to see what a complete file might look like.</p>
 </div>
-<hr>
-<div style="page-break-after: always;"></div>
-<div class="sect3">
-<h4 id="daemoncfg_file_section_daemon">[Daemon] Section</h4>
+<div class="sect2">
+<h3 id="daemoncfg_file_section_daemon">[Daemon] Section</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -677,8 +663,8 @@ This section is required.
 </tr>
 </table>
 </div>
-<div class="sect4">
-<h5 id="daemoncfg_file_section_daemon_profile">Profile</h5>
+<div class="sect3">
+<h4 id="daemoncfg_file_section_daemon_profile">Profile</h4>
 <div class="paragraph">
 <p>This tells the daemon which profile to load when it starts up.  Profiles are <strong>only</strong> loaded from the <code>~./config/opensd/profiles/</code> directory, so only specify the filename here.  OpenSD also has other methods for loading profiles once the daemon is running, this setting is only for the default profile you wish to use.</p>
 </div>
@@ -701,8 +687,8 @@ Profile = default.profile</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect4">
-<h5 id="daemoncfg_file_section_daemon_allowclients">AllowClients</h5>
+<div class="sect3">
+<h4 id="daemoncfg_file_section_daemon_allowclients">AllowClients</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -740,16 +726,18 @@ AllowClients = true</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="profile_files">Profile Configuration Files (*.profile)</h3>
+</div>
+<div class="sect1">
+<h2 id="profile_files">Profile Configuration Files (*.profile)</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the <a href="#daemoncfg_file">Daemon Configuration file (config.ini)</a> to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.</p>
+<p>These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the <a href="./config_ini.html">config.ini</a> file to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.</p>
 </div>
 <div class="paragraph">
 <p>Gamepad profiles can be found in <code>~/.config/opensd/profiles/</code>.  The file extension is <code>*.profile</code>.</p>
 </div>
 <div class="paragraph">
-<p>An <a href="#prof_example_profile">Example Profile</a> can be found in this documentation if you want to see what a complete file might look like.</p>
+<p>An <a href="./example_profile.html">example profile</a> can be found in this documentation if you want to see what a complete file might look like.</p>
 </div>
 <div class="paragraph">
 <p>A default profile (cleverly named <code>default.profile</code>) is provided which includes documentation in the comments on how to configure it.  It is not recommended to modify this file, instead you should make a copy of it, renaming it to <code>whatever_you_want.profile</code> and edit that file instead.  If the default profile is deleted, it will be recreated when the daemon is run, so if you need a clean or <em>updated</em> copy of the <code>default.profile</code>, simply delete it and restart the OpenSD daemon.</p>
@@ -757,11 +745,10 @@ AllowClients = true</code></pre>
 <div class="paragraph">
 <p>An unmodified copy of this file will be installed to <code>/usr/local/share/opensd/profiles/default.profile</code> or <code>/usr/share/opensd/profiles/default.profile</code>.</p>
 </div>
-<hr>
+<div class="sect2">
+<h3 id="prof_section_profile">[Profile] Section</h3>
 <div class="sect3">
-<h4 id="prof_section_profile">[Profile] Section</h4>
-<div class="sect4">
-<h5 id="prof_section_profile_name">Name</h5>
+<h4 id="prof_section_profile_name">Name</h4>
 <div class="paragraph">
 <p>The profile name as it will appear in the GUI and through the CLI query.  Should be unique for each profile to avoid confusion.</p>
 </div>
@@ -783,10 +770,9 @@ Name = My favourite gamepad profile</code></pre>
 </div>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_profile_description">Description</h5>
+<div class="sect3">
+<h4 id="prof_section_profile_description">Description</h4>
 <div class="paragraph">
 <p>A breif description of the profile for use in the GUI and CLI query.  Does not affect anything else, just intended as a hint for users.</p>
 </div>
@@ -808,13 +794,12 @@ Description = Just a profile I use for most applications.</code></pre>
 </div>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="prof_section_features">[Features] Section</h3>
 <div class="sect3">
-<h4 id="prof_section_features">[Features] Section</h4>
-<div class="sect4">
-<h5 id="prof_section_features_ff">ForceFeedback</h5>
+<h4 id="prof_section_features_ff">ForceFeedback</h4>
 <div class="paragraph">
 <p>Enable or disables haptic / force-feedback events for the gamepad device.  It&#8217;s worth mentioning that only the <code>Gamepad</code> device can receive force-feedback events; the <code>Motion</code> or <code>Mouse</code> devices will not receive these events.</p>
 </div>
@@ -851,10 +836,9 @@ This feature is not yet fully implemented
 </table>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_features_motiondevice">MotionDevice</h5>
+<div class="sect3">
+<h4 id="prof_section_features_motiondevice">MotionDevice</h4>
 <div class="paragraph">
 <p>If this is set to <code>true</code>, an additional input device will be created which will report motion control data.  Motion axes need to have thier ranges and bindings defined.  If this is disabled, any <code>Motion</code> device bindings will be ignored.</p>
 </div>
@@ -892,8 +876,8 @@ While it&#8217;s possible to combine gamepad and motion input into a single inpu
 </div>
 <hr>
 </div>
-<div class="sect4">
-<h5 id="prof_section_features_mousedevice">MouseDevice</h5>
+<div class="sect3">
+<h4 id="prof_section_features_mousedevice">MouseDevice</h4>
 <div class="paragraph">
 <p>If this is set to <code>true</code>, an additional input device will be created which will be used to send mouse / trackpad events.  Mouse events still need to have thier bindings defined.  If this is disabled, any <code>Mouse</code> device bindings will be ignored.</p>
 </div>
@@ -918,10 +902,9 @@ MouseDevice = true</code></pre>
 <p>If unspecified, this value defaults to <code>true</code>.</p>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_features_lizardmode">LizardMode</h5>
+<div class="sect3">
+<h4 id="prof_section_features_lizardmode">LizardMode</h4>
 <div class="paragraph">
 <p>The Steam Controller and the Steam Deck both have a kind of fallback "BIOS" mode which emulates some keyboard and mouse input using the gamepad.  Valve refers to this as "Lizard Mode".  This mode cannot be redefined.  It sends events IN ADDITION to the gamepad events created by the OpenSD driver, so it should <strong>always</strong> be disabled. If you would like mouse or keyboard emulation, they should be configured with <strong>bindings</strong>.  When OpenSD exits, Lizard Mode is re-enabled.</p>
 </div>
@@ -949,10 +932,9 @@ LizardMode = false</code></pre>
 <p>If unspecified, this value defaults to <code>false</code>.</p>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_features_stickfiltering">StickFiltering</h5>
+<div class="sect3">
+<h4 id="prof_section_features_stickfiltering">StickFiltering</h4>
 <div class="paragraph">
 <p>The thumbsticks on the Steam Deck have a circular range but return square-ish data, which makes it feel odd and complicated to apply radial deadzones to. Because of this, OpenSD vectorizes the stick position and returns "cleaner", round stick ranges, as well as being able to create clean deadzone rescaling.  If you disable this setting, axis ranges are still internally normalized and rescaled to the the uinput device, but no vectorization will be applied and any <strong>deadzones will be ignored</strong>.</p>
 </div>
@@ -992,10 +974,9 @@ This must be enabled for thumbstick deadzones to work.
 </table>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_features_trackpadfiltering">TrackpadFiltering</h5>
+<div class="sect3">
+<h4 id="prof_section_features_trackpadfiltering">TrackpadFiltering</h4>
 <div class="paragraph">
 <p>Similar to StickFiltering, but matches the square shape of the trackpad.  Filtering is only applied to absolute values.  This setting must be enabled to apply deadzones to the trackpad absolute axes.  Relative values (<code>*PadRelX</code> and <code>*PadRelY</code>) are unaffected, therefore deadzones do not affect mouse movement with the pads.</p>
 </div>
@@ -1037,8 +1018,8 @@ This must be enabled for trackpad deadzones to work.
 <hr>
 </div>
 </div>
-<div class="sect3">
-<h4 id="prof_section_deadzones">[Deadzones] Section</h4>
+<div class="sect2">
+<h3 id="prof_section_deadzones">[Deadzones] Section</h3>
 <div class="paragraph">
 <p>These values are <strong>double precision floating point</strong> and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If <a href="#prof_section_features_stickfiltering">StickFiltering</a> is disabled, <code>LStick</code> and <code>RStick</code> deadzones will be ignored.  If <a href="#prof_section_features_trackpadfiltering">TrackpadFiltering</a> is disabled, <code>LPad</code> and <code>RPad</code> deadzones will be ignored.</p>
 </div>
@@ -1091,8 +1072,8 @@ Because the Steam Deck thumbsticks tend not to return to center completely (at l
 </div>
 <hr>
 </div>
-<div class="sect3">
-<h4 id="prof_section_gamepadaxes">[GamepadAxes] Section</h4>
+<div class="sect2">
+<h3 id="prof_section_gamepadaxes">[GamepadAxes] Section</h3>
 <div class="paragraph">
 <p>Gamepad absolute axes must have a defined range or they will not be created.  Any <code>Gamepad</code> <code>ABS_*</code> events which are configured in the <a href="#prof_section_bindings_gamepad">Gamepad Bindings</a> section <strong>must be defined here first, or they will be ignored</strong>.</p>
 </div>
@@ -1146,10 +1127,9 @@ ABS_RZ          = 0         32767</code></pre>
 </div>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect3">
-<h4 id="prof_section_motionaxes">[MotionAxes] Section</h4>
+<div class="sect2">
+<h3 id="prof_section_motionaxes">[MotionAxes] Section</h3>
 <div class="paragraph">
 <p>Motion control absolute axes, as with the gamepad device, must have a defined range or they will not be created.  Any <code>Motion</code> <code>ABS_*</code> events which are configured in the <a href="#prof_section_bindings_motion">Motion Bindings</a> <strong>must be defined here first, or they will be ignored</strong>.</p>
 </div>
@@ -1207,10 +1187,9 @@ Motion controls are not yet fully implemented.
 </table>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect3">
-<h4 id="prof_section_bindings">[Bindings] Section</h4>
+<div class="sect2">
+<h3 id="prof_section_bindings">[Bindings] Section</h3>
 <div class="paragraph">
 <p>This should be a list of all the physical gamepad buttons/sticks/pads/motion inputs you want to bind to a virtual input event or command.  Anything not specified here will be considered "unbound" and not emit any event.</p>
 </div>
@@ -1299,15 +1278,14 @@ Motion controls are not yet fully implemented.
 </dl>
 </div>
 <div class="paragraph">
-<p>A full list of available input codes can be seen in the <a href="#prof_example_profile">Example Profile</a> section, as well as in <code>default.profile</code> file.</p>
+<p>A full list of available input codes can be seen in the <a href="#./example_profile">example profile</a> section, as well as in <code>default.profile</code> file from your installation.</p>
 </div>
 <div class="paragraph">
-<p><strong>A detailed explanation of each of these inputs can be found in the <a href="#input_types">Input Types</a> section.</strong></p>
+<p><strong>A detailed explanation of each of these inputs can be found in the <a href="./input_types.html">Input Types section</a>.</strong></p>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
-<div class="sect4">
-<h5 id="prof_section_bindings_gamepad">Gamepad Bindings</h5>
+<div class="sect3">
+<h4 id="prof_section_bindings_gamepad">Gamepad Bindings</h4>
 <div class="paragraph">
 <p>The <code>Gamepad</code> device binding is used to generate input events for a joystick / gamepad-type device.  This generally means buttons (<code>BTN_*</code>) and absolute axis (<code>ABS_*</code>) events.  <code>KEY_*</code> events are allowed, but many programs will not read <code>KEY_*</code> events from a joystick device, instead try binding <strong>key</strong> events to the <code>Mouse</code> device.</p>
 </div>
@@ -1395,10 +1373,10 @@ LTrigg          = Gamepad   ABS_Z       +</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A full list of gamepad input names can be seen in the <a href="#prof_example_profile">Example Profile</a> section.</p>
+<p>A full list of gamepad input names can be seen in the <a href="./example_profile.html">example profile</a>.</p>
 </div>
 <div class="paragraph">
-<p><strong>A detailed explanation of inputs can be found in the <a href="#input_types">Input Types</a> section of this document.</strong></p>
+<p><strong>A detailed explanation of inputs can be found in the <a href="./input_types.html">Input Types section</a> of this documentation.</strong></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1413,10 +1391,9 @@ LTrigg          = Gamepad   ABS_Z       +</code></pre>
 </table>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_bindings_motion">Motion Bindings</h5>
+<div class="sect3">
+<h4 id="prof_section_bindings_motion">Motion Bindings</h4>
 <div class="paragraph">
 <p>The <code>Motion</code> device binding is used to generate input events for a motion control-type device.  While OpenSD does not strictly enforce this, the Linux kernel and uinput specify that motion control events should be emitted by separate devices.  Not doing so can create a lot of "noise", especially when configuring controls within another application.  As per this spec, the <code>Motion</code> device only supports <code>EV_ABS</code> type events.  These events are prefixed with <code>ABS_</code>  (example: <code>ABS_Z</code>).  For a full list of event codes, see <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
 </div>
@@ -1459,10 +1436,10 @@ RollMinus       = Motion    ABS_X       -</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A full list of motion contol input names can be seen in the <a href="#prof_example_profile">Example Profile</a> section.</p>
+<p>A full list of motion contol input names can be seen in the <a href="./example_profile.html">example profile</a>.</p>
 </div>
 <div class="paragraph">
-<p><strong>A detailed explanation of motion input be found in the <a href="#input_types">Input Types</a> section of this document.</strong></p>
+<p><strong>A detailed explanation of motion input be found in the <a href="./input_types.html">Input Types Section</a> of this document.</strong></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1489,10 +1466,9 @@ This feature is not yet fully implemented.
 </table>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_bindings_mouse">Mouse Bindings</h5>
+<div class="sect3">
+<h4 id="prof_section_bindings_mouse">Mouse Bindings</h4>
 <div class="paragraph">
 <p>The <code>Mouse</code> device binding is used to generate input events which will be interpreted as events coming from a pointer-type device such as a physical mouse.  This binding type supports <strong>button</strong> / <strong>key</strong> and <strong>relative axis</strong> events.  The <code>Mouse</code> device can also function a bit like a keyboard, so it&#8217;s advised to bind any <strong>key</strong> events to this device.</p>
 </div>
@@ -1548,13 +1524,12 @@ RPadRelY        = Mouse REL_Y</code></pre>
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>Please see the <a href="#input_type_trackpad">Trackpads</a> section of this document for a better explanation of how <code>{L|R}PadRel{X|Y}</code> relative inputs work.</strong></p>
+<p><strong>Please see the <a href="./input_types.html#input_type_trackpad">Trackpad input type</a> section of this documentation for a better explanation of how <code>{L|R}PadRel{X|Y}</code> relative inputs work.</strong></p>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_bindings_command">Command Bindings</h5>
+<div class="sect3">
+<h4 id="prof_section_bindings_command">Command Bindings</h4>
 <div class="paragraph">
 <p>The <code>Command</code> binding allows you to execute external programs or scripts by forking them off as a child process.  These processes run concurrently, do not return any usable exit code, and will not interrupt the driver.</p>
 </div>
@@ -1592,10 +1567,9 @@ QuickAccess     = Command   true    0   rofi -show run</code></pre>
 </div>
 </div>
 <hr>
-<div style="page-break-after: always;"></div>
 </div>
-<div class="sect4">
-<h5 id="prof_section_bindings_profile">Profile Bindings</h5>
+<div class="sect3">
+<h4 id="prof_section_bindings_profile">Profile Bindings</h4>
 <div class="paragraph">
 <p>The <code>Profile</code> binding type allows you to switch to a different profile using just the gamepad input.  Profiles are loaded from the user profile directory.  There is a <strong>2 second</strong> delay after profile switching before the profile can be changed again, to prevent undesirable rapid cycling.  If a profile fails to load, the process will be aborted and the profile currently in use will remain so.</p>
 </div>
@@ -1626,25 +1600,23 @@ QuickAccess     = Command   true    0   rofi -show run</code></pre>
 L5      = Profile   left_hand_mouse.profile</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>&#160;<br>
-&#160;</p>
-</div>
 <hr>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="input_types">Input Types</h3>
+</div>
+<div class="sect1">
+<h2 id="_input_types">Input Types</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>As briefly described in the <a href="#prof_section_bindings">[Bindings] Section</a>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of <strong>X</strong> / <strong>Y</strong> axes (example: <code>LStickUp</code>, <code>LStickLeft</code>), which, as a primitive type are absolute, but the thumbsticks <em>also</em> have a <strong>touch sensor</strong> at the top which can be read as a binary <strong>button</strong> primitive (<code>LStickTouch</code>) as well as a pressure level (<code>LStickForce</code>) which is read as a single <strong>absolute axis</strong> like a <strong>trigger</strong> would be.</p>
+<p>As briefly described in the <a href="./profile_files.html#prof_section_bindings">Bindings section</a>, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of <strong>X</strong> / <strong>Y</strong> axes (example: <code>LStickUp</code>, <code>LStickLeft</code>), which, as a primitive type are absolute, but the thumbsticks <em>also</em> have a <strong>touch sensor</strong> at the top which can be read as a binary <strong>button</strong> primitive (<code>LStickTouch</code>) as well as a pressure level (<code>LStickForce</code>) which is read as a single <strong>absolute axis</strong> like a <strong>trigger</strong> would be.</p>
 </div>
 <div class="paragraph">
 <p>The intent is for each input name to be as <em>simple and intuitive as possible</em>, but that&#8217;s always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a <strong>binding</strong> ; )</p>
 </div>
-<div class="sect3">
-<h4 id="input_type_dpad">Directional Pad</h4>
+<div class="sect2">
+<h3 id="input_type_dpad">Directional Pad</h3>
 <div class="paragraph">
 <p>The directional pad is just a set of four buttons which are diametrically exclusive&#8201;&#8212;&#8201;you can press <strong>up</strong> and <strong>left</strong> simultaneously but you cannot press <strong>left</strong> and <strong>right</strong> simultaneously.</p>
 </div>
@@ -1696,7 +1668,7 @@ L5      = Profile   left_hand_mouse.profile</code></pre>
 </dl>
 </div>
 <div class="paragraph">
-<p>A common configuration as seen in the <a href="#prof_example_profile">Example Profile</a> might look like this:</p>
+<p>A common configuration, as seen in the <a href="./example_profile.html">example profile</a>, might look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1709,8 +1681,8 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect3">
-<h4 id="input_type_buttons">Buttons</h4>
+<div class="sect2">
+<h3 id="input_type_buttons">Buttons</h3>
 <div class="paragraph">
 <p>These are pretty straightforward. As you probably expect, buttons have two states.  They&#8217;re <strong>true</strong> when pressed and <strong>false</strong> when released.  The Steam Deck borrows common names for most buttons, but also adds a few of it&#8217;s own.  It&#8217;s debatable how to organize or classify these, so I&#8217;ll just sorta go by the legacy naming standards.</p>
 </div>
@@ -1823,8 +1795,8 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect3">
-<h4 id="input_type_thumb">Thumbsticks</h4>
+<div class="sect2">
+<h3 id="input_type_thumb">Thumbsticks</h3>
 <div class="paragraph">
 <p>The thumbsticks on the Steam Deck are associated with six different inputs in OpenSD.  As you would expect, there is an <strong>X</strong>/<strong>Y</strong> axis pair for each stick, but there are also <strong>touch</strong> and <strong>pressure</strong> (well, sorta) sensors located on the top of each one.  The directional axes are broken into halves such that each direction can emit different events if desired.</p>
 </div>
@@ -1832,7 +1804,7 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 <p>Axis values from thumbsticks are normalized internally so they can be rescaled to the defined <strong>ABS</strong> event ranges.  The hardware returns signed 16-bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.</p>
 </div>
 <div class="paragraph">
-<p>If <a href="#prof_section_features_stickfiltering">StickFiltering</a> is enabled the full axis is internally normalized as a unit vector and a <strong>radial deadzone</strong> may be applied.</p>
+<p>If <a href="./profile_files.html#prof_section_features_stickfiltering">Stick Filtering</a> is enabled the full axis is internally normalized as a unit vector and a <strong>radial deadzone</strong> may be applied.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1891,7 +1863,7 @@ DpadRight           = Gamepad   ABS_HAT0X   +</code></pre>
 </dd>
 <dt class="hdlist1">Use</dt>
 <dd>
-<p>Directional inputs are treated like axis halves.  You typically want to map <code>Up</code> and <code>Down</code> onto the same <strong>ABS</strong> event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the <strong>[Bindings]</strong> section of the <a href="#prof_example_profile">Example Profile</a>:</p>
+<p>Directional inputs are treated like axis halves.  You typically want to map <code>Up</code> and <code>Down</code> onto the same <strong>ABS</strong> event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the <strong>[Bindings]</strong> section of the <a href="./example_profile.html">example profile</a>:</p>
 </dd>
 </dl>
 </div>
@@ -1936,8 +1908,8 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect3">
-<h4 id="input_type_trigg">Triggers</h4>
+<div class="sect2">
+<h3 id="input_type_trigg">Triggers</h3>
 <div class="paragraph">
 <p>Triggers are pressure sensors that are also treated a bit like a thumbstick&#8217;s half-axis, with the difference being there&#8217;s no complement half.  Triggers have a resting position of the defined axis <strong>minimum</strong> limit and move toward the <strong>maximum</strong> limit when actuated.  <em>Typically</em> the minimum limit is zero, so the axis does not return non-zero values when released / resting, but you can do any weird thing you want.</p>
 </div>
@@ -1948,7 +1920,7 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 <p>Triggers also have a binary <strong>button</strong> component: <code>L2</code> and <code>R2</code>.  Information about these buttons can be found in the <a href="#input_type_buttons">Buttons</a> section.</p>
 </div>
 <div class="paragraph">
-<p>Linear deadzones can be applied to triggers, if desired in the <a href="#prof_section_deadzones">[Deadzones] Section</a>.</p>
+<p>Linear deadzones can be applied to triggers, if desired in the <a href="./profile_files.html#prof_section_deadzones">Deadzones Section</a> of a profile.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1993,8 +1965,8 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect3">
-<h4 id="input_type_trackpad">Trackpads</h4>
+<div class="sect2">
+<h3 id="input_type_trackpad">Trackpads</h3>
 <div class="paragraph">
 <p>At the core, trackpads are <strong>absolute axis</strong> devices have with an <strong>X</strong> / <strong>Y</strong> pair, as well as a pressure sensor <strong>Z-axis</strong> and a slightly tactile <strong>button</strong>.  A number of inputs can be extrapolated from the data those basic types provide.  That includes <strong>touch</strong> sensors, <strong>press / button</strong> sensors, <strong>pressure / force</strong> sensors, <strong>absolute coordinates</strong>, <strong>relative movement</strong> tracking as well as the ability to <strong>map</strong> out regions of the pad and treat them as individual <strong>buttons</strong>.  OpenSD trackpads have the most input bindings out of all the components.</p>
 </div>
@@ -2002,7 +1974,7 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 <p>As with the <a href="#input_type_thumb">Thumbsticks</a>, directional axes are broken into halves such that each direction can emit different events if desired.  These halves can be mapped on to a whole <strong>ABS</strong> event code, or use separately.</p>
 </div>
 <div class="paragraph">
-<p>Trackpads support radial deadzones for <strong>absolute axis</strong> inputs, and can be configured in the <a href="#prof_section_deadzones">[Deadzones] Section</a>.</p>
+<p>Trackpads support radial deadzones for <strong>absolute axis</strong> inputs, and can be configured in the <a href="./profile_files.html#prof_section_deadzones">Deadzones Section</a> of a profile.</p>
 </div>
 <div class="paragraph">
 <p><strong>Relative</strong> trackpad input, such as <code>LPadRelX</code> or <code>LPadRelY</code>, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the <strong>difference</strong> in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between <strong>-5</strong> and <strong>+5</strong>.  Binding <code><strong>RelX</code> and <code>*RelY</code> inputs to anything other than <code>REL_</strong></code> event codes on the <code>Mouse</code> device is probably not useful.</p>
@@ -2100,15 +2072,15 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </dd>
 </dl>
 </div>
-<div class="sect4">
-<h5 id="input_type_trackpad_quad">Quadrant Button Map</h5>
+<div class="sect3">
+<h4 id="input_type_trackpad_quad">Quadrant Button Map</h4>
 <div class="paragraph">
 <p>The <strong>quadrant map</strong> (<code>PadPressQuad*</code>) provides a way to treat each touchpad as being composed of four <strong>non-overlapping</strong> triagular quadrants, as depicted in the <strong>figure 1</strong> below.  Each <strong>button</strong> is inherently exclusive to the others in this map since the <strong>X</strong> / <strong>Y</strong> coordinate can only fall inside of one of these regions at a time.  This means that this map will not detect any overlapping presses, like <strong>a</strong> and <strong>b</strong> when you press in the upper-left region.</p>
 </div>
 <div class="paragraph">
 <p>Fig. 1</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
 <pre>┌─────────────┐
 │ \         / │
@@ -2155,15 +2127,15 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect4">
-<h5 id="input_type_trackpad_orth">Orthogonal Button Map</h5>
+<div class="sect3">
+<h4 id="input_type_trackpad_orth">Orthogonal Button Map</h4>
 <div class="paragraph">
 <p>The <strong>orthogonal map</strong> (<code>PadPressOrth*</code>) works similarly to a <a href="#input_type_dpad">Directional Pad</a>.  As you can see below in figure 2, it demonstrates how the <strong>"a"</strong>, <strong>"b"</strong>, <strong>"c"</strong> and <strong>"d"</strong> regions represent orthogonal directions which are not strictly exclusive as they are with the <a href="#input_type_trackpad_quad">Quadrant Button Map</a>.  If a diagonal corner is pressed, it triggers both orthogonally adjacent buttons.  For example, pressing the upper-middle of the pad only triggers <strong>"a"</strong>, but pressing the upper-left of the pad will trigger both <strong>"a"</strong> and <strong>"b"</strong>.</p>
 </div>
 <div class="paragraph">
 <p>Fig. 2</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
 <pre>┌─────┬─────┬─────┐
 │     │     │     │
@@ -2210,15 +2182,15 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect4">
-<h5 id="input_type_trackpad_grid4">2x2 Grid Button Map</h5>
+<div class="sect3">
+<h4 id="input_type_trackpad_grid4">2x2 Grid Button Map</h4>
 <div class="paragraph">
 <p>This button map divides the pad into regions along the center axes, resulting in four square <strong>buttons</strong> in each corner, as depicted in figure 3.  Buttons are naturally exclusive, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.</p>
 </div>
 <div class="paragraph">
 <p>Fig. 3</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
 <pre>┌────────┬────────┐
 │        │        │
@@ -2265,8 +2237,8 @@ RStickRight         = Gamepad   ABS_RX      +</code></pre>
 </div>
 <hr>
 </div>
-<div class="sect4">
-<h5 id="input_type_trackpad_grid9">3x3 Grid Button Map</h5>
+<div class="sect3">
+<h4 id="input_type_trackpad_grid9">3x3 Grid Button Map</h4>
 <div class="paragraph">
 <p>This button map divides the pad into thirds along both axes, resulting in a 3x3 grid of nine square <strong>buttons</strong>, as depicted in figure 4.  These buttons are naturally exclusive to one another, so only one can be pressed at a time.  Buttons are enumerated left-to-right, top-to-bottom.</p>
 </div>
@@ -2285,7 +2257,7 @@ The resulting size of each button will be fairly small, so it may require a litt
 <div class="paragraph">
 <p>Fig. 4</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
 <pre>┌─────┬─────┬─────┐
 │     │     │     │
@@ -2365,8 +2337,19 @@ The resulting size of each button will be fairly small, so it may require a litt
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="daemoncfg_file_example">Example config.ini</h3>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TODO: This section
+&lt;&lt;&lt;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_config_ini">Example config.ini</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-ini" data-lang="ini">[Daemon]
@@ -2377,11 +2360,12 @@ Profile = default.profile
 AllowClients = true</code></pre>
 </div>
 </div>
-<hr>
 <div style="page-break-after: always;"></div>
 </div>
-<div class="sect2">
-<h3 id="prof_example_profile">Example Profile</h3>
+</div>
+<div class="sect1">
+<h2 id="_example_profile">Example Profile</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
@@ -2541,21 +2525,13 @@ YawPlus             = Motion    ABS_Z       +
 YawMinus            = Motion    ABS_Z       -</code></pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="troubleshooting">Troubleshooting</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>TODO:</p>
-</div>
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 </div>
 <div id="footer" style="max-width: 100%;">
 <div id="footer-text">
-Last updated 2022-11-21 16:10:34 -0800
+Last updated 2022-12-06 16:08:14 -0800
 </div>
 </div>
 </body>

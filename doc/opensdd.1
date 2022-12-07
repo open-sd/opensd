@@ -2,12 +2,12 @@
 .\"     Title: opensdd
 .\"    Author: seek
 .\" Generator: Asciidoctor 2.0.18
-.\"      Date: 2022-11-19
+.\"      Date: 2022-12-06
 .\"    Manual: opensdd
 .\"    Source: opensdd
 .\"  Language: English
 .\"
-.TH "OPENSDD" "1" "2022-11-19" "opensdd" "opensdd"
+.TH "OPENSDD" "1" "2022-12-06" "opensdd" "opensdd"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -69,20 +69,14 @@ User\-configurable gamepad profiles.
 .SH "PROJECT HOME"
 .sp
 .URL "https://gitlab.com/open\-sd/opensd" "" ""
-.SH "WIKI"
+.SH "ONLINE DOCUMENTATION"
 .sp
-.URL "https://gitlab.com/open\-sd/opensd/\-/wikis/home" "" ""
+.URL "https://open\-sd.gitlab.io/opensd\-docs" "" ""
 .SH "AUTHOR"
 .sp
 seek (\c
 .URL "https://gitlab.com/seek\-dev" "" ")"
-.SH "CONFIGURATION"
-.SS "OpenSD User Manual"
-.sp
-.ce
-\l'\n(.lu*25u/100u\(ap'
-.bp
-.SS "Running OpenSD"
+.SH "RUNNING OPENSD"
 .sp
 OpenSD is intended to be run as a user\-level service, but it can be run from a terminal like most other Linux programs.  This can be useful for troubleshooting or debugging purposes since every message is logged to stdout.
 .sp
@@ -158,9 +152,9 @@ $ systemctl \-\-user start opensd
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Configuration Files"
+.SH "CONFIGURATION FILES"
 .sp
-OpenSD uses two types of configuration files.  The first type being the Daemon Configuration file (config.ini), and the second type are gamepad Profile Configuration Files (*.profile) which are loaded by the daemon.
+OpenSD uses two types of configuration files.  The first type being the Daemon Configuration, and the second type are gamepad Profiles which are loaded by the daemon.
 .sp
 All files use an \c
 .URL "https://en.wikipedia.org/wiki/INI_file" "\fIini\-style\fP" ""
@@ -182,8 +176,8 @@ OpenSD follows the XDG specification, so environments which set / change \f(CR$X
 .sp .5v
 .RE
 .sp
-Basic format rules
-.RS 4
+.B Basic format rules:
+.br
 .sp
 .RS 4
 .ie n \{\
@@ -261,20 +255,15 @@ Key assignment \fBmust\fP be separated by whitespace.  (example: \f(CRkey = valu
 .\}
 Comments are preceeded by a \f(CR#\fP or \f(CR;\fP at the beginning of the line.
 .RE
-.RE
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Daemon Configuration file (config.ini)"
+.SH "DAEMON CONFIGURATION FILE (CONFIG.INI)"
 .sp
 This single file contains a small group of options that pertain to the daemon itself.  The default configuration file for the daemon can be found at \f(CR~/.config/opensd/config.ini\fP.  An unmodified copy of this file will be installed to \f(CR/usr/local/share/opensd/config/config.ini\fP or \f(CR/usr/share/opensd/config/config.ini\fP.
 .sp
-An Example config.ini can be found in this documentation if you want to see what a complete file might look like.
-.sp
-.ce
-\l'\n(.lu*25u/100u\(ap'
-.bp
+An example config.ini can be found in this documentation if you want to see what a complete file might look like.
 .SS "[Daemon] Section"
 .if n .sp
 .RS 4
@@ -359,20 +348,17 @@ AllowClients = true
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Profile Configuration Files (*.profile)"
+.SH "PROFILE CONFIGURATION FILES (*.PROFILE)"
 .sp
-These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the Daemon Configuration file (config.ini) to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.
+These files are used to configure the gamepad driver features and bindings.  A default profile is configured in the config.ini file to be loaded at startup, but you can also switch between them at any time while the daemon is running using any of several possible methods.
 .sp
 Gamepad profiles can be found in \f(CR~/.config/opensd/profiles/\fP.  The file extension is \f(CR*.profile\fP.
 .sp
-An Example Profile can be found in this documentation if you want to see what a complete file might look like.
+An example profile can be found in this documentation if you want to see what a complete file might look like.
 .sp
 A default profile (cleverly named \f(CRdefault.profile\fP) is provided which includes documentation in the comments on how to configure it.  It is not recommended to modify this file, instead you should make a copy of it, renaming it to \f(CRwhatever_you_want.profile\fP and edit that file instead.  If the default profile is deleted, it will be recreated when the daemon is run, so if you need a clean or \fIupdated\fP copy of the \f(CRdefault.profile\fP, simply delete it and restart the OpenSD daemon.
 .sp
 An unmodified copy of this file will be installed to \f(CR/usr/local/share/opensd/profiles/default.profile\fP or \f(CR/usr/share/opensd/profiles/default.profile\fP.
-.sp
-.ce
-\l'\n(.lu*25u/100u\(ap'
 .SS "[Profile] Section"
 .SS "Name"
 .sp
@@ -401,7 +387,6 @@ Name = My favourite gamepad profile
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Description"
 .sp
 A breif description of the profile for use in the GUI and CLI query.  Does not affect anything else, just intended as a hint for users.
@@ -429,7 +414,6 @@ Description = Just a profile I use for most applications.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "[Features] Section"
 .SS "ForceFeedback"
 .sp
@@ -474,7 +458,6 @@ This feature is not yet fully implemented
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "MotionDevice"
 .sp
 If this is set to \f(CRtrue\fP, an additional input device will be created which will report motion control data.  Motion axes need to have thier ranges and bindings defined.  If this is disabled, any \f(CRMotion\fP device bindings will be ignored.
@@ -547,7 +530,6 @@ If unspecified, this value defaults to \f(CRtrue\fP.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "LizardMode"
 .sp
 The Steam Controller and the Steam Deck both have a kind of fallback "BIOS" mode which emulates some keyboard and mouse input using the gamepad.  Valve refers to this as "Lizard Mode".  This mode cannot be redefined.  It sends events IN ADDITION to the gamepad events created by the OpenSD driver, so it should \fBalways\fP be disabled. If you would like mouse or keyboard emulation, they should be configured with \fBbindings\fP.  When OpenSD exits, Lizard Mode is re\-enabled.
@@ -579,7 +561,6 @@ If unspecified, this value defaults to \f(CRfalse\fP.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "StickFiltering"
 .sp
 The thumbsticks on the Steam Deck have a circular range but return square\-ish data, which makes it feel odd and complicated to apply radial deadzones to. Because of this, OpenSD vectorizes the stick position and returns "cleaner", round stick ranges, as well as being able to create clean deadzone rescaling.  If you disable this setting, axis ranges are still internally normalized and rescaled to the the uinput device, but no vectorization will be applied and any \fBdeadzones will be ignored\fP.
@@ -625,7 +606,6 @@ This must be enabled for thumbstick deadzones to work.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "TrackpadFiltering"
 .sp
 Similar to StickFiltering, but matches the square shape of the trackpad.  Filtering is only applied to absolute values.  This setting must be enabled to apply deadzones to the trackpad absolute axes.  Relative values (\f(CR*PadRelX\fP and \f(CR*PadRelY\fP) are unaffected, therefore deadzones do not affect mouse movement with the pads.
@@ -819,7 +799,6 @@ ABS_RZ          = 0         32767
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "[MotionAxes] Section"
 .sp
 Motion control absolute axes, as with the gamepad device, must have a defined range or they will not be created.  Any \f(CRMotion\fP \f(CRABS_*\fP events which are configured in the Motion Bindings \fBmust be defined here first, or they will be ignored\fP.
@@ -905,7 +884,6 @@ Motion controls are not yet fully implemented.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "[Bindings] Section"
 .sp
 This should be a list of all the physical gamepad buttons/sticks/pads/motion inputs you want to bind to a virtual input event or command.  Anything not specified here will be considered "unbound" and not emit any event.
@@ -993,13 +971,12 @@ Orthogonal button maps
 \f(CR{L|R}PadPressGrid3x3_{1|2|3|4|5|6|7|8|9}\fP
 .RE
 .sp
-A full list of available input codes can be seen in the Example Profile section, as well as in \f(CRdefault.profile\fP file.
+A full list of available input codes can be seen in the example profile section, as well as in \f(CRdefault.profile\fP file from your installation.
 .sp
 \fBA detailed explanation of each of these inputs can be found in the Input Types section.\fP
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Gamepad Bindings"
 .sp
 The \f(CRGamepad\fP device binding is used to generate input events for a joystick / gamepad\-type device.  This generally means buttons (\f(CRBTN_*\fP) and absolute axis (\f(CRABS_*\fP) events.  \f(CRKEY_*\fP events are allowed, but many programs will not read \f(CRKEY_*\fP events from a joystick device, instead try binding \fBkey\fP events to the \f(CRMouse\fP device.
@@ -1123,9 +1100,9 @@ LTrigg          = Gamepad   ABS_Z       +
 .fi
 .if n .RE
 .sp
-A full list of gamepad input names can be seen in the Example Profile section.
+A full list of gamepad input names can be seen in the example profile.
 .sp
-\fBA detailed explanation of inputs can be found in the Input Types section of this document.\fP
+\fBA detailed explanation of inputs can be found in the Input Types section of this documentation.\fP
 .if n .sp
 .RS 4
 .it 1 an-trap
@@ -1143,7 +1120,6 @@ A full list of gamepad input names can be seen in the Example Profile section.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Motion Bindings"
 .sp
 The \f(CRMotion\fP device binding is used to generate input events for a motion control\-type device.  While OpenSD does not strictly enforce this, the Linux kernel and uinput specify that motion control events should be emitted by separate devices.  Not doing so can create a lot of "noise", especially when configuring controls within another application.  As per this spec, the \f(CRMotion\fP device only supports \f(CREV_ABS\fP type events.  These events are prefixed with \f(CRABS_\fP  (example: \f(CRABS_Z\fP).  For a full list of event codes, see \c
@@ -1210,9 +1186,9 @@ RollMinus       = Motion    ABS_X       \-
 .fi
 .if n .RE
 .sp
-A full list of motion contol input names can be seen in the Example Profile section.
+A full list of motion contol input names can be seen in the example profile.
 .sp
-\fBA detailed explanation of motion input be found in the Input Types section of this document.\fP
+\fBA detailed explanation of motion input be found in the Input Types Section of this document.\fP
 .if n .sp
 .RS 4
 .it 1 an-trap
@@ -1244,7 +1220,6 @@ This feature is not yet fully implemented.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Mouse Bindings"
 .sp
 The \f(CRMouse\fP device binding is used to generate input events which will be interpreted as events coming from a pointer\-type device such as a physical mouse.  This binding type supports \fBbutton\fP / \fBkey\fP and \fBrelative axis\fP events.  The \f(CRMouse\fP device can also function a bit like a keyboard, so it\(cqs advised to bind any \fBkey\fP events to this device.
@@ -1331,11 +1306,10 @@ RPadRelY        = Mouse REL_Y
 \f(CRevent_code\fP: Any \f(CREV_REL\fP type event.  These events are prefixed with \f(CRREL_\fP.  (example: \f(CRREL_X\fP)
 .RE
 .sp
-\fBPlease see the Trackpads section of this document for a better explanation of how \f(CR{L|R}PadRel{X|Y}\fP relative inputs work.\fP
+\fBPlease see the Trackpad input type section of this documentation for a better explanation of how \f(CR{L|R}PadRel{X|Y}\fP relative inputs work.\fP
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Command Bindings"
 .sp
 The \f(CRCommand\fP binding allows you to execute external programs or scripts by forking them off as a child process.  These processes run concurrently, do not return any usable exit code, and will not interrupt the driver.
@@ -1407,7 +1381,6 @@ QuickAccess     = Command   true    0   rofi \-show run
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
-.bp
 .SS "Profile Bindings"
 .sp
 The \f(CRProfile\fP binding type allows you to switch to a different profile using just the gamepad input.  Profiles are loaded from the user profile directory.  There is a \fB2 second\fP delay after profile switching before the profile can be changed again, to prevent undesirable rapid cycling.  If a profile fails to load, the process will be aborted and the profile currently in use will remain so.
@@ -1455,16 +1428,12 @@ L5      = Profile   left_hand_mouse.profile
 .fi
 .if n .RE
 .sp
-\~
-.br
-\~
-.sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Input Types"
+.SH "INPUT TYPES"
 .sp
-As briefly described in the [Bindings] Section, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of \fBX\fP / \fBY\fP axes (example: \f(CRLStickUp\fP, \f(CRLStickLeft\fP), which, as a primitive type are absolute, but the thumbsticks \fIalso\fP have a \fBtouch sensor\fP at the top which can be read as a binary \fBbutton\fP primitive (\f(CRLStickTouch\fP) as well as a pressure level (\f(CRLStickForce\fP) which is read as a single \fBabsolute axis\fP like a \fBtrigger\fP would be.
+As briefly described in the Bindings section, the gamepad has multiple input components which can be categorized by their interface, but also by a primitive type. For example, the thumbsticks on the Steam Deck have a pair of \fBX\fP / \fBY\fP axes (example: \f(CRLStickUp\fP, \f(CRLStickLeft\fP), which, as a primitive type are absolute, but the thumbsticks \fIalso\fP have a \fBtouch sensor\fP at the top which can be read as a binary \fBbutton\fP primitive (\f(CRLStickTouch\fP) as well as a pressure level (\f(CRLStickForce\fP) which is read as a single \fBabsolute axis\fP like a \fBtrigger\fP would be.
 .sp
 The intent is for each input name to be as \fIsimple and intuitive as possible\fP, but that\(cqs always going to be pretty subjective.  This section intends to provide a painfully detailed explanation for every individual input that can have a \fBbinding\fP ; )
 .SS "Directional Pad"
@@ -1563,7 +1532,7 @@ Buttons bound to \f(CRABS_\fP events emit the axis limit in the given direction.
 .RE
 .RE
 .sp
-A common configuration as seen in the Example Profile might look like this:
+A common configuration, as seen in the example profile, might look like this:
 .sp
 .if n .RS 4
 .nf
@@ -1903,7 +1872,7 @@ The thumbsticks on the Steam Deck are associated with six different inputs in Op
 .sp
 Axis values from thumbsticks are normalized internally so they can be rescaled to the defined \fBABS\fP event ranges.  The hardware returns signed 16\-bit integer values for axis values in the HID reports.  The "pressure sensor" component has a very short numerical range, but is quite sensitive.
 .sp
-If StickFiltering is enabled the full axis is internally normalized as a unit vector and a \fBradial deadzone\fP may be applied.
+If Stick Filtering is enabled the full axis is internally normalized as a unit vector and a \fBradial deadzone\fP may be applied.
 .sp
 Naming convention
 .RS 4
@@ -2058,7 +2027,7 @@ Descriptions
 .sp
 Use
 .RS 4
-Directional inputs are treated like axis halves.  You typically want to map \f(CRUp\fP and \f(CRDown\fP onto the same \fBABS\fP event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the \fB[Bindings]\fP section of the Example Profile:
+Directional inputs are treated like axis halves.  You typically want to map \f(CRUp\fP and \f(CRDown\fP onto the same \fBABS\fP event code, but in opposite directions. Doing so will perfectly map the full range of motion to an event code.  An example of this, as demonstrated in the \fB[Bindings]\fP section of the example profile:
 .RE
 .sp
 .if n .RS 4
@@ -2156,7 +2125,7 @@ Axis values from triggers are normalized internally so they can be rescaled to t
 .sp
 Triggers also have a binary \fBbutton\fP component: \f(CRL2\fP and \f(CRR2\fP.  Information about these buttons can be found in the Buttons section.
 .sp
-Linear deadzones can be applied to triggers, if desired in the [Deadzones] Section.
+Linear deadzones can be applied to triggers, if desired in the Deadzones Section of a profile.
 .sp
 Naming convention
 .RS 4
@@ -2234,7 +2203,7 @@ At the core, trackpads are \fBabsolute axis\fP devices have with an \fBX\fP / \f
 .sp
 As with the Thumbsticks, directional axes are broken into halves such that each direction can emit different events if desired.  These halves can be mapped on to a whole \fBABS\fP event code, or use separately.
 .sp
-Trackpads support radial deadzones for \fBabsolute axis\fP inputs, and can be configured in the [Deadzones] Section.
+Trackpads support radial deadzones for \fBabsolute axis\fP inputs, and can be configured in the Deadzones Section of a profile.
 .sp
 \fBRelative\fP trackpad input, such as \f(CRLPadRelX\fP or \f(CRLPadRelY\fP, are not affected by deadzones and return data suitable for pointing devices like mice.  These return the \fBdifference\fP in positional movement calculated between HID frames.  Some filtering is always applied to this process to reduce jitter and a small amount of intertia is also applied.  The typical value range returned by these inputs is usually between \fB\-5\fP and \fB+5\fP.  Binding \f(CR\fBRelX\fP and \f(CR*RelY\fP inputs to anything other than \f(CRREL_\fP\fP event codes on the \f(CRMouse\fP device is probably not useful.
 .sp
@@ -3091,7 +3060,11 @@ Fig. 4
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Example config.ini"
+.SH "TROUBLESHOOTING"
+.sp
+TODO: This section
+<<<
+.SH "EXAMPLE CONFIG.INI"
 .sp
 .if n .RS 4
 .nf
@@ -3105,11 +3078,8 @@ AllowClients = true
 .fam
 .fi
 .if n .RE
-.sp
-.ce
-\l'\n(.lu*25u/100u\(ap'
 .bp
-.SS "Example Profile"
+.SH "EXAMPLE PROFILE"
 .sp
 .if n .RS 4
 .nf
@@ -3272,9 +3242,7 @@ YawMinus            = Motion    ABS_Z       \-
 .fam
 .fi
 .if n .RE
-.SS "Troubleshooting"
-.sp
-TODO:
+.bp
 .SH "AUTHOR"
 .sp
 seek
