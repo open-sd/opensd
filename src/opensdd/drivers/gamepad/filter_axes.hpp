@@ -17,55 +17,12 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __ERRORS_HPP__
-#define __ERRORS_HPP__
 
-#include <string>
-#include <errno.h>
+#ifndef __GAMEPAD__FILTER_AXES_HPP__
+#define __GAMEPAD__FILTER_AXES_HPP__
 
+void FilterStickCoords( double& rX, double& rY, double deadzone, double scale );
 
-namespace Err
-{
-    enum
-    {
-        // Success
-        OK = 0,
+void FilterPadCoords( double& rX, double& rY, double deadzone, double scale );
 
-        // Generic
-        UNKNOWN,
-        EMPTY,
-        UNSUPPORTED,
-        INVALID_PARAMETER,
-        INVALID_FORMAT,
-        OUT_OF_RANGE,
-        OUT_OF_MEMORY,
-        ENVIRONMENT_ERROR,
-        UNHANDLED_TYPE,
-
-        // Files
-        FILE_NOT_FOUND,
-        DIR_NOT_FOUND,
-
-        // TODO: Clean up
-        READ_FAILED,
-        WRITE_FAILED,
-        COPY_FAILED,
-        CANNOT_OPEN,
-        NO_PERMISSION,      
-        ALREADY_OPEN,
-        NOT_OPEN,
-        INIT_FAILED,
-        NOT_INITIALIZED,
-        NOT_FOUND,
-        NO_DEVICE,
-        DEVICE_LOST,
-        CANNOT_CREATE,
-        CANNOT_SET_PROP,
-        WRONG_SIZE,
-    };
-
-    std::string GetErrnoString( int e );
-}
-
-
-#endif // __ERRORS_HPP__
+#endif // __GAMEPAD__FILTER_AXES_HPP__

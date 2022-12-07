@@ -19,7 +19,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "driver.hpp"
 #include "compat.hpp"
+#include "filter_axes.hpp"
 #include "../../../common/log.hpp"
+#include "../../../common/string_funcs.hpp"
 #include "../../runner.hpp"
 // Linux
 #include <unistd.h>
@@ -29,56 +31,6 @@
 #include <cmath>
 #include <iostream>
 #include <chrono>
-
-
-void FilterStickCoords( double& rX, double& rY, double deadzone, double scale )
-{
-    double mag = sqrt( rX * rX + rY * rY );
-    double ang = atan2( rY, rX );
-
-    // Check if vector magnitude is inside deadzone
-    if (mag < deadzone)
-    {
-        // Clip low input inside deadzone
-        rX = 0;
-        rY = 0;
-    }
-    else
-    {
-        // Rescale stick outside deadzone
-        mag = (mag - deadzone) * scale;
-        // Clip magnitude to unit vector
-        mag = (mag > 1.0) ? 1.0 : mag;
-        // Translate polar coordinates back to cartesian
-        rX = mag * cos(ang);
-        rY = mag * sin(ang);
-    }
-}
-
-
-
-void FilterPadCoords( double& rX, double& rY, double deadzone, double scale )
-{
-    double mag = sqrt( rX * rX + rY * rY );
-    double ang = atan2( rY, rX );
-
-    // Check if vector magnitude is inside deadzone
-    if (mag < deadzone)
-    {
-        // Clip low input inside deadzone
-        rX = 0;
-        rY = 0;
-    }
-    else
-    {
-        // Rescale stick outside deadzone
-        mag = (mag - deadzone) * scale;
-        // Translate polar coordinates back to cartesian
-        rX = mag * cos(ang);
-        rY = mag * sin(ang);
-    }
-}
-
 
 
 int Drivers::Gamepad::Driver::OpenHid()
@@ -117,7 +69,11 @@ int Drivers::Gamepad::Driver::OpenHid()
 
 int Drivers::Gamepad::Driver::ReadRegister( uint8_t reg, uint16_t& rValue )
 {
-    // TODO
+    // TODO:  Read gamepad registers
+    
+    // Suppress compiler warnings in the meantime
+    ++reg;
+    ++rValue;
     
     return Err::OK;
 }
@@ -136,7 +92,7 @@ int Drivers::Gamepad::Driver::WriteRegister( uint8_t reg, uint16_t value )
         return Err::NOT_OPEN;
     }
 
-    using namespace v1;
+    using namespace v100;
     
     
     // Set the first byte of the report to the write register command
@@ -166,28 +122,51 @@ int Drivers::Gamepad::Driver::WriteRegister( uint8_t reg, uint16_t value )
 
 int Drivers::Gamepad::Driver::HandleInputReport( const std::vector<uint8_t>& rReport )
 {
-    using namespace v1;
-
-    if (rReport.at(0) != ReportType::INPUT)
-    {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report ID." );
-        return Err::INVALID_FORMAT;
-    }
-    
+    // All report descriptors are 64 bytes, so this is just to be safe
     if (rReport.size() != 64)
     {
-        gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report size was recieved from gamepad device." );
+        gLog.Write( Log::DEBUG, FUNC_NAME, "Invalid input report size was received from gamepad device." );
         return Err::WRONG_SIZE;
     }
-
-    // Cast input report vector into packed report struct
-    PackedInputReport*      pir = (PackedInputReport*)rReport.data();
-    // Update internal gamepad state
-    UpdateState( pir );
-    // Translate gamepad state into mapped events
-    Translate();
-    // Write out event buffer to uinput
-    Flush();
+    
+    // Combine major + minor version numbers (I think)
+    uint16_t report_ver = ((uint16_t)rReport.at(0) << 8) + (uint16_t)rReport.at(1);
+    
+    // Handle report versions
+    switch (report_ver)
+    {
+        case 0x0100:  // Version 1.0 (I think)
+            // Handle different report types 
+            switch (rReport.at(2))
+            {
+                // Input data report (I think)
+                case 0x09: 
+                {
+                    // Cast input report vector into packed report struct
+                    v100::PackedInputDataReport* pir = (v100::PackedInputDataReport*)rReport.data();
+                    // Update internal gamepad state
+                    UpdateState( pir );
+                    // Translate gamepad state into mapped events
+                    Translate();
+                    // Write out event buffer to uinput
+                    Flush();
+                }
+                break;
+                
+                // Unhandled report types
+                default:
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled report type was received from the gamepad device: " + Str::Uint16ToHex(rReport.at(2)) );
+                    return Err::UNHANDLED_TYPE;
+                break;
+            }
+        break;
+        
+        // Unhandled report versions
+        default:
+            gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled report version was received from the gamepad device: " + Str::Uint16ToHex(report_ver) );
+            return Err::UNSUPPORTED;
+        break;
+    }
     
     return Err::OK;
 }
@@ -206,7 +185,7 @@ int Drivers::Gamepad::Driver::ClearRegister( uint8_t reg )
         return Err::NOT_OPEN;
     }
     
-    using namespace v1;
+    using namespace v100;
     
     
     // Set the first byte of the report to the write register command
@@ -257,9 +236,9 @@ void Drivers::Gamepad::Driver::DestroyUinputDevs()
 
 
 
-void Drivers::Gamepad::Driver::UpdateState( v1::PackedInputReport* pIr )
+void Drivers::Gamepad::Driver::UpdateState( v100::PackedInputDataReport* pIr )
 {
-    using namespace     v1;
+    using namespace     v100;
     DeviceState         old = mState;
     
     // Buttons
@@ -613,14 +592,15 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
                         device->UpdateRel( bind.ev_code, (bind.dir) ? state : state * -1.0 );  // TODO Some kind of axis scaling / multiplier
                 break;
                 
+                // Unsupported input event type
                 default:
-                    // Unsupported input event type
                     gLog.Write( Log::DEBUG, FUNC_NAME, "An unsupported input event type occurred." );
                     return;
                 break;
             }
         break;
         
+        // Relative bindings
         case BindMode::RELATIVE:
             switch (bind.ev_type)
             {
@@ -638,8 +618,8 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
             }
         break;
         
+        // Unhandled state trigger mode
         default:
-            // Unhandled state trigger mode
             gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled state trigger occurred." );
             return;
         break;
@@ -650,10 +630,9 @@ void Drivers::Gamepad::Driver::TransEvent( Binding& bind, double state, BindMode
 
 void Drivers::Gamepad::Driver::Translate()
 {
-    //return;
-
     // Map normalized event values using the pregenerated map and write them to
     // our uinput event buffer
+    
     // Dpad
     TransEvent( mMap.dpad.up,               mState.dpad.up,                 BindMode::BUTTON );
     TransEvent( mMap.dpad.down,             mState.dpad.down,               BindMode::BUTTON );
@@ -900,7 +879,7 @@ int Drivers::Gamepad::Driver::Poll()
     static std::vector<uint8_t>     buff;
     int                             result;
     
-    using namespace v1;
+    using namespace v100;
     
     // Prevent other public functions from being called while handling device input
     std::lock_guard<std::mutex>     lock( mPollMutex );
@@ -934,36 +913,28 @@ int Drivers::Gamepad::Driver::Poll()
     }
     
     if (buff.size())
-    {
-        switch (buff.at(0))
-        {
-            case ReportId::INPUT:
-                HandleInputReport( buff );
-            break;
-            
-            default:
-                // Unhandled report types
-                gLog.Write( Log::DEBUG, FUNC_NAME, "An unhandled report type was recieved from gamepad device." );
-            break;
-        }
-    }
+        HandleInputReport( buff );
     else
         gLog.Write( Log::VERB, FUNC_NAME, "Received zero-length report from gamepad device." );
     
-    // Handle forcefeedback events
+    // Handle incoming force-feedback events
     if (mpGamepad->IsFFEnabled())
     {
         int             result;
         input_event     ev;
-        
+
+        // Read event from uinput
         result = mpGamepad->Read( ev );
         if (result == Err::OK)
         {
+            // Handle different event types accordingly
             switch (ev.type)
             {
+                // Force-feedback event
                 case EV_FF:
                     switch (ev.code)
                     {
+                        // Set gain
                         case FF_GAIN:
                             gLog.Write( Log::VERB, ">>> FF GAIN: " + std::to_string(ev.value) );
                         break;
@@ -975,9 +946,11 @@ int Drivers::Gamepad::Driver::Poll()
                     }
                 break;
                 
+                // Uinput upload events
                 case EV_UINPUT:
                     switch (ev.code)
                     {
+                        // Upload force-feedback program
                         case UI_FF_UPLOAD:
                         {
                             uinput_ff_upload    data;
@@ -988,6 +961,7 @@ int Drivers::Gamepad::Driver::Poll()
                         }
                         break;
                         
+                        // Erase force-feedback program
                         case UI_FF_ERASE:
                         {
                             uinput_ff_erase     data;
@@ -1032,11 +1006,11 @@ void Drivers::Gamepad::Driver::ThreadedLizardHandler()
     // CLEAR_MAPPINGS report.  If there's a better way to do this, I'd love to
     // know about it.  Looking at you, Valve.
         
-    using namespace v1;
+    using namespace v100;
     
     // Initialize report
     buff.resize( 64, 0 );
-    buff.at(0) = ReportId::CLEAR_MAPPINGS;
+    buff.at(0) = ReportType::CLEAR_MAPPINGS;
 
     // Loop thread while driver is running
     while (mRunning)
@@ -1092,7 +1066,7 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
     std::vector<uint8_t>    buff;
 
     
-    using namespace v1;
+    using namespace v100;
         
     if (!mHid.IsOpen())
     {
@@ -1102,15 +1076,15 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
     
     // Pause main driver thread to set mode
     std::lock_guard<std::mutex>     lock( mPollMutex );
-    // Wait 50ms for drivers to hit the mutex just to be safe
-    usleep( 50000 );
+    // Wait 10ms for drivers to hit the mutex just to be safe
+    usleep( 10000 );
     
     // Initialize report
     buff.resize( 64, 0 );
     
     if (!enabled)
     {
-        buff.at(0) = ReportId::CLEAR_MAPPINGS;                      // Disable keyboard emulation (for a few seconds)
+        buff.at(0) = ReportType::CLEAR_MAPPINGS;                      // Disable keyboard emulation (for a few seconds)
         result = mHid.Write( buff );
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to disable keyboard emulation." );
@@ -1128,12 +1102,12 @@ int Drivers::Gamepad::Driver::SetLizardMode( bool enabled )
     }
     else
     {
-        buff.at(0) = ReportId::DEFAULT_MAPPINGS;                    // Enable keyboard emulation
+        buff.at(0) = ReportType::DEFAULT_MAPPINGS;                    // Enable keyboard emulation
         result = mHid.Write( buff );
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable keyboard emulation." );
         
-        buff.at(0) = ReportId::DEFAULT_MOUSE;                       // Enable mouse emulation
+        buff.at(0) = ReportType::DEFAULT_MOUSE;                       // Enable mouse emulation
         result = mHid.Write( buff );
         if (result != Err::OK)
             gLog.Write( Log::DEBUG, FUNC_NAME, "Failed to enable mouse emulation." );

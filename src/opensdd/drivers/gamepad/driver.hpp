@@ -78,7 +78,7 @@ namespace Drivers::Gamepad
         int                         CreateUinputDevs();
         void                        DestroyUinputDevs();
         // Update loop functions
-        void                        UpdateState( v1::PackedInputReport* pIr );
+        void                        UpdateState( v100::PackedInputDataReport* pIr );
         void                        TransEvent( Binding& bind, double state, BindMode mode );
         void                        Translate();
         void                        Flush();
