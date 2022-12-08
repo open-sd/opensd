@@ -560,7 +560,7 @@ namespace EvName
         EVIL(KEY_FASTREVERSE)
         EVIL(KEY_SLOWREVERSE)
         EVIL(KEY_DATA)
-#define // HDMI CEC
+#endif // HDMI CEC
 
 // 4.12
 #ifdef KEY_ONSCREEN_KEYBOARD
