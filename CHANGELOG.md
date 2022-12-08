@@ -1,5 +1,14 @@
 # OpenSD changelog
 
+## [v0.45]  2022/12/07
+### Fixed
+  - Fixed issue building on older kernels where input_event_names.hpp references codes that are not yet defined.
+  - Fixed a build issue where, in some environments, pthread was not getting linked.
+
+### Changed
+  - Updated kernel requirement to 4.9 to reflect new input event code checks
+
+
 ## [v0.44]  2022/12/06
 ### Added 
   - Created new online documentation at https://open-sd.gitlab.io/opensd-docs
