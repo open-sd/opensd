@@ -19,7 +19,7 @@
 ####################################################################################################
 cmake_minimum_required( VERSION 3.10 )
 
-project( OpenSD VERSION 0.44 )
+project( OpenSD VERSION 0.45 )
 
 # Compiler settings
 set( CMAKE_CXX_STANDARD 20 )
@@ -29,9 +29,13 @@ set( CMAKE_CXX_COMPILER g++ )
 set( CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall" )
 set( CMAKE_CXX_FLAGS_RELEASE_INIT "-Wall -O2" )
 set( CMAKE_BUILD_TYPE Release )
+set( THREADS_PREFER_PTHREAD_FLAG ON )
 
 # Path for extra cmake modules
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/" )
+
+# Check dependencies
+find_package(Threads REQUIRED)
 
 # Executable names
 set( OPENSD_DAEMON_BIN "opensdd" )
@@ -107,7 +111,7 @@ option( OPT_INSTALL_DOCUMENTATION "Install user documentation" TRUE )
 if( BUILD_DAEMON )
     add_executable( "${OPENSD_DAEMON_BIN}" "${OPENSD_DAEMON_SRC}" )
     target_compile_options( "${OPENSD_DAEMON_BIN}" PUBLIC -Wall -Wextra )
-    target_link_libraries( "${OPENSD_DAEMON_BIN}" )
+    target_link_libraries( "${OPENSD_DAEMON_BIN}" PRIVATE Threads::Threads )
     install( TARGETS "${OPENSD_DAEMON_BIN}" CONFIGURATIONS Release DESTINATION bin )
 endif( BUILD_DAEMON )
 
