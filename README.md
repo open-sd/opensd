@@ -47,7 +47,7 @@ The OpenSD main branch is currently in a usable state for basic driver functiona
 
 ## Requirements
 The code itself has very few dependencies other than the kernel.
-- Kernel 4.0+
+- Kernel 4.9+
 - GCC 8.0+ (for c++20 designated initializers)
 - cmake 3.10+
 - systemd (optional, for user service file)
