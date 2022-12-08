@@ -244,8 +244,16 @@ namespace EvName
         EVIL(KEY_PAUSECD)
         EVIL(KEY_PROG3)
         EVIL(KEY_PROG4)
+        
+// 5.17
+#ifdef  KEY_ALL_APPLICATIONS
         EVIL(KEY_ALL_APPLICATIONS)
+#endif
+
+#ifdef  KEY_DASHBOARD
         EVIL(KEY_DASHBOARD)
+#endif
+
         EVIL(KEY_SUSPEND)
         EVIL(KEY_CLOSE)
         EVIL(KEY_PLAY)
@@ -313,11 +321,21 @@ namespace EvName
         EVIL(KEY_TITLE)
         EVIL(KEY_SUBTITLE)
         EVIL(KEY_ANGLE)
+
+// 5.1
+#ifdef KEY_FULL_SCREEN
         EVIL(KEY_FULL_SCREEN)
+#endif
+
         EVIL(KEY_ZOOM)
         EVIL(KEY_MODE)
         EVIL(KEY_KEYBOARD)
+
+// 5.1
+#ifdef KEY_ASPECT_RATIO
         EVIL(KEY_ASPECT_RATIO)
+#endif
+
         EVIL(KEY_SCREEN)
         EVIL(KEY_PC)
         EVIL(KEY_TV)
@@ -389,9 +407,13 @@ namespace EvName
         EVIL(KEY_10CHANNELSUP)
         EVIL(KEY_10CHANNELSDOWN)
         EVIL(KEY_IMAGES)
+
+// 5.10
+#ifdef KEY_NOTIFICATION_CENTER
         EVIL(KEY_NOTIFICATION_CENTER)
         EVIL(KEY_PICKUP_PHONE)
         EVIL(KEY_HANGUP_PHONE)
+#endif
 
         EVIL(KEY_DEL_EOL)
         EVIL(KEY_DEL_EOS)
@@ -419,7 +441,11 @@ namespace EvName
         EVIL(KEY_FN_F)
         EVIL(KEY_FN_S)
         EVIL(KEY_FN_B)
+
+// 5.10
+#ifdef KEY_FN_RIGHT_SHIFT
         EVIL(KEY_FN_RIGHT_SHIFT)
+#endif
 
         EVIL(KEY_BRL_DOT1)
         EVIL(KEY_BRL_DOT2)
@@ -469,7 +495,11 @@ namespace EvName
         EVIL(KEY_LIGHTS_TOGGLE)
 
         EVIL(KEY_ALS_TOGGLE)
+
+// 4.16
+#ifdef KEY_ROTATE_LOCK_TOGGLE
         EVIL(KEY_ROTATE_LOCK_TOGGLE)
+#endif
 
         EVIL(KEY_BUTTONCONFIG)
         EVIL(KEY_TASKMANAGER)
@@ -478,10 +508,26 @@ namespace EvName
         EVIL(KEY_APPSELECT)
         EVIL(KEY_SCREENSAVER)
         EVIL(KEY_VOICECOMMAND)
+
+// 4.13
+#ifdef KEY_ASSISTANT
         EVIL(KEY_ASSISTANT)
+#endif
+
+// 5.2
+#ifdef KEY_KBD_LAYOUT_NEXT
         EVIL(KEY_KBD_LAYOUT_NEXT)
+#endif
+
+// 5.13
+#ifdef KEY_EMOJI_PICKER
         EVIL(KEY_EMOJI_PICKER)
+#endif
+
+// 5.17
+#ifdef KEY_DICTATE
         EVIL(KEY_DICTATE)
+#endif
 
         EVIL(KEY_BRIGHTNESS_MIN)
         EVIL(KEY_BRIGHTNESS_MAX)
@@ -493,11 +539,13 @@ namespace EvName
         EVIL(KEY_KBDINPUTASSIST_ACCEPT)
         EVIL(KEY_KBDINPUTASSIST_CANCEL)
 
+// 4.7
+// HDMI CEC
+#ifdef KEY_RIGHT_UP
         EVIL(KEY_RIGHT_UP)
         EVIL(KEY_RIGHT_DOWN)
         EVIL(KEY_LEFT_UP)
         EVIL(KEY_LEFT_DOWN)
-
         EVIL(KEY_ROOT_MENU)
         EVIL(KEY_MEDIA_TOP_MENU)
         EVIL(KEY_NUMERIC_11)
@@ -512,9 +560,26 @@ namespace EvName
         EVIL(KEY_FASTREVERSE)
         EVIL(KEY_SLOWREVERSE)
         EVIL(KEY_DATA)
+#endif // HDMI CEC
+
+// 4.12
+#ifdef KEY_ONSCREEN_KEYBOARD
         EVIL(KEY_ONSCREEN_KEYBOARD)
+#endif
+
+// 5.5
+#ifdef KEY_PRIVACY_SCREEN_TOGGLE
         EVIL(KEY_PRIVACY_SCREEN_TOGGLE)
+#endif
+
+// 5.6
+#ifdef KEY_SELECTIVE_SCREENSHOT
         EVIL(KEY_SELECTIVE_SCREENSHOT)
+#endif
+
+// 5.18
+// Marine navigation keycodes
+#ifdef KEY_NEXT_ELEMENT
         EVIL(KEY_NEXT_ELEMENT)
         EVIL(KEY_PREVIOUS_ELEMENT)
         EVIL(KEY_AUTOPILOT_ENGAGE_TOGGLE)
@@ -530,7 +595,11 @@ namespace EvName
         EVIL(KEY_SIDEVU_SONAR)
         EVIL(KEY_NAV_INFO)
         EVIL(KEY_BRIGHTNESS_MENU)
+#endif // Marine navigation keycodes
 
+// 5.5
+// Macro keyboards
+#ifdef KEY_MACRO1
         EVIL(KEY_MACRO1)
         EVIL(KEY_MACRO2)
         EVIL(KEY_MACRO3)
@@ -568,12 +637,17 @@ namespace EvName
         EVIL(KEY_MACRO_PRESET1)
         EVIL(KEY_MACRO_PRESET2)
         EVIL(KEY_MACRO_PRESET3)
+#endif  // Macro keyboards
 
+//5.5
+// LCD panel keyboards
+#ifdef KEY_KBD_LCD_MENU1
         EVIL(KEY_KBD_LCD_MENU1)
         EVIL(KEY_KBD_LCD_MENU2)
         EVIL(KEY_KBD_LCD_MENU3)
         EVIL(KEY_KBD_LCD_MENU4)
         EVIL(KEY_KBD_LCD_MENU5)
+#endif
 
         EVIL(BTN_MISC)
         EVIL(BTN_0)
@@ -648,7 +722,12 @@ namespace EvName
         EVIL(BTN_TOOL_MOUSE)
         EVIL(BTN_TOOL_LENS)
         EVIL(BTN_TOOL_QUINTTAP)
+
+// 4.15
+#ifdef BTN_STYLUS3
         EVIL(BTN_STYLUS3)
+#endif
+
         EVIL(BTN_TOUCH)
         EVIL(BTN_STYLUS)
         EVIL(BTN_STYLUS2)
@@ -732,6 +811,12 @@ namespace EvName
         EVIL(ABS_TOOL_WIDTH)
 
         EVIL(ABS_VOLUME)
+
+// 6.1
+#ifdef ABS_PROFILE
+        EVIL(ABS_PROFILE)
+#endif
+
         EVIL(ABS_MISC)
 
         EVIL(ABS_MT_SLOT)
@@ -764,8 +849,13 @@ namespace EvName
         EVIL(REL_DIAL)
         EVIL(REL_WHEEL)
         EVIL(REL_MISC)
+
+// 5.0
+#ifdef REL_WHEEL_HI_RES
         EVIL(REL_WHEEL_HI_RES)
         EVIL(REL_HWHEEL_HI_RES)
+#endif
+
     };
     
     // Helper functions
