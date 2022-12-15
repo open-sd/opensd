@@ -1,5 +1,10 @@
 # OpenSD changelog
 
+## [v0.46]  2022/12/15
+### Added
+  - Added uinput FF event handling for WiP FF support
+
+ 
 ## [v0.45]  2022/12/07
 ### Fixed
   - Fixed issue building on older kernels where input_event_names.hpp references codes that are not yet defined.
