@@ -936,12 +936,12 @@ int Drivers::Gamepad::Driver::Poll()
                     {
                         // Set gain
                         case FF_GAIN:
-                            gLog.Write( Log::VERB, ">>> FF GAIN: " + std::to_string(ev.value) );
+                            // TODO: Set gain
+                            //gLog.Write( Log::VERB, "FF GAIN: " + std::to_string(ev.value) );
                         break;
                         
                         default:
-                            gLog.Write( Log::VERB, ">>> Unknown FF effect:  code=" + std::to_string(ev.code) + "   val=" + 
-                                        std::to_string(ev.value) );
+                            gLog.Write( Log::VERB, "Unknown FF effect:  code=" + std::to_string(ev.code) + "   val=" + std::to_string(ev.value) );
                         break;
                     }
                 break;
@@ -953,27 +953,29 @@ int Drivers::Gamepad::Driver::Poll()
                         // Upload force-feedback program
                         case UI_FF_UPLOAD:
                         {
-                            uinput_ff_upload    data;
+                            // TODO: FF uploads
+                            //uinput_ff_upload    data;
                             
-                            gLog.Write( Log::VERB, ">>> UI_FF_UPLOAD" );
+                            //gLog.Write( Log::VERB, "UI_FF_UPLOAD" );
                             
-                            mpGamepad->GetFFEffect( ev.value, data );
+                            //mpGamepad->GetFFEffect( ev.value, data );
                         }
                         break;
                         
                         // Erase force-feedback program
                         case UI_FF_ERASE:
                         {
-                            uinput_ff_erase     data;
+                            // TODO: FF Erase
+                            //uinput_ff_erase     data;
                             
-                            gLog.Write( Log::VERB, ">>> UI_FF_ERASE" );
+                            //gLog.Write( Log::VERB, ">>> UI_FF_ERASE" );
                             
-                            mpGamepad->EraseFFEffect( ev.value, data );
+                            //mpGamepad->EraseFFEffect( ev.value, data );
                         }   
                         break;
                         
                         default:
-                            gLog.Write( Log::VERB, ">>> Unhandled EV_UINPUT code." );
+                            //gLog.Write( Log::VERB, "Unhandled EV_UINPUT code." );
                         break;
                     }
                 break;
@@ -983,7 +985,7 @@ int Drivers::Gamepad::Driver::Poll()
                 break;
                 
                 default:
-                    gLog.Write( Log::VERB, ">>> Unhandled uinput type." );
+                    gLog.Write( Log::VERB, "Unhandled uinput type." );
                 break;
             }
         }
