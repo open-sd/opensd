@@ -2,6 +2,7 @@
 
 ## [v0.46]  2022/12/15
 ### Added
+  - Improved input report handling
   - Added uinput FF event handling for WiP FF support
 
  
