@@ -24,7 +24,7 @@
 #include "../../hidraw.hpp"
 #include "../../uinput.hpp"
 #include "hid_reports.hpp"
-#include "hid_state.hpp"
+#include "device_state.hpp"
 #include "profile.hpp"
 
 
@@ -67,29 +67,33 @@ namespace Drivers::Gamepad
         uint64_t                    mProfSwitchDelay;       // In milliseconds
         uint64_t                    mProfSwitchTimestamp;   // In milliseconds
         
-        // Hid functions
+        // HID functions
         int                         OpenHid();
-        int                         SetHidRegister( uint8_t reg, uint16_t value );
-        int                         ClearMapping();
+        // SDC reports
+        int                         ReadRegister( uint8_t reg, uint16_t& rValue );
+        int                         WriteRegister( uint8_t reg, uint16_t value );
+        int                         ClearRegister( uint8_t reg );
+        int                         HandleInputReport( const std::vector<uint8_t>& rReport );
         // Uinput
         int                         CreateUinputDevs();
         void                        DestroyUinputDevs();
         // Update loop functions
-        void                        UpdateState( v1::PackedInputReport* pIr );
+        void                        UpdateState( v100::PackedInputDataReport* pIr );
         void                        TransEvent( Binding& bind, double state, BindMode mode );
         void                        Translate();
         void                        Flush();
-        
-    protected:
         int                         Poll();
+        // Threaded handlers
         void                        ThreadedLizardHandler();
         
     public:
+        // Configuration functions
         int                         SetProfile( const Drivers::Gamepad::Profile& rProf );
         int                         SetLizardMode( bool enabled );
         void                        SetDeadzone( AxisEnum axis, double dz );
         void                        SetStickFiltering( bool enabled );
         void                        SetPadFiltering( bool enabled );
+        // Virtual function to start driver thread
         void                        Run();
 
         Driver();

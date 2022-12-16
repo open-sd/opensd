@@ -17,8 +17,8 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __GAMEPAD__HID_STATE_HPP__
-#define __GAMEPAD__HID_STATE_HPP__
+#ifndef __GAMEPAD__DEVICE_STATE_HPP__
+#define __GAMEPAD__DEVICE_STATE_HPP__
 
 
 namespace Drivers::Gamepad
@@ -157,4 +157,4 @@ namespace Drivers::Gamepad
 } // namespace Drivers::Gamepad
 
 
-#endif // __GAMEPAD__HID_STATE_HPP__
+#endif // __GAMEPAD__DEVICE_STATE_HPP__

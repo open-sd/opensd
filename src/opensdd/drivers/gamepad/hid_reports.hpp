@@ -17,20 +17,20 @@
 //  You should have received a copy of the GNU General Public License along with this program. 
 //  If not, see <https://www.gnu.org/licenses/>.             
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef __GAMEPAD__REPORTS_HPP__
-#define __GAMEPAD__REPORTS_HPP__
+#ifndef __GAMEPAD__HID_REPORTS_HPP__
+#define __GAMEPAD__HID_REPORTS_HPP__
 
 #include <cstdint>
 
 
 namespace Drivers::Gamepad
 {
-    // Version 1 namespace
+    // Version 1.00 namespace
     // We use versioning here for future-proofing against possible firmware 
     // updates or hardware revisions that might affect HID reports.  Hopefully
     // This might allow us to keep the driver code the same, while only swapping
     // out some structures and stuff.
-    namespace v1
+    namespace v100
     {
         // Input report axis ranges
         const double    STICK_X_MIN         = -32767.0;
@@ -61,13 +61,11 @@ namespace Drivers::Gamepad
         // has to be disabled again with a CLEAR_MAPPINGS report.
         const double    LIZARD_SLEEP_SEC    = 2.0;
         
-        namespace ReportId
+        namespace ReportType
         {
             enum
-            {   // Input report header
-                INPUT                       = 0x01,
-                
-                // Feature report types
+            {   
+                INPUT_DATA                  = 0x09,
                 SET_MAPPINGS                = 0x80,
                 CLEAR_MAPPINGS              = 0x81,
                 GET_MAPPINGS                = 0x82,
@@ -85,7 +83,8 @@ namespace Drivers::Gamepad
                 DEFAULT_MOUSE               = 0x8e,
                 FORCE_FEEDBACK              = 0x8f,
                 REQUEST_COMM_STATUS         = 0xb4,
-                GET_SERIAL                  = 0xae
+                GET_SERIAL                  = 0xae,
+                HAPTIC_PULSE                = 0xea
             };
         }
     
@@ -100,28 +99,17 @@ namespace Drivers::Gamepad
             };
         }
 
-        // Length of HID reports in bytes / octets
-        namespace ReportSize
-        {
-            enum
-            {
-                INPUT           = 64,
-                HAPTIC          = 7,
-                CONFIG          = 21
-            };
-        }
-
-        // Bitwise POD structure that directly maps gamepad input reports.
-        struct __attribute__((__packed__)) PackedInputReport
+        // This structure maps the input
+        struct __attribute__((__packed__)) PackedInputDataReport
         {
             //              Field           Bits    Byte #      Description
             //-----------------------------------------------------------------------------------------------------------------
-            uint8_t         report_id       : 8;    // 0        HID input report ID
-            uint8_t         _unk0           : 8;    // 1        Always returns 0. Possibly USAGE PAGE?
-            uint8_t         _unk1           : 8;    // 2        Always returns 9. Possibly status like SC?  Could also be USAGE?
-            uint8_t         report_size     : 8;    // 3        Appears to be the length of report in bytes.  Always returns 64.
+            uint8_t         major_ver       : 8;    // 0        Major version?  Always 0x01
+            uint8_t         minor_ver       : 8;    // 1        Minor version?  Always 0x00
+            uint8_t         report_type     : 8;    // 2        Report type?    Always 0x09
+            uint8_t         report_size     : 8;    // 3        Actual data length of report in bytes.  Always 64 for input reports.
             // byte 4-7
-            uint32_t        frame           : 32;   // 4        Looks like a linear counter for input frames
+            uint32_t        frame           : 32;   // 4        Input frame counter?
             // byte 8
             bool            r2              : 1;    // 8.0      Binary sensor for analogue triggers
             bool            l2              : 1;    // 8.1    
@@ -237,4 +225,4 @@ namespace Drivers::Gamepad
 } // namespace Driver::Gamepad
 
 
-#endif // __GAMEPAD__REPORTS_HPP__
+#endif // __GAMEPAD__HID_REPORTS_HPP__
