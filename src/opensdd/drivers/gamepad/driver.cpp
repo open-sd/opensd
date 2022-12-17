@@ -781,13 +781,10 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     DestroyUinputDevs();
     
     // Create Gamepad device
-    if (!rProf.dev.gamepad.name_override.empty())
-        cfg.deviceinfo.name = rProf.dev.gamepad.name_override;
-    else
-        cfg.deviceinfo.name     = "OpenSD Gamepad Device";
-    cfg.deviceinfo.vid          = 0xDEAD;
-    cfg.deviceinfo.pid          = 0xBEEF;
-    cfg.deviceinfo.ver          = 0x0001;
+    cfg.deviceinfo.name         = rProf.dev.gamepad.name;
+    cfg.deviceinfo.vid          = rProf.dev.gamepad.vid;
+    cfg.deviceinfo.pid          = rProf.dev.gamepad.pid;
+    cfg.deviceinfo.ver          = rProf.dev.gamepad.ver;
     cfg.features.enable_keys    = true;
     cfg.features.enable_abs     = true;
     cfg.features.enable_rel     = true;
@@ -805,13 +802,10 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     // Create motion device
     if (rProf.features.motion)
     {
-        if (!rProf.dev.motion.name_override.empty())
-            cfg.deviceinfo.name     = rProf.dev.motion.name_override;
-        else
-            cfg.deviceinfo.name     = "OpenSD Motion Control Device";
-        cfg.deviceinfo.vid          = 0xDEAD;
-        cfg.deviceinfo.pid          = 0xBEEF;
-        cfg.deviceinfo.ver          = 0x0001;
+        cfg.deviceinfo.name         = rProf.dev.motion.name;
+        cfg.deviceinfo.vid          = rProf.dev.motion.vid;
+        cfg.deviceinfo.pid          = rProf.dev.motion.pid;
+        cfg.deviceinfo.ver          = rProf.dev.motion.ver;
         cfg.features.enable_keys    = false;
         cfg.features.enable_abs     = true;
         cfg.features.enable_rel     = false;
@@ -830,13 +824,10 @@ int Drivers::Gamepad::Driver::SetProfile( const Drivers::Gamepad::Profile& rProf
     // Create mouse device
     if (rProf.features.mouse)
     {
-        if (!rProf.dev.mouse.name_override.empty())
-            cfg.deviceinfo.name     = rProf.dev.mouse.name_override;
-        else
-            cfg.deviceinfo.name     = "OpenSD Trackpad/Mouse Device";
-        cfg.deviceinfo.vid          = 0xDEAD;
-        cfg.deviceinfo.pid          = 0xBEEF;
-        cfg.deviceinfo.ver          = 0x0001;
+        cfg.deviceinfo.name         = rProf.dev.mouse.name;
+        cfg.deviceinfo.vid          = rProf.dev.mouse.vid;
+        cfg.deviceinfo.pid          = rProf.dev.mouse.pid;
+        cfg.deviceinfo.ver          = rProf.dev.mouse.ver;
         cfg.features.enable_keys    = true;
         cfg.features.enable_abs     = false;
         cfg.features.enable_rel     = true;

@@ -41,6 +41,7 @@ namespace Err
         OUT_OF_MEMORY,
         ENVIRONMENT_ERROR,
         UNHANDLED_TYPE,
+        UNTERMINATED,
 
         // Files
         FILE_NOT_FOUND,

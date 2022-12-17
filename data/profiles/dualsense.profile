@@ -1,4 +1,4 @@
-# OpenSD profile file: default
+# OpenSD profile file: dualsense
 #
 # Please see the online OpenSD users manual at https://open-sd.gitlab.io/opensd-docs
 # for detailed explanations of each setting in this file. Or use the offline 
@@ -14,12 +14,12 @@
 # The profile name as it will appear in the GUI and through the CLI query. 
 # Should be unique for each profile to avoid confusion.
 #   Value: Any unique name.  Should be enclosed in quotes to preserve spaces.
-Name            = "Default OpenSD Profile"
+Name            = "Sony Dualsense compatibility profile"
 
 # Description
 # The profile description as it will appear in the GUI and through the CLI query. 
 #   Value: A brief description.  Should be enclosed in quotes "" to preserve spaces.
-Description     = "A basic configuration that should work for most games and provide a few extras."
+Description     = "This profile mimics the appearance and behaviour of the hid_playstation driver."
 
 
 [Features]
@@ -96,6 +96,9 @@ TrackpadFiltering  = true
 #   Gamepad = 0xDEAD 0xBEEF 0x001 "OpenSD Gamepad Device"
 #   Motion = 0xDEAD 0xBEEF 0x001 "OpenSD Motion Control Device"
 #   Mouse = 0xDEAD 0xF00D 0x001 "OpenSD Mouse Device"
+Gamepad     = 0x054C 0x0CE6 0x8100 "Wireless Controller"
+Motion      = 0x054C 0x0CE6 0x8100 "Wireless Controller Motion Sensors"
+Mouse       = 0x054C 0x0CE6 0x8100 "Wireless Controller Touchpad"
 
 
 [Deadzones]
@@ -107,8 +110,8 @@ TrackpadFiltering  = true
 # If TrackpadFiltering is disabled, LPad and RPad deadzones will be ignored.
 #   Supported inputs:  LeftStick, RightStick, LeftPad, RightPad, LeftTrigg, RightTrigg
 #   Values: 0.000 to 0.900
-LStick      = 0.1
-RStick      = 0.1
+LStick      = 0
+RStick      = 0
 LPad        = 0
 RPad        = 0
 LTrigg      = 0
@@ -121,24 +124,24 @@ RTrigg      = 0
 # defined here first, or they will be ignored.
 ABS_HAT0X       = -1        1
 ABS_HAT0Y       = -1        1
-ABS_X           = -32767    32767
-ABS_Y           = -32767    32767
-ABS_RX          = -32767    32767
-ABS_RY          = -32767    32767
-ABS_Z           = 0         32767
-ABS_RZ          = 0         32767
+ABS_X           = -255      255
+ABS_Y           = -255      255
+ABS_RX          = -255      255
+ABS_RY          = -255      255
+ABS_Z           = 0         255
+ABS_RZ          = 0         255
 
 
 [MotionAxes]
 # Motion control absolute axes must have a defined range or they will not be created.
 # Any 'Motion' ABS_ events which are configured in the [Bindings] section must be
 # defined here first, or they will be ignored.
-ABS_X           = -32767    32767
-ABS_Y           = -32767    32767
-ABS_Z           = -32767    32767
-ABS_RX          = -32767    32767
-ABS_RY          = -32767    32767
-ABS_RZ          = -32767    32767
+ABS_X           = -32768    32768       16      8192
+ABS_Y           = -32768    32768       16      8192
+ABS_Z           = -32768    32768       16      8192
+ABS_RX          = -2097152  2097152     16      1024
+ABS_RY          = -2097152  2097152     16      1024
+ABS_RZ          = -2097152  2097152     16      1024
 
 
 [Bindings]
@@ -260,7 +263,7 @@ R5                  = None
 Menu                = Gamepad   BTN_START
 Options             = Gamepad   BTN_SELECT
 Steam               = Gamepad   BTN_MODE
-QuickAccess         = Mouse     BTN_RIGHT
+QuickAccess         = None
 # Triggers
 LTrigg              = Gamepad   ABS_Z       +
 RTrigg              = Gamepad   ABS_RZ      +
@@ -284,10 +287,10 @@ LPadDown            = None
 LPadLeft            = None
 LPadRight           = None
 LPadTouch           = None
-LPadRelX            = None
-LPadRelY            = None
-LPadTouch           = None
-LPadPress           = None
+LPadRelX            = Mouse     REL_X
+LPadRelY            = Mouse     REL_Y
+LPadTouch           = Mouse     BTN_TOUCH
+LPadPress           = Mouse     BTN_LEFT
 LPadForce           = None
 LPadPressQuadUp     = None
 LPadPressQuadDown   = None
@@ -318,7 +321,7 @@ RPadRight           = None
 RPadTouch           = None
 RPadRelX            = Mouse     REL_X
 RPadRelY            = Mouse     REL_Y
-RPadTouch           = None
+RPadTouch           = Mouse     BTN_TOUCH
 RPadPress           = Mouse     BTN_LEFT
 RPadForce           = None
 RPadPressQuadUp     = None

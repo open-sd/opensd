@@ -21,9 +21,114 @@
 #include "log.hpp"
 #include "string_funcs.hpp"
 // C++
-#include <sstream>
+//#include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <cctype>
+
+
+// Checks if a string contains whitespace characters
+bool HasWhitespace( const std::string& rString )
+{
+    for (auto c : rString)
+        if (std::isspace(c))
+            return true; // Found whitespace char, return true
+    
+    // No whitespace characters found
+    return false;
+}
+
+
+// Converts line from an ini file into a vector of strings, with respect to
+// comment lines and quoted sections
+int VectoriseLine( const std::string& rLineInput, std::vector<std::string>& rVecOutput )
+{
+    std::vector<std::string>    v;
+    std::string                 s;
+    bool                        q = false;
+    bool                        c = false;
+    
+    rVecOutput.clear();
+    
+    // Iterate through input line
+    for (auto i : rLineInput)
+    {
+        // Check if comment flag is set
+        if (c)
+        {
+            // Comment flag is set, add all chars to temp string
+            s += i;
+        }
+        else
+        {
+            // Check for quote characters
+            if (i == '"')
+            {
+                // Char is a quote, set flag and discard character
+                q = !q;
+            }
+            else  // Character is not a quote
+            {
+                // Check if inside a quoted block
+                if (!q)
+                {
+                    // Not in a quoted block
+                    
+                    // Check if character is a comment initiator
+                    if ((i == '#') || (i == ';'))
+                    {
+                        // Character is a comment initiator
+                        // Add comment initiator to string
+                        s += i;
+                        // Flag the rest of the line as just a comment
+                        c = true;
+                    }
+                    else // Character is not inside a quote or comment block
+                    {
+                        // Check if char is whitespace
+                        if (std::isspace(i))
+                        {
+                            // Char is unquoted whitespace
+                            
+                            // If temp string is not empty then add it to the vector
+                            // and clear string, otherwise ignore the whitespace
+                            if (!s.empty())
+                            {
+                                v.push_back(s);
+                                s.clear();
+                            }
+                        }
+                        else // Char is not whitespace
+                        {
+                            // Add non-whitespace characters to temp string
+                            s += i;
+                        }
+                    }
+                }
+                else // Character IS inside a quoted block
+                {
+                    // Add literal character to temp string
+                    s += i;
+                }
+            }
+        }
+    }
+    
+    
+    // Add last string to vector
+    if (!s.empty())
+        v.push_back(s);
+
+    rVecOutput = v;
+    
+    // Unclosed quote
+    if (q)
+        return Err::UNTERMINATED;
+        
+    // Return ok
+    return Err::OK;
+}
+
 
 
 int Ini::IniFile::LoadFile( std::filesystem::path filePath )
@@ -36,8 +141,10 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
     unsigned int            section_count = 0;
     unsigned int            key_count = 0;
     unsigned int            value_count = 0;
+    int                     result;
     
     mData.clear();
+
     if (!fs::exists(filePath))
     {
         gLog.Write( Log::ERROR, FUNC_NAME, "File '" + filePath.string() + "' not found." );
@@ -62,7 +169,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
     // Read file line-by-line
     while (std::getline( file, line ))
     {
-        std::stringstream           ss(line);   // copy line into stream
+        //std::stringstream           ss(line);   // copy line into stream
         std::vector<std::string>    t_vec;
         std::string                 t_str;
         bool                        ignore = false;
@@ -70,8 +177,19 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
         ++line_count;
    
         // parse line by whitespace into a vector
-        while (ss >> t_str)
-            t_vec.push_back(t_str);
+        result = VectoriseLine( line, t_vec );
+        if (result != Err::OK)
+            switch (result)
+            {
+                case Err::UNTERMINATED:
+                    gLog.Write( Log::WARN, "Line " + std::to_string(line_count) + " of " + filePath.string() + " has an unterminated quote." );
+                break;
+                
+                default:
+                    gLog.Write( Log::DEBUG, FUNC_NAME, "An Unhandled error occurred while parsing line " + std::to_string(line_count) + " of " + filePath.string() );
+                break;
+            }
+        
 
         // Check for blank line
         if (!t_vec.size())
@@ -134,7 +252,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                     // Check for comments
                     // Comments lines will being with # as the first non-whitespace character
                     // Check if line is a comment
-                    if (t_vec.front().at(0) == '#')
+                    if ((t_vec.front().at(0) == '#') || (t_vec.front().at(0) == ';'))
                     {
                         // Push whole line as the key name, but flag it as a comment
                         Key             t_key;
@@ -159,6 +277,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                             }
                             else
                             {
+                                // Check for blank key names
                                 if (t_vec.front().empty())
                                 {
                                     gLog.Write( Log::DEBUG, FUNC_NAME, "Error on line "  + std::to_string(line_count) + 
@@ -166,6 +285,7 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                                 }
                                 else
                                 {
+                                    // Check key name for invalid characters
                                     for (auto& c : t_vec.front())
                                     {
                                         if (!((std::isalnum(c)) || (c == '_')))
@@ -176,11 +296,13 @@ int Ini::IniFile::LoadFile( std::filesystem::path filePath )
                                         }
                                     }
                                     
+                                    // If keyname is valid, read values
                                     if (!ignore)
                                     {
                                         Key             t_key;
                                         t_key.name      = t_vec.front();
                                         t_key.comment   = false;
+                                        
                                         // Copy all the values to the temp key
                                         for (unsigned int i = 2; i < t_vec.size(); ++i)
                                         {
@@ -270,9 +392,9 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
             // Handle comments
             if (k.comment)
             {
-                // Make sure comments start with # if its not a blank line
+                // Make sure comments start with # or ; if its not a blank line
                 if (!k.name.empty())
-                    if (!k.name.starts_with('#'))
+                    if ((!k.name.starts_with('#')) || (!k.name.starts_with(';')))
                         k.name = "# " + k.name;
                 
                 file << k.name << std::endl;
@@ -284,15 +406,21 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
                     return Err::WRITE_FAILED;
                 }
             }
-            else
+            else // Not a comment
             {
                 // Ignore keys without values
                 if (k.values.size())
                 {
-                    // Handle keys
+                    // Create key string
                     std::string     str = k.name + " =";
                     for (auto v : k.values)
+                    {
+                        // If value contains any whitespace, put the value in quotes
+                        if (HasWhitespace(v))
+                            v = "\"" + v + "\"";
+                        
                         str += " " + v;
+                    }
                     
                     file << str << std::endl;
                     if (file.fail())
@@ -305,8 +433,7 @@ int Ini::IniFile::SaveFile( std::filesystem::path filePath )
                 }
             }
         }
-        // Add an extra line at the end of a section so it doesnt get
-        // too mushed together.
+        // Add an extra line at the end of a section so it doesnt get too mushed together.
         file << std::endl;
         if (file.fail())
         {

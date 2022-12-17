@@ -36,11 +36,12 @@ private:
 
     // Loading helper methods
     void                        AddKeyEvent( Drivers::Gamepad::BindType bindType, uint16_t code );
-    void                        AddAbsEvent( Drivers::Gamepad::BindType bindType, uint16_t code, int32_t min, int32_t max );
+    void                        AddAbsEvent( Drivers::Gamepad::BindType bindType, uint16_t code, int32_t min, int32_t max, int32_t fuzz = 0, int32_t res = 0 );
     void                        AddRelEvent( Drivers::Gamepad::BindType bindType, uint16_t code );
     void                        GetFeatEnable( std::string key, bool& rValue );
+    void                        GetDeviceInfo( std::string key, uint16_t& rVid, uint16_t& rPid, uint16_t& rVer, std::string& rName );
     void                        GetDeadzone( std::string key, double& rValue );
-    void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax );
+    void                        GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax, int32_t& rFuzz, int32_t& rRes );
     void                        GetEventBinding( std::string key, Drivers::Gamepad::Binding& rBind );
     void                        GetCommandBinding( std::string key, Drivers::Gamepad::Binding& rBind );
     void                        GetProfileBinding( std::string key, Drivers::Gamepad::Binding& rBind );
