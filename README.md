@@ -21,27 +21,35 @@ This goal of this software is to provide a better, fully open-source implementat
 <br>
 
 ## Features
-Development is still early, so several of the features are incomplete.  What's listed is the current scope of the project.  See the Roadmap section for feature implmentation.
+Development is still ongoing, so several of the features are still incomplete.
 
-- Small and fast driver daemon
-- Fully configurable and mappable
-- Customizable gamepad profiles
-- Configurable by ini file
-- CLI tool to configure live driver
-- GUI tool to configure live driver
-- Support for gamepad input (buttons, axes, etc.)
-- Support for motion controls (accelerometers, gyros)
-- Support for Force-Feedback / haptic vibration.
-- Support for non-gamepad input (volume)
-- Manual backlight control
-- Automatic backlight control (ambient light sensor)
-- Volume control
-- Configurable mouse emulation
+- [x]   Small, fast, multi-threaded driver daemon.
+- [x]   Fully configurable and mappable.
+- [x]   Universal bindings system.
+- [x]   Customizable gamepad profiles.
+- [x]   Configurable by ini file.
+- [ ]   GUI configuration tool.
+- [ ]   CLI scripting tool.
+- [x]   Fully configurable gamepad input (buttons, axes, etc.)
+- [x]   Highly configurable trackpad support.
+- [x]   Fully configurable mouse emulation.
+- [ ]   Fully configurable motion controls.
+- [x]   Configurable radial deadzones.
+- [ ]   Full support for Force-Feedback / haptics.
+- [ ]   Automatic and manual backlight control.
+- [ ]   Battery reporting
+- [ ]   CLI config tool
+- [ ]   GUI config tool
+- [x]   Install script
+- [x]   Online documentation / Wiki
+- [x]   Offline documentation
+- [X]   manpage
+- [ ]   Distro packaging
 
 <br>
 
-## Current state
-The OpenSD main branch is currently in a usable state for basic driver functionality.  It should be enough to play many games and emulators if you know your way around a terminal.
+## Current State
+The current state is very usable.  Most of the main functionality of the driver is implemented and working reliably; more features will be added in time.  The GUI configuration tool does not exist yet, so all configuration is done with **ini** files (if you're like me you prefer that anyway, haha).
 
 <br>
 
@@ -70,49 +78,15 @@ $ man opensdd
 ```
 
 ## Roadmap
-Feature progress:
+The next big steps are getting a good understanding of the haptic reports the Steam Deck uses and getting IPC working so clients can connect to the daemon.
 
-- [x]   Driver daemon
-    - [x]   Gamepad driver
-        - [x]   Hidraw interface
-        - [x]   Gamepad uinput interface
-        - [x]   Motion uinput interface
-        - [x]   Mouse uinput interface
-        - [x]   Completely mappable
-        - [x]   Universal binding system
-        - [x]   Profile support
-        - [x]   Profile ini loading
-        - [x]   Configuration directories
-        - [x]   Multithreaded
-        - [x]   Buttons
-        - [x]   Sticks
-        - [x]   Trackpads
-        - [x]   Trackpad button emulation
-        - [x]   Run commands / scripts with bindings
-        - [ ]   Accelerometers
-        - [ ]   Gyros
-        - [x]   "Lizard Mode" control
-        - [x]   Mouse emuation
-        - [ ]   Force-feedback
-        - [x]   Deadzones
-    - [ ]   Backlight driver
-        - [ ]   Backend interface
-        - [ ]   Manual control
-        - [ ]   Automatic control
-    - [ ]   Volume control
-    - [ ]   IPC
-    - [x]   Config file loading
-        - [ ]   Global config file
-        - [x]   User config files
-        - [x]   User profile files
-- [ ]   Battery reporting
-- [ ]   CLI config tool
-- [ ]   GUI config tool
-- [x]   Install script
-- [ ]   Packaging
-- [X]   Documentation
-- [X]   Man files
-- [X]   Wiki
+This is *roughly* the roadmap I'm currently looking at:
+- AUR package build
+- IPC
+- CLI scripting tool
+- Force Feedback / haptics
+- Backlight control
+- GUI configuration tool
 
 <br>
 
@@ -124,7 +98,7 @@ I've published a group of [hardware notes](https://open-sd.gitlab.io/opensd-docs
 ## Contributing
 There are still a lot of open questions about the Steam Deck HID reports, particularly feature reports.  Most of the the work has come from reverse engineering input reports and function documenetation from the kernel Steam Controller driver.  Anyone who can fill in blanks in the code would be appreciated, just open an issue or submit a PR.
 
-The user documentation also has its own repo at https://gitlab.com/open-sd/opensd-docs if you'd like to help with that.  Please open an issue there for anything documentation related.
+The user documentation also has its own repo at https://gitlab.com/open-sd/opensd-docs if you'd like to help with that.  Please open an issue or submit a PR there for anything documentation related.
 
 As always, feel free to buy me a coffee if you appreciate my work ;)
 
