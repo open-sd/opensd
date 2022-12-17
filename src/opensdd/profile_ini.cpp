@@ -71,7 +71,7 @@ void ProfileIni::AddKeyEvent( BindType bindType, uint16_t code )
 
 
 
-void ProfileIni::AddAbsEvent( BindType bindType, uint16_t code, int32_t min, int32_t max )
+void ProfileIni::AddAbsEvent( BindType bindType, uint16_t code, int32_t min, int32_t max, int32_t fuzz, int32_t res )
 {
     bool    found = false;
     
@@ -84,10 +84,12 @@ void ProfileIni::AddAbsEvent( BindType bindType, uint16_t code, int32_t min, int
                     
             if (!found)
             {
-                Uinput::AbsAxisInfo     axis;
+                Uinput::AbsAxisInfo     axis = {};
                 axis.code = code;
                 axis.min = min;
                 axis.max = max;
+                axis.fuzz = fuzz;
+                axis.res = res;
                 mProf.dev.gamepad.abs_list.push_back( axis );
             }
         break;
@@ -99,10 +101,12 @@ void ProfileIni::AddAbsEvent( BindType bindType, uint16_t code, int32_t min, int
                     
             if (!found)
             {
-                Uinput::AbsAxisInfo     axis;
+                Uinput::AbsAxisInfo     axis = {};
                 axis.code = code;
                 axis.min = min;
                 axis.max = max;
+                axis.fuzz = fuzz;
+                axis.res = res;
                 mProf.dev.motion.abs_list.push_back( axis );
             }
         break;
@@ -190,6 +194,50 @@ void ProfileIni::GetFeatEnable( std::string key, bool& rValue )
 
 
 
+void ProfileIni::GetDeviceInfo( std::string key, uint16_t& rVid, uint16_t& rPid, uint16_t& rVer, std::string& rName )
+{
+    Ini::ValVec         val;
+    uint16_t            vid;
+    uint16_t            pid;
+    uint16_t            ver;
+    
+    
+    // Values are unaltered if not found
+    
+    val = mIni.GetVal( "DeviceInfo", key );
+    if (val.Count())
+    {
+        // Key should have 4 values
+        if (val.Count() < 4)
+        {
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Device info for '" + key + "' has fewer than four values.  Skipping key." );
+            return;
+        }
+        
+        // Convert hex values to int
+        try
+        {
+            vid = std::stoul( val.String(0), nullptr, 16 );
+            pid = std::stoul( val.String(1), nullptr, 16 );
+            ver = std::stoul( val.String(2), nullptr, 16 );
+        }
+        catch (...)
+        {
+            gLog.Write( Log::DEBUG, FUNC_NAME, "Device info for '" + key + "' contains an invalid hexidecimal value.  Skipping key." );
+            return;
+        }
+        
+        // No errors, so set reference values and return
+        rVid = vid;
+        rPid = pid;
+        rVer = ver;
+        rName = val.String(3);
+        rName = val.String(3);
+    }
+}
+
+
+
 void ProfileIni::GetDeadzone( std::string key, double& rValue )
 {
     Ini::ValVec         val;
@@ -218,7 +266,7 @@ void ProfileIni::GetDeadzone( std::string key, double& rValue )
 
 
 
-void ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax )
+void ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rMin, int32_t& rMax, int32_t& rFuzz, int32_t& rRes )
 {
     Ini::ValVec         val;
     
@@ -232,6 +280,7 @@ void ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rM
         int     min = val.Int(0);
         int     max = val.Int(1);
         
+        // Get min / max range
         if (min == max)
         {
             gLog.Write( Log::DEBUG, FUNC_NAME, "Format error: " + key + " has an invalid range.  Ignoring." );
@@ -240,7 +289,21 @@ void ProfileIni::GetAxisRange( std::string section, std::string key, int32_t& rM
         {
             rMin = min;
             rMax = max;
-            gLog.Write( Log::VERB, "Setting axis range for " + key + ": " + std::to_string(min) + " to " + std::to_string(max) );
+            gLog.Write( Log::VERB, "Got axis range for " + key + ": " + std::to_string(min) + " to " + std::to_string(max) );
+        }
+        
+        // Get fuzziness, if present
+        if (val.Count() > 2)
+        {
+            rFuzz = val.Int(2);
+            gLog.Write( Log::VERB, "Got axis fuzziness for " + key + " to " + std::to_string(rFuzz) + "." );
+        }
+        
+        // Get resolution, if present
+        if (val.Count() > 3)
+        {
+            rRes = val.Int(3);
+            gLog.Write( Log::VERB, "Got axis resolution for " + key + " to " + std::to_string(rRes) + "." );
         }
     }
 }
@@ -527,6 +590,7 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
         return Err::FILE_NOT_FOUND;
     }
     
+    gLog.Write( Log::DEBUG, "Loading profile from '" + filePath.string() + "'." );
     result = mIni.LoadFile( filePath );
     if (result != Err::OK)
     {
@@ -535,12 +599,13 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
     }
     
     // Begin reading values from profile file
-    
     // ----------------------------- [Profile] section -----------------------------
     // Name =
     val = mIni.GetVal( "Profile", "Name" );
     if (val.Count())
         mProf.profile_name = val.FullString();
+
+    gLog.Write( Log::DEBUG, "Reading profile: '" + mProf.profile_name + "'." );
     
     // Description = 
     val = mIni.GetVal( "Profile", "Description" );
@@ -548,6 +613,7 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
         mProf.profile_desc = val.FullString();
     
     // ----------------------------- [Features] section -----------------------------
+    gLog.Write( Log::VERB, "Reading [Features] section..." );
     GetFeatEnable( "ForceFeedback",     mProf.features.ff );
     GetFeatEnable( "MotionDevice",      mProf.features.motion );
     GetFeatEnable( "MouseDevice",       mProf.features.mouse );
@@ -555,7 +621,14 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
     GetFeatEnable( "StickFiltering",    mProf.features.filter_sticks );
     GetFeatEnable( "TrackpadFiltering", mProf.features.filter_pads );
 
+    // ----------------------------- [DeviceInfo] section -----------------------------
+    gLog.Write( Log::VERB, "Reading [DeviceInfo] section..." );
+    GetDeviceInfo( "Gamepad",   mProf.dev.gamepad.vid, mProf.dev.gamepad.pid, mProf.dev.gamepad.ver, mProf.dev.gamepad.name );
+    GetDeviceInfo( "Motion",    mProf.dev.motion.vid, mProf.dev.motion.pid, mProf.dev.motion.ver, mProf.dev.motion.name );
+    GetDeviceInfo( "Mouse",     mProf.dev.mouse.vid, mProf.dev.mouse.pid, mProf.dev.mouse.ver, mProf.dev.mouse.name );
+
     // ----------------------------- [Deadzone] section -----------------------------
+    gLog.Write( Log::VERB, "Reading [Deadzone] section..." );
     GetDeadzone( "LStick",  mProf.dz.stick.l );
     GetDeadzone( "RStick",  mProf.dz.stick.r );
     GetDeadzone( "LPad",    mProf.dz.pad.l );
@@ -565,12 +638,16 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
 
     // ----------------------------- [GamepadAxes] section -----------------------------
     // Iterate through list of keys and define / enable axes
+    gLog.Write( Log::VERB, "Reading [GamepadAxes] section..." );
     val = mIni.GetKeyList( "GamepadAxes" );
     for (auto& key : val.mData)
     {
-        int32_t         min;
-        int32_t         max;
-        uint16_t        code;
+        int32_t         min = 0;
+        int32_t         max = 0;
+        int32_t         fuzz = 0;
+        int32_t         res = 0;
+        uint16_t        code = 0;
+        
         int             result;
         
         result = EvName::GetEvCode( key );
@@ -580,18 +657,21 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
         }
         code = (uint16_t)result;
         
-        GetAxisRange( "GamepadAxes", key, min, max );
-        AddAbsEvent( BindType::GAME, code, min, max );
+        GetAxisRange( "GamepadAxes", key, min, max, fuzz, res );
+        AddAbsEvent( BindType::GAME, code, min, max, fuzz, res );
     }
 
     // ----------------------------- [MotionAxes] section -----------------------------
+    gLog.Write( Log::VERB, "Reading [MotionAxes] section..." );
     // Iterate through list of keys and define / enable axes
     val = mIni.GetKeyList( "MotionAxes" );
     for (auto& key : val.mData)
     {
-        int32_t         min;
-        int32_t         max;
-        uint16_t        code;
+        int32_t         min = 0;
+        int32_t         max = 0;
+        int32_t         fuzz = 0;
+        int32_t         res = 0;
+        uint16_t        code = 0;
         int             result;
         
         result = EvName::GetEvCode( key );
@@ -601,11 +681,12 @@ int ProfileIni::Load( std::filesystem::path filePath, Profile& rProf )
         }
         code = (uint16_t)result;
         
-        GetAxisRange( "MotionAxes", key, min, max );
-        AddAbsEvent( BindType::MOTION, code, min, max );
+        GetAxisRange( "MotionAxes", key, min, max, fuzz, res );
+        AddAbsEvent( BindType::MOTION, code, min, max, fuzz, res );
     }
     
     // ----------------------------- [Bindings] section -----------------------------
+    gLog.Write( Log::VERB, "Reading [Bindings] section..." );
     // Dpad
     GetBinding( "DpadUp",               mProf.map.dpad.up );
     GetBinding( "DpadDown",             mProf.map.dpad.down );

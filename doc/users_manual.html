@@ -477,6 +477,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#prof_section_features_trackpadfiltering">TrackpadFiltering</a></li>
 </ul>
 </li>
+<li><a href="#prof_section_devinfo">[DeviceInfo] Section</a></li>
 <li><a href="#prof_section_deadzones">[Deadzones] Section</a></li>
 <li><a href="#prof_section_gamepadaxes">[GamepadAxes] Section</a></li>
 <li><a href="#prof_section_motionaxes">[MotionAxes] Section</a></li>
@@ -634,6 +635,9 @@ OpenSD follows the XDG specification, so environments which set / change <code>$
 <li>
 <p>Comments are preceeded by a <code>#</code> or <code>;</code> at the beginning of the line.</p>
 </li>
+<li>
+<p>Placing a value in quotes "" treats the value as a literal string which allows whitespace.</p>
+</li>
 </ul>
 </div>
 <hr>
@@ -757,8 +761,15 @@ AllowClients = true</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-ini" data-lang="ini">Name = &lt;Your chosen profile name&gt;</code></pre>
+<pre class="highlight"><code class="language-ini" data-lang="ini">Name = &lt;profile_name&gt;</code></pre>
 </div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>profile_name</code>:  Any unique name.  Should be enclosed in quotes "" to preserve spaces.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Example:</p>
@@ -766,8 +777,20 @@ AllowClients = true</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
-Name = My favourite gamepad profile</code></pre>
+Name = "My favourite gamepad profile"</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Prior to version 0.47, quoted literal strings were not supported.  It&#8217;s recommended, but not necessary to update old profiles to put this value in quotes.
+</td>
+</tr>
+</table>
 </div>
 <hr>
 </div>
@@ -781,8 +804,15 @@ Name = My favourite gamepad profile</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-ini" data-lang="ini">Description = &lt;Description of the profile&gt;</code></pre>
+<pre class="highlight"><code class="language-ini" data-lang="ini">Description = &lt;description&gt;</code></pre>
 </div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>description</code>:  A brief, helpful description of what your profile does.  Should be enclosed in quotes "" to preserve spaces.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Example:</p>
@@ -790,8 +820,20 @@ Name = My favourite gamepad profile</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-ini" data-lang="ini">[Profile]
-Description = Just a profile I use for most applications.</code></pre>
+Description = "Just a profile I use for most applications."</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Prior to version 0.47, quoted literal strings were not supported.  It&#8217;s recommended, but not necessary to update old profiles to put this value in quotes.
+</td>
+</tr>
+</table>
 </div>
 <hr>
 </div>
@@ -1019,6 +1061,63 @@ This must be enabled for trackpad deadzones to work.
 </div>
 </div>
 <div class="sect2">
+<h3 id="prof_section_devinfo">[DeviceInfo] Section</h3>
+<div class="paragraph">
+<p>This section is used to optionally configure the USB identification of each device OpenSD creates.  While OpenSD has its own defaults, they can be overridden to make these devices appear as a different hardware.  This can be useful when some <em>very poorly written games</em> only look for / support specific gamepads, rather than a universal API.  Shame.  Often, these games filter out all input devices which <em>don&#8217;t match</em> the device <strong>name string</strong> and/or the USB <strong>VID:PID</strong>.  These settings enable the gamepad to mimic the appearance of a device which the software does recognise.</p>
+</div>
+<div class="paragraph">
+<p>Format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;device&gt;    = &lt;vid&gt; &lt;pid&gt; &lt;ver&gt; &lt;name&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>device</code>: Any OpenSD input device: <code>Gamepad</code>, <code>Motion</code>, or <code>Mouse</code>.</p>
+</li>
+<li>
+<p><code>vid</code>:    The USB device VendorID to use. Format must be in hexidecimal.</p>
+</li>
+<li>
+<p><code>pid</code>:    The USB device ProductID to use. Format must be in hexidecimal.</p>
+</li>
+<li>
+<p><code>ver</code>:    The USB device version to use. Format must be in hexidecimal.</p>
+</li>
+<li>
+<p><code>name</code>:   The USB device name string to use.  Should be enclosed in quotes "" if it contains any whitespace characters.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[DeviceInfo]
+Gamepad     = 0xDEAD 0xBEEF 0x0001 "OpenSD Gamepad Device"
+Motion      = 0xDEAD 0xBEEF 0x0001 "OpenSD Motion Control Device"
+Mouse       = 0xC475 0xF00D 0x0101 "OpenSD Mouse / Trackpad Device"</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Some software may also perform gamepad detection based on button and axis configuration.  Axis settings can also be configured in the <a href="#prof_section_gamepadaxes">[GamepadAxes] Section</a> and <a href="#prof_section_motionaxes">[MotionAxes] Section</a> for this very purpose.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+<div class="sect2">
 <h3 id="prof_section_deadzones">[Deadzones] Section</h3>
 <div class="paragraph">
 <p>These values are <strong>double precision floating point</strong> and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If <a href="#prof_section_features_stickfiltering">StickFiltering</a> is disabled, <code>LStick</code> and <code>RStick</code> deadzones will be ignored.  If <a href="#prof_section_features_trackpadfiltering">TrackpadFiltering</a> is disabled, <code>LPad</code> and <code>RPad</code> deadzones will be ignored.</p>
@@ -1028,7 +1127,7 @@ This must be enabled for trackpad deadzones to work.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-ini" data-lang="ini">axis      = &lt;value&gt;</code></pre>
+<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;axis&gt;      = &lt;value&gt;</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1094,7 +1193,7 @@ Because the Steam Deck thumbsticks tend not to return to center completely (at l
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;abs_event&gt;     = &lt;min&gt;     &lt;max&gt;</code></pre>
+<pre class="highlight"><code class="language-ini" data-lang="ini">&lt;abs_event&gt;     = &lt;min&gt; &lt;max&gt; [fuzz] [res]</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1103,10 +1202,16 @@ Because the Steam Deck thumbsticks tend not to return to center completely (at l
 <p><code>abs_event</code>:  Any absolute axis event code you wish to bind.  Absolute event codes begin with <code>ABS_</code>.  A full list of input event codes can be found at <a href="https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input-event-codes.h">linux/input-event-codes.h</a> from the Linux kernel.</p>
 </li>
 <li>
-<p><code>min</code>:  An integer representing the <strong>minimum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+<p><code>min</code>:   A value representing the <strong>minimum</strong> range of the axis.  This is a signed 32-bit integer.</p>
 </li>
 <li>
-<p><code>max</code>:  An integer representing the <strong>maximum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+<p><code>max</code>:   A value representing the <strong>maximum</strong> range of the axis.  This is a signed 32-bit integer.</p>
+</li>
+<li>
+<p><code>fuzz</code>:  Optional value representing the <em>fuzziness</em> of the axis values.  This is a signed 32-bit integer.</p>
+</li>
+<li>
+<p><code>res</code>:   Optional value representing the resolution of the axis in units/mm (units/radian for rotational axes).  This is a signed 32-bit integer.</p>
 </li>
 </ul>
 </div>

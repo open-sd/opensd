@@ -156,7 +156,7 @@ int Uinput::Device::EnableKey( uint16_t code )
 
 
 
-int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
+int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max, int32_t fuzz, int32_t res )
 {
     int                 result;
     uinput_abs_setup    axis_info;
@@ -192,12 +192,13 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
     }
     
     // Define and enable axis through uinput
-    axis_info.code              = code;
-    axis_info.absinfo.value     = 0;
-    axis_info.absinfo.minimum   = min;
-    axis_info.absinfo.maximum   = max;
-    axis_info.absinfo.fuzz      = 0;    // TODO: Should this be implemented?
-    axis_info.absinfo.flat      = 0;
+    axis_info.code                  = code;
+    axis_info.absinfo.value         = 0;
+    axis_info.absinfo.minimum       = min;
+    axis_info.absinfo.maximum       = max;
+    axis_info.absinfo.fuzz          = fuzz;
+    axis_info.absinfo.flat          = 0;
+    axis_info.absinfo.resolution    = res;
 
     result = ioctl( mFd, UI_ABS_SETUP, &axis_info );
     if (result < 0)
@@ -208,7 +209,7 @@ int Uinput::Device::EnableAbs( uint16_t code, int32_t min, int32_t max )
         return Err::WRITE_FAILED;
     }
     
-    // Everything okay, lets add a new key buffer
+    // Everything okay, lets add a new event buffer
     EventInfo           evinfo = {};
     evinfo.ev.type      = EV_ABS;
     evinfo.ev.code      = code;
@@ -266,7 +267,7 @@ int Uinput::Device::EnableRel( uint16_t code )
         return Err::WRITE_FAILED;
     }
     
-    // Everything okay, lets add a new key buffer
+    // Everything okay, lets add a new event buffer
     EventInfo           evinfo = {};
     evinfo.ev.type      = EV_REL;
     evinfo.ev.code      = code;
@@ -576,7 +577,7 @@ int Uinput::Device::Configure( const Uinput::DeviceConfig& rCfg )
     {
         for (auto&& i : rCfg.abs_list)
         {
-            if (EnableAbs( i.code, i.min, i.max ) != Err::OK)
+            if (EnableAbs( i.code, i.min, i.max, i.fuzz, i.res ) != Err::OK)
                 ++error_count;
         }
     }

@@ -62,7 +62,10 @@ namespace Drivers::Gamepad
 
         struct _devinfo
         {
-            std::string                         name_override;
+            std::string                         name;
+            uint16_t                            vid;
+            uint16_t                            pid;
+            uint16_t                            ver;
             std::vector<uint16_t>               key_list;
             std::vector<Uinput::AbsAxisInfo>    abs_list;
             std::vector<uint16_t>               rel_list;

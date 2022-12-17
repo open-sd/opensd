@@ -31,9 +31,11 @@ namespace Uinput
     // Structure for absolute axis event registration
     struct AbsAxisInfo
     {
-        uint16_t            code;      // Axis event code / number
+        uint16_t            code;       // Axis event code / number
         int32_t             min;        // Minimum range of axis
         int32_t             max;        // Maximum range of axis
+        int32_t             fuzz;       // Axis value fuzziness
+        int32_t             res;        // Axis resolution in units/mm or units/radian
     };
     
     struct DeviceConfig

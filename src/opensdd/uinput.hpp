@@ -62,7 +62,7 @@ namespace Uinput
         void                    Close();
         bool                    IsOpen();
         int                     EnableKey( uint16_t code );
-        int                     EnableAbs( uint16_t code, int32_t min, int32_t max );
+        int                     EnableAbs( uint16_t code, int32_t min, int32_t max, int32_t fuzz = 0, int32_t res = 0 );
         int                     EnableRel( uint16_t code );
         int                     EnableFF();
         int                     Create( std::string deviceName, uint16_t vid, uint16_t pid, uint16_t ver );

@@ -256,6 +256,17 @@ Key assignment \fBmust\fP be separated by whitespace.  (example: \f(CRkey = valu
 Comments are preceeded by a \f(CR#\fP or \f(CR;\fP at the beginning of the line.
 .RE
 .sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+Placing a value in quotes "" treats the value as a literal string which allows whitespace.
+.RE
+.sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
 .bp
@@ -369,10 +380,21 @@ Format:
 .if n .RS 4
 .nf
 .fam C
-Name = <Your chosen profile name>
+Name = <profile_name>
 .fam
 .fi
 .if n .RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRprofile_name\fP:  Any unique name.  Should be enclosed in quotes "" to preserve spaces.
+.RE
 .sp
 Example:
 .sp
@@ -380,10 +402,24 @@ Example:
 .nf
 .fam C
 [Profile]
-Name = My favourite gamepad profile
+Name = "My favourite gamepad profile"
 .fam
 .fi
 .if n .RE
+.if n .sp
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+.B Note
+.ps -1
+.br
+.sp
+Prior to version 0.47, quoted literal strings were not supported.  It\(cqs recommended, but not necessary to update old profiles to put this value in quotes.
+.sp .5v
+.RE
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
@@ -396,10 +432,21 @@ Format:
 .if n .RS 4
 .nf
 .fam C
-Description = <Description of the profile>
+Description = <description>
 .fam
 .fi
 .if n .RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRdescription\fP:  A brief, helpful description of what your profile does.  Should be enclosed in quotes "" to preserve spaces.
+.RE
 .sp
 Example:
 .sp
@@ -407,10 +454,24 @@ Example:
 .nf
 .fam C
 [Profile]
-Description = Just a profile I use for most applications.
+Description = "Just a profile I use for most applications."
 .fam
 .fi
 .if n .RE
+.if n .sp
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+.B Note
+.ps -1
+.br
+.sp
+Prior to version 0.47, quoted literal strings were not supported.  It\(cqs recommended, but not necessary to update old profiles to put this value in quotes.
+.sp .5v
+.RE
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
@@ -651,6 +712,104 @@ This must be enabled for trackpad deadzones to work.
 .sp
 .ce
 \l'\n(.lu*25u/100u\(ap'
+.SS "[DeviceInfo] Section"
+.sp
+This section is used to optionally configure the USB identification of each device OpenSD creates.  While OpenSD has its own defaults, they can be overridden to make these devices appear as a different hardware.  This can be useful when some \fIvery poorly written games\fP only look for / support specific gamepads, rather than a universal API.  Shame.  Often, these games filter out all input devices which \fIdon\(cqt match\fP the device \fBname string\fP and/or the USB \fBVID:PID\fP.  These settings enable the gamepad to mimic the appearance of a device which the software does recognise.
+.sp
+Format:
+.sp
+.if n .RS 4
+.nf
+.fam C
+<device>    = <vid> <pid> <ver> <name>
+.fam
+.fi
+.if n .RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRdevice\fP: Any OpenSD input device: \f(CRGamepad\fP, \f(CRMotion\fP, or \f(CRMouse\fP.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRvid\fP:    The USB device VendorID to use. Format must be in hexidecimal.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRpid\fP:    The USB device ProductID to use. Format must be in hexidecimal.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRver\fP:    The USB device version to use. Format must be in hexidecimal.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRname\fP:   The USB device name string to use.  Should be enclosed in quotes "" if it contains any whitespace characters.
+.RE
+.sp
+Example:
+.sp
+.if n .RS 4
+.nf
+.fam C
+[DeviceInfo]
+Gamepad     = 0xDEAD 0xBEEF 0x0001 "OpenSD Gamepad Device"
+Motion      = 0xDEAD 0xBEEF 0x0001 "OpenSD Motion Control Device"
+Mouse       = 0xC475 0xF00D 0x0101 "OpenSD Mouse / Trackpad Device"
+.fam
+.fi
+.if n .RE
+.if n .sp
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+.B Note
+.ps -1
+.br
+.sp
+Some software may also perform gamepad detection based on button and axis configuration.  Axis settings can also be configured in the [GamepadAxes] Section and [MotionAxes] Section for this very purpose.
+.sp .5v
+.RE
+.sp
+.ce
+\l'\n(.lu*25u/100u\(ap'
 .SS "[Deadzones] Section"
 .sp
 These values are \fBdouble precision floating point\fP and represent the percentage of the total axis range to ignore.  A value of 0.05 would be a 5% deadzone.  Deadzones are capped at 0.9 (90%).  A value of 0 is considered disabled.  If StickFiltering is disabled, \f(CRLStick\fP and \f(CRRStick\fP deadzones will be ignored.  If TrackpadFiltering is disabled, \f(CRLPad\fP and \f(CRRPad\fP deadzones will be ignored.
@@ -660,7 +819,7 @@ Format:
 .if n .RS 4
 .nf
 .fam C
-axis      = <value>
+<axis>      = <value>
 .fam
 .fi
 .if n .RE
@@ -739,7 +898,7 @@ Format:
 .if n .RS 4
 .nf
 .fam C
-<abs_event>     = <min>     <max>
+<abs_event>     = <min> <max> [fuzz] [res]
 .fam
 .fi
 .if n .RE
@@ -765,7 +924,7 @@ from the Linux kernel.
 .  sp -1
 .  IP \(bu 2.3
 .\}
-\f(CRmin\fP:  An integer representing the \fBminimum\fP range of the axis.  This is a signed 32\-bit integer.
+\f(CRmin\fP:   A value representing the \fBminimum\fP range of the axis.  This is a signed 32\-bit integer.
 .RE
 .sp
 .RS 4
@@ -776,7 +935,29 @@ from the Linux kernel.
 .  sp -1
 .  IP \(bu 2.3
 .\}
-\f(CRmax\fP:  An integer representing the \fBmaximum\fP range of the axis.  This is a signed 32\-bit integer.
+\f(CRmax\fP:   A value representing the \fBmaximum\fP range of the axis.  This is a signed 32\-bit integer.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRfuzz\fP:  Optional value representing the \fIfuzziness\fP of the axis values.  This is a signed 32\-bit integer.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.  sp -1
+.  IP \(bu 2.3
+.\}
+\f(CRres\fP:   Optional value representing the resolution of the axis in units/mm (units/radian for rotational axes).  This is a signed 32\-bit integer.
 .RE
 .sp
 Example:
