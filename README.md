@@ -38,8 +38,6 @@ Development is still ongoing, so several of the features are still incomplete.
 - [ ]   Full support for Force-Feedback / haptics.
 - [ ]   Automatic and manual backlight control.
 - [ ]   Battery reporting
-- [ ]   CLI config tool
-- [ ]   GUI config tool
 - [x]   Install script
 - [x]   Online documentation / Wiki
 - [x]   Offline documentation
@@ -109,7 +107,7 @@ OpenSD is licensed under THE GNU GPLv3+.  See LICENSE for details.
 
 <br>
 
-## Disclaimer
+## Legal
 I have no affiliation with Valve or any of their properties.
 
 Valve, Steam, Steam Deck, Steam Controller or other Valve trademarks, are the property of Valve LLC.  Playstation, DualShock and DualSense or other Sony trademarks are the property of the Sony Corporation.  Any reference to these, or other tradmarks, are in fair use.
