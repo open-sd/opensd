@@ -70,10 +70,7 @@ Check out the Getting Started section in the [online documentation](https://open
 ## Using and configuring OpenSD
 A beautiful online [user's manual](https://open-sd.gitlab.io/opensd-docs/opensd-docs/latest/users_manual/running.html) can also be found in the online documentation.
 
-Offline documentation is also available in the *doc* directory of this repository.  If you've already installed OpenSD, documentation can be found in `/usr/local/share/doc/opensd/` as well as a `man` pages: opensdd(1) and opensd(5)
-```
-$ man opensdd
-```
+Offline documentation is also available in the *doc* directory of this repository.  If you've already installed OpenSD, documentation can be found in `/usr/local/share/doc/opensd/` as well as man pages: **opensdd(1)** and **opensd-files(5)**
 
 ## Roadmap
 The next big steps are getting a good understanding of the haptic reports the Steam Deck uses and getting IPC working so clients can connect to the daemon.

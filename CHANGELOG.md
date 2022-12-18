@@ -2,7 +2,7 @@
 
 ## [v0.48]  2022/12/18
 ### Changed
-  - Split man page into two parts: opensdd(1) and opensd(5).
+  - Split man page into two parts: opensdd(1) and opensd-files(5).
   - man pages are now compressed with gzip.
   - Separated install scripts into post-install section of cmake build.
   - Modified cmake build to be able to optionally disable post-install for PKGBUILD.
