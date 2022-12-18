@@ -19,7 +19,7 @@
 ####################################################################################################
 cmake_minimum_required( VERSION 3.10 )
 
-project( OpenSD VERSION 0.47 )
+project( OpenSD VERSION 0.48 )
 
 # Compiler settings
 set( CMAKE_CXX_STANDARD 20 )
@@ -72,7 +72,8 @@ file( GLOB OPENSD_CONFIG_FILE "data/config/config.ini" )
 file( GLOB OPENSD_PROFILE_FILES "data/profiles/*.profile" )
 
 # OpenSD documentation files
-file( GLOB OPENSD_MANPAGE_FILE "doc/opensdd.1" )
+file( GLOB OPENSD_MAN1_FILES "doc/opensdd.1.gz" )
+file( GLOB OPENSD_MAN5_FILES "doc/opensd-files.5.gz" )
 file( GLOB OPENSD_DOC_FILES 
         "doc/users_manual.html"
         "CHANGELOG.md" 
@@ -96,16 +97,19 @@ configure_file( "${PROJECT_SOURCE_DIR}/src/common/cmake_vars.hpp.in" "${PROJECT_
 include_directories( "${PROJECT_BINARY_DIR}/gen/" )
 set( UDEV_RULE_DIR "/etc/udev/rules.d/" CACHE STRING "Install directory for udev rules" )
 set( DOCUMENTATION_DIR "share/doc/opensd/" )
-set( MANPAGE_DIR "man/man1/" )
+set( MANPAGE_DIR "share/man/" )
 
 # Build options
 option( BUILD_DAEMON "Build OpenSD daemon (opensdd)" TRUE )
 option( BUILD_CLI "Build OpenSD CLI tool (opensd-cli)" FALSE )
 option( BUILD_GUI "Build OpenSD GUI tool (opensd-gui)" FALSE )
 option( OPT_INSTALL_UDEV_RULE "Install udev rules" TRUE )
-option( OPT_INSTALL_GROUP "Add 'opensd' group and make current user a member" TRUE )
 option( OPT_INSTALL_SYSD_SERVICE "Install systemd user service" TRUE )
 option( OPT_INSTALL_DOCUMENTATION "Install user documentation" TRUE )
+option( OPT_POSTINSTALL "Run post-install scripts" TRUE )
+option( OPT_POSTINSTALL_ADD_GROUP "Post-install: Add 'opensd' group and make current user a member" TRUE )
+option( OPT_POSTINSTALL_RELOAD_UDEV "Post-install: Reload udev rules" TRUE )
+option( OPT_POSTINSTALL_RELOAD_SYSD "Post-install: Reload user-level systemd rules" TRUE )
 
 # Build driver daemon binary
 if( BUILD_DAEMON )
@@ -124,6 +128,8 @@ endif( BUILD_CLI )
 if( BUILD_GUI )
     # TODO
 endif( BUILD_GUI )
+
+### Installation ###
 
 # Copy data files to build directory for development and testing on systems 
 # where OpenSD is not installed
@@ -147,18 +153,31 @@ endif( OPT_INSTALL_SYSD_SERVICE )
 
 # Install user documentation if enabled
 if( OPT_INSTALL_DOCUMENTATION )
-    install( FILES "${OPENSD_MANPAGE_FILE}" DESTINATION "${MANPAGE_DIR}" )
+    install( FILES "${OPENSD_MAN1_FILES}" DESTINATION "${MANPAGE_DIR}/man1/" )
+    install( FILES "${OPENSD_MAN5_FILES}" DESTINATION "${MANPAGE_DIR}/man5/" )
     install( FILES ${OPENSD_DOC_FILES} DESTINATION "${DOCUMENTATION_DIR}" )
 endif( OPT_INSTALL_DOCUMENTATION )
 
-# Install udev rule and reload udev if enabled
+# Install udev rule
 if( OPT_INSTALL_UDEV_RULE )
     install( FILES "${OPENSD_UDEV_RULE_FILE}" DESTINATION "${UDEV_RULE_DIR}" )
-    install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/reload_udev.sh )" )
 endif( OPT_INSTALL_UDEV_RULE )
 
-# Add 'opensd' group for udev rule and add current user to that group. 
-# Gets correct username when installing with sudo.
-if( OPT_INSTALL_GROUP )
-    install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/opensd_group.sh )" )
-endif( OPT_INSTALL_GROUP )
+### Post-install ###
+if( OPT_POSTINSTALL )
+    # Reload udev rules
+    if( OPT_POSTINSTALL_RELOAD_UDEV )
+        install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/reload_udev.sh )" )
+    endif( OPT_POSTINSTALL_RELOAD_UDEV )
+
+    # Add 'opensd' group for udev rule and add current user to that group. 
+    # Gets correct username when installing with sudo.
+    if( OPT_POSTINSTALL_ADD_GROUP )
+        install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/opensd_group.sh )" )
+    endif( OPT_POSTINSTALL_ADD_GROUP )
+    
+    # Reload systemd user rules
+    if( OPT_POSTINSTALL_RELOAD_SYSD )
+        install( CODE "execute_process( COMMAND ${PROJECT_SOURCE_DIR}/scripts/reload_sysd.sh )" )
+    endif( OPT_POSTINSTALL_RELOAD_SYSD )
+endif( OPT_POSTINSTALL )

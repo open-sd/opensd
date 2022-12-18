@@ -1,5 +1,17 @@
 # OpenSD changelog
 
+## [v0.48]  2022/12/18
+### Changed
+  - Split man page into two parts: opensdd(1) and opensd(5).
+  - man pages are now compressed with gzip.
+  - Separated install scripts into post-install section of cmake build.
+  - Modified cmake build to be able to optionally disable post-install for PKGBUILD.
+  - Cleaned up post-install scripts a little.
+
+### Fixed
+  - man pages should go into the correct directory now.
+
+
 ## [v0.47]  2022/12/16
 ### Added
   - Added [DeviceInfo] section to profile files for compatibility.  See documentation.
