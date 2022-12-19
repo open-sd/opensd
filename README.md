@@ -42,7 +42,6 @@ Development is still ongoing, so several of the features are still incomplete.
 - [x]   Online documentation / Wiki
 - [x]   Offline documentation
 - [X]   manpage
-- [ ]   Distro packaging
 
 <br>
 
@@ -65,6 +64,8 @@ Some of the hardware support for the Steam Deck is pretty recent, so using the m
 ## Getting started
 Check out the Getting Started section in the [online documentation](https://open-sd.gitlab.io/opensd-docs) for steps on getting, building, installing.
 
+A current git build of OpenSD is also available in the [Arch User Repository](https://aur.archlinux.org/packages/opensd-git).
+
 <br>
 
 ## Using and configuring OpenSD
@@ -76,7 +77,6 @@ Offline documentation is also available in the *doc* directory of this repositor
 The next big steps are getting a good understanding of the haptic reports the Steam Deck uses and getting IPC working so clients can connect to the daemon.
 
 This is *roughly* the roadmap I'm currently looking at:
-- AUR package build
 - IPC
 - CLI scripting tool
 - Force Feedback / haptics
